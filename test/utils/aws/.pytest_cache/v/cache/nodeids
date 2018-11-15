@@ -1,0 +1,5 @@
+[
+  "Test_Lambdas.py::Test_Lambdas::test_constructor",
+  "Test_Lambdas.py::Test_Lambdas::test_create_delete_exists_invoke",
+  "Test_Lambdas.py::Test_Lambdas::test_upload_update"
+]

@@ -1,0 +1,4 @@
+{
+  "Test_Save_To_ELK.py": true,
+  "Test_Save_To_ELK.py::Test_Save_To_ELK::test_delete_documents_with_id": true
+}
