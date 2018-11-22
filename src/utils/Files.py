@@ -32,6 +32,10 @@ class Files:
         return glob.glob(path_pattern)
 
     @staticmethod
+    def file_name(path):
+        return os.path.basename(path)
+
+    @staticmethod
     def path_combine(path1, path2):
         return abspath(join(path1, path2))
 
