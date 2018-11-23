@@ -26,6 +26,21 @@ class API_Browser:
             self.set_last_chrome_session({'url_chrome': self._browser.wsEndpoint})
         return self._browser
 
+    async def browser_close(self):
+        browser = await self.browser()
+        if browser is not None:
+            await browser.close()
+
+    async def js_eval(self, code):
+        page = await self.page()
+        return await page.evaluate(code)
+
+    # async def js_invoke(self, method, *args):
+    #     page = await self.page()
+    #     jscode = "{0}({1})"
+    #     return await page.evaluate(method, *args)
+
+
     async def open(self, url):
         page      = await self.page()
         response  = await page.goto(url)  # returns response object
@@ -44,7 +59,9 @@ class API_Browser:
         content = await page.content()
         return PyQuery(content)
 
-    async def screenshot(self, full_page = True, file_screenshot = None):
+    async def screenshot(self, url= None, full_page = True, file_screenshot = None):
+        if url:
+            await self.open(url)
         if file_screenshot is None:
             file_screenshot = self.file_tmp_screenshot
 
@@ -52,6 +69,14 @@ class API_Browser:
         await page.screenshot({'path': file_screenshot, 'fullPage': full_page})
         return file_screenshot
 
+
+    async def url(self):
+        page = await self.page()
+        return page.url
+
+
+
+    # helper sync functions
 
     def get_last_chrome_session(self):
         data = Json.load_json(self.file_tmp_last_chrome_session)
