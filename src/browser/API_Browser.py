@@ -1,0 +1,61 @@
+from pyppeteer import connect, launch
+from utils.Http import WS_is_open
+from utils.Json import Json
+from pyquery    import PyQuery
+
+
+class API_Browser:
+
+    def __init__(self):
+        self.file_tmp_last_chrome_session = '/tmp/browser-last_chrome_session.json'
+        self.file_tmp_screenshot          = '/tmp/browser-page-screenshot.png'
+        self._browser                     = None
+
+    async def browser(self):
+        if self._browser is None:
+            self._browser = await self.browser_connect()
+        return self._browser
+
+    async def browser_connect(self, url_chrome =None, headless = True, auto_close = False):
+        if not url_chrome:
+            url_chrome = self.get_last_chrome_session().get('url_chrome')
+        if url_chrome and WS_is_open(url_chrome):
+            self._browser = await connect({'browserWSEndpoint': url_chrome})
+        else:
+            self._browser = await launch(headless=headless, autoClose= auto_close)
+            self.set_last_chrome_session({'url_chrome': self._browser.wsEndpoint})
+        return self._browser
+
+    async def open(self, url):
+        page      = await self.page()
+        response  = await page.goto(url)  # returns response object
+        headers   = response.headers
+        status    = response.status
+        url       = response.url
+        return headers, status, url
+
+    async def page(self):
+        browser = await self.browser()
+        pages = await browser.pages()
+        return pages.pop()
+
+    async def html(self):
+        page = await self.page()
+        content = await page.content()
+        return PyQuery(content)
+
+    async def screenshot(self, full_page = True, file_screenshot = None):
+        if file_screenshot is None:
+            file_screenshot = self.file_tmp_screenshot
+
+        page = await self.page()
+        await page.screenshot({'path': file_screenshot, 'fullPage': full_page})
+        return file_screenshot
+
+
+    def get_last_chrome_session(self):
+        data = Json.load_json(self.file_tmp_last_chrome_session)
+        return data
+
+    def set_last_chrome_session(self, data):
+        Json.save_json_pretty(self.file_tmp_last_chrome_session, data)

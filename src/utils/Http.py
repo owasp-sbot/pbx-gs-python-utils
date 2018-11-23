@@ -1,5 +1,7 @@
 import ssl
-from urllib.request import Request, urlopen
+from   urllib.request import Request, urlopen
+import websocket
+
 
 def DELETE(url, data='', headers={}):
     return Http_Request(url, data, headers, 'DELETE')
@@ -18,3 +20,11 @@ def Http_Request(url, data='', headers={}, method='POST', encoding = 'utf-8' ):
     request  = Request(url, data.encode(), headers=headers)
     request.get_method = lambda: method
     return urlopen(request, context=gcontext).read().decode(encoding)
+
+def WS_is_open(ws_url):
+    try:
+        ws = websocket.WebSocket()
+        ws.connect(ws_url)
+        return ws.connected
+    except:
+        return False
