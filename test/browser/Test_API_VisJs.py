@@ -19,6 +19,7 @@ class Test_API_Browser(TestCase):
     def test_add_node(self):
         node = { "id" : 'new_node',"label" : "an label" }
         self.api.remove_node(node['id'])        \
+                .add_node(node)                 \
                 .remove_node(node['id'])
 
     def test_add_edge(self):

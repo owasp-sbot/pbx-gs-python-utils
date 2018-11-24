@@ -54,6 +54,11 @@ class API_Browser:
         pages = await browser.pages()
         return pages.pop()
 
+    async def sleep(self, mseconds):
+        page = await self.page()
+        await page.waitFor(mseconds);
+        return self
+
     async def html(self):
         page = await self.page()
         content = await page.content()

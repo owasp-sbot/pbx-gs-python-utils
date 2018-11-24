@@ -13,6 +13,7 @@ class API_VisJs():
         for node in nodes:
             self.add_node(node)
         return self
+
     @sync
     async def add_node(self, node):
         method   = 'network.body.data.nodes.add'
