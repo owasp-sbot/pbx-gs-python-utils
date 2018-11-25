@@ -6,23 +6,26 @@ from pyquery    import PyQuery
 
 class API_Browser:
 
-    def __init__(self):
+    def __init__(self, headless = True, auto_close = True, url_chrome = None):
         self.file_tmp_last_chrome_session = '/tmp/browser-last_chrome_session.json'
         self.file_tmp_screenshot          = '/tmp/browser-page-screenshot.png'
         self._browser                     = None
+        self.headless                     = headless
+        self.auto_close                   = auto_close
+        self.url_chrome                   = url_chrome
 
     async def browser(self):
         if self._browser is None:
             self._browser = await self.browser_connect()
         return self._browser
 
-    async def browser_connect(self, url_chrome =None, headless = True, auto_close = False):
-        if not url_chrome:
+    async def browser_connect(self):
+        if not self.url_chrome:
             url_chrome = self.get_last_chrome_session().get('url_chrome')
         if url_chrome and WS_is_open(url_chrome):
             self._browser = await connect({'browserWSEndpoint': url_chrome})
         else:
-            self._browser = await launch(headless=headless, autoClose= auto_close)
+            self._browser = await launch(headless=self.headless, autoClose = self.auto_close)
             self.set_last_chrome_session({'url_chrome': self._browser.wsEndpoint})
         return self._browser
 
