@@ -50,7 +50,7 @@ class API_Browser:
         headers   = response.headers
         status    = response.status
         url       = response.url
-        return headers, status, url
+        return headers, status, url, self
 
     async def page(self):
         browser = await self.browser()

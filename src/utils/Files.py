@@ -1,3 +1,4 @@
+import errno
 import gzip
 import os
 import glob
@@ -7,6 +8,12 @@ from   os.path import abspath, join
 
 
 class Files:
+    @staticmethod
+    def copy(source, destination):
+        parent_folder = Files.folder_name(destination)
+        Files.folder_create(parent_folder)                      # ensure targer folder exists
+        return shutil.copy(source, destination)
+
     @staticmethod
     def contents(path):
         with open(path, "rt") as file:
@@ -34,6 +41,32 @@ class Files:
     @staticmethod
     def file_name(path):
         return os.path.basename(path)
+
+    @staticmethod
+    def folder_exists(path):          # add check to see if it is a folder
+        return Files.exists(path)
+
+    @staticmethod
+    def folder_create(path):
+        try:
+            os.makedirs(path)
+        except OSError as exc:
+            if exc.errno == errno.EEXIST and os.path.isdir(path):
+                pass
+            else:
+                raise
+        if Files.folder_exists(path):
+            return path
+        return None
+
+    @staticmethod
+    def folder_delete_all(path):                # this will remove recursively
+        shutil.rmtree(path)
+        return Files.exists(path) is False
+
+    @staticmethod
+    def folder_name(path):
+        return os.path.dirname(path)
 
     @staticmethod
     def path_combine(path1, path2):

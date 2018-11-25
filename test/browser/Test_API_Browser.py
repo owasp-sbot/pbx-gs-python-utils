@@ -32,7 +32,7 @@ class Test_API_Browser(TestCase):
 
     @sync
     async def test_open(self):
-        (headers, status, url) = await self.api.open('https://www.google.com')
+        (headers, status, url, browser) = await self.api.open('https://www.google.com')
         assert headers['x-frame-options'] == 'SAMEORIGIN'
         assert status                     == 200
         assert url                        == 'https://www.google.com/'

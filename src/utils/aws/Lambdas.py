@@ -26,7 +26,6 @@ class Lambdas:
             self.runtime = 'python3.6'
 
 
-
         # values expected to be provided
         self.name       = name.replace('.','_')
         if handler is not None:
