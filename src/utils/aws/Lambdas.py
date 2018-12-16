@@ -98,6 +98,15 @@ class Lambdas:
         self.upload().aws.lambda_update_function(self.name, self.s3_bucket, self.s3_key)
         return self
 
+    def update_with_src(self, path_to_src = None):             # use this when wanting to add a local folder to the lambda source code
+
+        if path_to_src is None: path_to_src = Files.path_combine(__file__, '../../../../../../src')
+        src_tmp = '/tmp/src_{0}'.format(self.name)
+        copy_tree(self.source, src_tmp)
+        copy_tree(path_to_src, src_tmp)
+        self.source = src_tmp
+        return self.update()
+
 def exec_string_in_lambda(lambda_code):
     name = 'lambda_from_string'                  # should make this a random value
     handler = 'lambdas.dev.exec_string.run'

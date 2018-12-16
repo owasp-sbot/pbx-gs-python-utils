@@ -56,7 +56,7 @@ class Elastic_Search:
             print(error)
             return {"elk-error": "{0}".format(error)}
 
-    def add_bulk(self, data, id_key = None):
+    def add_bulk(self, data, id_key = None, pipeline = None):
         actions = []
         for item in data:
             item_data = {
@@ -68,7 +68,10 @@ class Elastic_Search:
                 item_data["_id"] = item[id_key]
             actions.append(item_data)
 
-        ok, _ = helpers.bulk(self.es, actions, index=self.index)
+        if pipeline is None:
+            ok, _ = helpers.bulk(self.es, actions, index=self.index)
+        else:
+            ok, _ = helpers.bulk(self.es, actions, index=self.index, pipeline='geoip')
         return ok
 
     def create_index(self,body = {}):
@@ -76,12 +79,12 @@ class Elastic_Search:
             self._result = self.es.indices.create(index=self.index, body=body)
         return self
 
-    def create_index_with_location_geo_point(self):
+    def create_index_with_location_geo_point(self,field = "location"):
         body = {
                 "mappings": {
                     "item": {
                         "properties": {
-                            "location": {
+                            field: {
                                 "type": "geo_point"
                             }
                         }
