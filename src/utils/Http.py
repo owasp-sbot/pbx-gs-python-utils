@@ -1,6 +1,6 @@
 import ssl
 from   urllib.request import Request, urlopen
-import websocket
+#import websocket
 
 
 def DELETE(url, data='', headers={}):
@@ -23,6 +23,7 @@ def Http_Request(url, data='', headers={}, method='POST', encoding = 'utf-8' ):
 
 def WS_is_open(ws_url):
     try:
+        import websocket                 # was causing issues in lambda (couldn't find it)
         ws = websocket.WebSocket()
         ws.connect(ws_url)
         return ws.connected

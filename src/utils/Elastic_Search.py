@@ -71,7 +71,7 @@ class Elastic_Search:
         if pipeline is None:
             ok, _ = helpers.bulk(self.es, actions, index=self.index)
         else:
-            ok, _ = helpers.bulk(self.es, actions, index=self.index, pipeline='geoip')
+            ok, _ = helpers.bulk(self.es, actions, index=self.index, pipeline=pipeline)
         return ok
 
     def create_index(self,body = {}):
