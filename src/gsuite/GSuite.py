@@ -52,4 +52,5 @@ class GSuite:
         return self.create_service('admin', 'reports_v1','admin.reports.audit.readonly')
 
     def drive_v3(self):
-        return self.create_service('drive', 'v3', 'drive.metadata.readonly')
+        return self.create_service('drive', 'v3', 'drive')
+        #return self.create_service('drive', 'v3', 'drive.metadata.readonly')
