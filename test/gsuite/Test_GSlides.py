@@ -36,15 +36,19 @@ class Test_GDrive(TestCase):
         Dev.pprint(presentation_id)
 
     def test_slide_elements(self):
-        elements = self.gslides.slide_elements(self.test_id, 1)
-        elements = self.gslides.slide_elements(self.test_id, 2)
-        #elements = self.gslides.slide_elements(self.test_id, 3)
-        Dev.pprint(elements)
+        test_id = self.gdrive.find_by_name('GSlides API tests').get('id')
+        elements = self.gslides.slide_elements(test_id, 1)
+        assert len(elements) > 0
 
-    def test_slides_get(self):
-        slides = self.gslides.slides_get(self.test_id)
+    def test_slides(self):
+        slides = self.gslides.slides(self.test_id)
         assert len(slides) > 0
 
-        for i, slide in enumerate(slides):
-            print('- Slide #{} contains {} elements.'.format(
-                i + 1, len(slide.get('pageElements'))))
+    def test_set_element_text(self):
+        file_id    = self.gdrive.find_by_name('GSlides API tests').get('id')
+        slides     = self.gslides.slides(self.test_id)
+        element_id = slides.pop().get('pageElements').pop().get('objectId') # last element of the last slide
+        text       = 'new text.....changed....'
+        result     = self.gslides.set_element_text(file_id,element_id,text)
+
+        assert result.get('presentationId') == file_id

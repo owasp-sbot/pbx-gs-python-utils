@@ -1,5 +1,7 @@
 from gsuite.GDrive import GDrive
 from gsuite.GSuite import GSuite
+from utils.Dev import Dev
+
 
 class GSlides:
 
@@ -22,16 +24,27 @@ class GSlides:
         except:
             return None
 
-    def slide_elements(self, presentation_id,page):
-        page -= 1                                             # so that we can use page 1 or 2, instead of page 0 or 1
-        slides = self.slides_get(presentation_id)
-        if page < len(slides):
-            return slides[page].get('pageElements')
+    def slide_elements(self, presentation_id, page_number):
+        slides = self.slides(presentation_id)
+        page   = slides[page_number]
+        if page:
+            return page.get('pageElements')
         return []
 
-    def slides_get(self, presentation_id):
+    def slides(self, presentation_id):
         presentation = self.presentation_get(presentation_id)
         if presentation:
             return presentation.get('slides')
         return []
 
+
+    def set_element_text(self, file_id, element_id, text):
+
+        body = { 'requests' : [    {   'deleteText' : { 'objectId'      : element_id         ,
+                                                        'textRange'     : { 'type': 'ALL' }}},
+                                   {
+                                       'insertText': { 'objectId'      : element_id          ,
+                                                       'insertionIndex': 0                   ,
+                                                       'text'          : text             }}]}
+
+        return self.gdrive.execute(self.presentations.batchUpdate(presentationId=file_id, body=body))
