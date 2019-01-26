@@ -73,6 +73,12 @@ class Files:
         return abspath(join(path1, path2))
 
     @staticmethod
+    def lines(path):
+        with open(path, "rt") as file:
+            for line in file:
+                yield line
+
+    @staticmethod
     def lines_gz(path):
         with gzip.open(path, "rt") as file:
             for line in file:

@@ -24,12 +24,12 @@ class Elastic_Search:
 
     def _setup_Elastic_on_cloud_via_AWS_Secret(self,index, secret_id):
         credentials = json.loads(Secrets(secret_id).value())
-        host        = credentials['host']
-        username    = credentials['username']
-        password    = credentials['password']
-        port        = credentials['port']
+        self.host        = credentials['host']
+        self.username    = credentials['username']
+        self.password    = credentials['password']
+        self.port        = credentials['port']
         self.index  = index
-        self._setup_Elastic_on_cloud(host, port, username, password)
+        self._setup_Elastic_on_cloud(self.host, self.port, self.username, self.password)
         return self
 
     def _setup_Elastic_on_cloud(self, host, port, username, password):
@@ -158,6 +158,10 @@ class Elastic_Search:
         for result in results['hits']['hits']:
             yield result['_source']
 
+    def get_index_settings(self):
+        url = 'https://{3}:{4}@{0}:{1}/{2}/_settings'.format(self.host, self.port, self.index, self.username, self.password)
+        return json.loads(requests.get(url).text)
+
     def search_using_lucene(self, query, size=10000, sort = None):              # for syntax and examples of lucene queries see https://www.elastic.co/guide/en/elasticsearch/reference/6.4/query-dsl-query-string-query.html#query-string-syntax
         query = query.replace('“', '"').replace('”','"')                        # fix the quotes we receive from Slack
         results = self.es.search(index=self.index, q=query, size=size,sort = sort)
@@ -189,6 +193,17 @@ class Elastic_Search:
         results = self.es.search(index=self.index, body= query, size=size)
         for result in results['hits']['hits']:
             yield result['_source']
+
+
+    def set_index_settings(self, settings):
+        headers = {'Content-Type': 'application/json'}
+        url = 'https://{0}:{1}/{2}/_settings'.format(self.host, self.port, self.index)
+        response = requests.put(url, json.dumps(settings), headers=headers, auth=HTTPBasicAuth(self.username, self.password))
+        return response.text
+
+    def set_index_settings_total_fields(self,value):
+        self.set_index_settings({"index.mapping.total_fields.limit": value})
+        return self
 
     def delete_using_query(self, query):
         results = self.es.delete_by_query(index=self.index, body=query)

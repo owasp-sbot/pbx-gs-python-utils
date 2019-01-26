@@ -1,2 +1,3 @@
 test/plantuml/.pytest_cache
 test/browser/.pytest_cache
+test/gsuite/.pytest_cache
