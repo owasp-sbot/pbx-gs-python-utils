@@ -57,5 +57,7 @@ class GSuite:
 
     def slides_v1(self):
         return self.create_service('slides', 'v1', 'presentations')
-        #return self.create_service('drive', 'v3', 'drive.metadata.readonly')
+
+    def sheets_v4(self):
+        return self.create_service('sheets', 'v4', 'spreadsheets')
 

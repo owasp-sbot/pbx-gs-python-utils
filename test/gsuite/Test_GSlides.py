@@ -132,7 +132,37 @@ class Test_GDrive(TestCase):
         for shape in shapes:
             test_shape_creation(shape)
 
+    def test_element_create_table(self):
+        (file_id, slide_id) = self.get_target_slide_id()
+        table_id  = self.gslides.element_create_table(file_id, slide_id)
 
+        # the deleteText command (below) was throwing an error (I think it might be caused by the fact that there is no data in the cell)
+        requests = [#{ "deleteText": {   "objectId"      : table_id,
+                    #                    "cellLocation"  : {  "rowIndex": 4, "columnIndex": 2   },
+                    #                    "textRange"     : {"type": "ALL"                     }}},
+                    { "insertText": {   "objectId"      : table_id,
+                                        "cellLocation"  : {  "rowIndex": 0, "columnIndex": 0   },
+                                        "text"          : "text added",
+                                        "insertionIndex": 0                                   }},]
+        self.gslides.execute_requests(file_id, requests)
+        requests = [ { "updateTableCellProperties"  : {   "objectId": table_id,
+                                                          "tableRange": { "location"  : { "rowIndex"   : 0, "columnIndex": 0},
+                                                                          "rowSpan"   : 1 ,
+                                                                          "columnSpan": 1 },
+                                                          "tableCellProperties": { "tableCellBackgroundFill":  { "solidFill": { "color": {"rgbColor": {"red": 0.0,"green": 0.0, "blue": 0.0 }}}}},
+                                                          "fields"             : "tableCellBackgroundFill.solidFill.color"}},
+                     { "updateTextStyle"            : {    "objectId": table_id,
+                                                           "cellLocation": { "rowIndex": 0, "columnIndex": 0},
+                                                           "style": { "foregroundColor": {
+                                                                      "opaqueColor": { "rgbColor": {"red": 0.5,"green": 1.0,"blue": 0.5}} },
+                                                                      "bold": True,
+                                                                      "fontFamily": "Cambria",
+                                                                      "fontSize": { "magnitude": 38,"unit": "PT" }},
+                                                          "textRange": { "type": "ALL"},
+                                                          "fields": "foregroundColor,bold,fontFamily,fontSize" }}]
+        self.gslides.execute_requests(file_id, requests)
+        sleep(3)
+        self.gslides.element_delete(file_id, table_id)
 
     def test_element_set_text_style(self):
         (file_id, slide_id) = self.get_target_slide_id()
@@ -180,6 +210,6 @@ class Test_GDrive(TestCase):
                                                         'shapeProperties': { "shapeBackgroundFill" : { "solidFill"  : { "alpha": 0.6, "color": { "themeColor": "ACCENT5" } } }},
                                                         'fields'         : 'shapeBackgroundFill'                       }})
 
-        self.gslides.element_set_via_requests(file_id, requests)
+        self.gslides.execute_requests(file_id, requests)
         sleep(2)
         self.gslides.element_delete(file_id, shape_id)

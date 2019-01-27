@@ -19,6 +19,10 @@ class GSlides:
     def execute(self,command):
         return self.gdrive.execute(command)
 
+    def execute_requests(self, file_id, requests):
+        return self.batch_update(file_id, requests)
+
+
     def random_id(self, prefix):
         return Misc.random_string_and_numbers(6, prefix + "_")
 
@@ -39,6 +43,13 @@ class GSlides:
                             "transform": { "scaleX": 1, "scaleY": 1, "translateX": x_pos, "translateY": y_pos, "unit": "PT" }}}}]
         result = self.batch_update(file_id, requests)
         return result.get('replies')[0].get('createImage').get('objectId')
+
+    def element_create_table(self, file_id, slide_id, rows = 3, cols = 3):
+        requests = [   { "createTable": { "elementProperties": { "pageObjectId": slide_id  },
+                                          "rows"             : rows                         ,
+                                          "columns"          : cols                       }}]
+        result = self.batch_update(file_id, requests)
+        return result.get('replies')[0].get('createTable').get('objectId')
 
     def element_create_text(self,file_id, page_id, text = "Text...", x_pos=200, y_pos=200, width=100, height=100):
         element_id = self.random_id('Textbox')
@@ -94,10 +105,6 @@ class GSlides:
                                                 'shapeProperties'  : properties   ,
                                                 'fields'           : fields     }}]
         return self.batch_update(file_id, requests)
-
-    def element_set_via_requests(self, file_id, requests):
-        return self.batch_update(file_id, requests)
-
 
     def presentation_create(self, title):
         body = { 'title': title }
