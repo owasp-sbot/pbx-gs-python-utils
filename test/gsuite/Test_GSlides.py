@@ -3,6 +3,7 @@ from unittest        import TestCase
 from gsuite.GDrive    import GDrive
 from gsuite.GSlides   import GSlides
 from utils.Dev import Dev
+from utils.Misc import Misc
 
 
 class Test_GDrive(TestCase):
@@ -44,7 +45,7 @@ class Test_GDrive(TestCase):
         slides = self.gslides.slides(self.test_id)
         assert len(slides) > 0
 
-    def test_set_element_text(self):
+    def test_element_set_text(self):
         file_id    = self.gdrive.find_by_name('GSlides API tests').get('id')
         slides     = self.gslides.slides(self.test_id)
         element_id = slides.pop().get('pageElements').pop().get('objectId') # last element of the last slide
@@ -52,3 +53,26 @@ class Test_GDrive(TestCase):
         result     = self.gslides.set_element_text(file_id,element_id,text)
 
         assert result.get('presentationId') == file_id
+
+
+    def test_delete_element(self):
+        file_id  = self.gdrive.find_by_name('GSlides API tests').get('id')
+        elements = self.gslides.slide_elements_indexed_by_id(file_id,1)
+        for key,element in elements.items():
+            Dev.pprint(key)
+            if 'textbox_' in key.lower():
+                Dev.pprint(self.gslides.element_delete(file_id,key))
+
+
+
+    def test_add_element_text(self):
+        file_id = self.gdrive.find_by_name('GSlides API tests').get('id')
+        slides  = self.gslides.slides(self.test_id)
+        page_id = slides.pop().get('objectId')
+        text    = Misc.random_string_and_numbers(6,'New Text Field - ')
+        x_pos   = 50
+        y_pos   = 250
+        width   = 300
+        height  = 50
+        result = self.gslides.element_create_text(file_id, page_id, text, x_pos, y_pos, width, height)
+        Dev.pprint(result)
