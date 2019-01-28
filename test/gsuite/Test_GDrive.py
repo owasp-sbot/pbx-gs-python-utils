@@ -19,6 +19,7 @@ class Test_GDrive(TestCase):
     def test_file_export(self):
         id = '1rWCUAh2y4AY-RrqyK5JywDskGjJe4GydrPSrX1td6Lk'   # test document
         id = '1CA-uqZj9HVr2_RHiI-esVyHBoHZ1M1sxGzq54EQ2Ek4'   # test slides
+        file_id = self.gdrive.find_by_name('GSlides API tests').get('id')
         pdf_data = self.gdrive.file_export(id)
 
         with open('./test.pdf', "wb") as fh:
