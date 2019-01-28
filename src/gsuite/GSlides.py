@@ -111,17 +111,30 @@ class GSlides:
         presentation = self.presentations.create(body=body).execute()
         return presentation.get('presentationId')
 
-    def presentation_get(self,presentation_id):
+    def presentation_metadata(self,presentation_id):
         try:
             return self.presentations.get(presentationId = presentation_id).execute()
         except:
             return None
+
+    def slide_copy(self,presentation_id, slide_id, new_slide_id):
+        requests =   [ { "duplicateObject": {
+                                                "objectId" : slide_id,
+                                                "objectIds": { slide_id : new_slide_id }}} ]
+        return self.execute_requests(presentation_id, requests)
 
     def slide_elements(self, presentation_id, page_number):
         slides = self.slides(presentation_id)
         page   = slides[page_number]
         if page:
             return page.get('pageElements')
+        return []
+
+    def slide_elements_via_id(self, presentation_id, slide_id):
+        slides = self.slides_indexed_by_id(presentation_id)
+        slide = slides.get(slide_id)
+        if slide:
+            return slide.get('pageElements')
         return []
 
     def slide_elements_indexed_by_id(self, presentation_id, page_number):
@@ -131,9 +144,17 @@ class GSlides:
         return elements
 
     def slides(self, presentation_id):
-        presentation = self.presentation_get(presentation_id)
+        presentation = self.presentation_metadata(presentation_id)
         if presentation:
             return presentation.get('slides')
         return []
+
+    def slides_indexed_by_id(self, presentation_id):
+        presentation = self.presentation_metadata(presentation_id)
+        slides = {}
+        if presentation:
+            for slide in presentation.get('slides'):
+                slides[slide.get('objectId')] = slide
+        return slides
 
 

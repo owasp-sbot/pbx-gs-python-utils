@@ -11,15 +11,15 @@ class Test_GDrive(TestCase):
     def setUp(self):
         self.gslides = GSlides()
         self.gdrive  = GDrive()
-        self.test_id = '1CA-uqZj9HVr2_RHiI-esVyHBoHZ1M1sxGzq54EQ2Ek4'
 
     # helper methods
 
     def get_target_slide_id(self):
         file_id  = self.gdrive.find_by_name('GSlides API tests').get('id')
-        slides   = self.gslides.slides(self.test_id)
+        slides   = self.gslides.slides(file_id)
         slide_id = slides.pop().get('objectId')
         return file_id, slide_id
+
     # tests for GDrive methods
 
     def test_ctor(self):
@@ -46,18 +46,26 @@ class Test_GDrive(TestCase):
         presentation_id = self.gslides.presentation_create('created via Unit tests')
         Dev.pprint(presentation_id)
 
+    def test_slide_copy(self):
+        file_id = self.gdrive.find_by_name('GSlides API tests').get('id')
+        slide_id = 'g4b149a1e32_0_0'
+        new_slide_id = 'slide_3'
+        result = self.gslides.slide_copy(file_id,slide_id,new_slide_id)
+        Dev.pprint(result)
+
     def test_slide_elements(self):
         test_id = self.gdrive.find_by_name('GSlides API tests').get('id')
         elements = self.gslides.slide_elements(test_id, 1)
         assert len(elements) > 0
 
     def test_slides(self):
-        slides = self.gslides.slides(self.test_id)
+        test_id = self.gdrive.find_by_name('GSlides API tests').get('id')
+        slides = self.gslides.slides(test_id)
         assert len(slides) > 0
 
     def test_element_set_text(self):
         file_id    = self.gdrive.find_by_name('GSlides API tests').get('id')
-        slides     = self.gslides.slides(self.test_id)
+        slides     = self.gslides.slides(file_id)
         element_id = slides.pop().get('pageElements').pop().get('objectId') # last element of the last slide
         text       = 'new text.....changed....'
         result     = self.gslides.set_element_text(file_id,element_id,text)
