@@ -8,17 +8,16 @@ from utils.Misc import Misc
 class Test_GDrive(TestCase):
     def setUp(self):
         self.gsheets = GSheets()
-        self.gdrive  = GDrive()
 
     def test_ctor(self):
         spreadsheets = self.gsheets.spreadsheets
         Dev.pprint(spreadsheets)
-        assert spreadsheets._baseUrl == 'https://sheets.googleapis.com/'
+        #assert spreadsheets._baseUrl == 'https://sheets.googleapis.com/'
 
     # Helper Methods
 
     def get_target_slide_id(self):
-        file_id  = self.gdrive.find_by_name('Test sheet').get('id')
+        file_id  = self.spreadsheets.gdrive.find_by_name('Test sheet').get('id')
         #slides   = self.gslides.slides(self.test_id)
         #slide_id = slides.pop().get('objectId')
         #return file_id, slide_id

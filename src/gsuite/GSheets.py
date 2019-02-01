@@ -5,9 +5,9 @@ from utils.Dev import Dev
 
 class GSheets:
 
-    def __init__(self):
-        self.gdrive       = GDrive()
-        self.spreadsheets = GSuite().sheets_v4().spreadsheets()
+    def __init__(self, gsuite_secret_id=None):
+        self.gdrive       = GDrive(gsuite_secret_id)
+        self.spreadsheets = GSuite(gsuite_secret_id).sheets_v4().spreadsheets()
 
     def batch_update(self, file_id, requests):
         body = {'requests': requests  }

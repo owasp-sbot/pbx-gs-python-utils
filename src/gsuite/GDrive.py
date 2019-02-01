@@ -4,8 +4,8 @@ from utils.Dev import Dev
 
 class GDrive:
 
-    def __init__(self):
-        self.files = GSuite().drive_v3().files()
+    def __init__(self,gsuite_secret_id=None):
+        self.files = GSuite(gsuite_secret_id).drive_v3().files()
 
     def execute(self, command):
         try:

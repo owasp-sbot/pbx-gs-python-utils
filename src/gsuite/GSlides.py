@@ -6,9 +6,9 @@ from utils.Misc import Misc
 
 class GSlides:
 
-    def __init__(self):
-        self.presentations = GSuite().slides_v1().presentations()
-        self.gdrive        = GDrive()
+    def __init__(self, gsuite_secret_id=None):
+        self.presentations = GSuite(gsuite_secret_id).slides_v1().presentations()
+        self.gdrive        = GDrive(gsuite_secret_id)
 
     # misc utils
 

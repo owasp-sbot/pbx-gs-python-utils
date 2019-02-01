@@ -9,6 +9,9 @@ class Test_GSuite(TestCase):
     def setUp(self):
         self.gsuite = GSuite()
 
+    def test__init__(self):
+        self.gsuite.gsuite_secret_id == 'gsuite_token'
+
     def test_get_oauth_token_drive(self):
         token_file = self.gsuite.get_oauth_token('drive.metadata.readonly')
         token_values = Json.load_json(token_file)

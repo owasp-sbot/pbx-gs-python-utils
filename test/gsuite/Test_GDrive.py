@@ -8,8 +8,8 @@ class Test_GDrive(TestCase):
         self.gdrive = GDrive()
 
     def test_ctor(self):
-        service = self.gdrive.service
-        assert service._baseUrl == 'https://www.googleapis.com/drive/v3/'
+        files = self.gdrive.files
+        assert files._baseUrl == 'https://www.googleapis.com/drive/v3/'
 
     def test_file_find_by_name(self):
         name   = 'GSlides API tests'

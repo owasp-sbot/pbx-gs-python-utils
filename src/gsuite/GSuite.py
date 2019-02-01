@@ -1,4 +1,5 @@
 import json
+import os
 
 from httplib2                  import Http
 from oauth2client              import file, client
@@ -13,27 +14,33 @@ from utils.aws.secrets         import Secrets
 
 
 class GSuite:
-    def __init__(self):
-        self.gsuite_secret_id = 'gsuite_token'
+    def __init__(self, gsuite_secret_id=None):
+        if gsuite_secret_id is None:
+            self.gsuite_secret_id = 'gsuite_token'
+        else:
+            self.gsuite_secret_id = gsuite_secret_id
 
     # this function will prompt the user if there isn't a local tmp file with a token for the requested scope
     # the main credentials are stored using AWS Secrets (in the id defined at self.gsuite_secret_id)
     def get_oauth_token(self, desired_scope):
-        secret_data      = json.loads(Secrets(self.gsuite_secret_id).value())                       # load secret from AWS Secrets store
-        credentials_file = '/tmp/gsuite_credentials.json'                                           # file to hold the credentials.json value
-        Files.write(credentials_file, secret_data['credentials.json'])                              # save value received from AWS into file
+        secret_data      = json.loads(Secrets(self.gsuite_secret_id).value())                           # load secret from AWS Secrets store
+        token_file    = '/tmp/gmail_credential_{0}.json'.format(desired_scope)                          # this is the tmp file with the token value for the desired scope
 
-        token_file    = '/tmp/gmail_credential_{0}.json'.format(desired_scope)                      # this is the tmp file with the token value for the desired scope
-        if not Files.exists(token_file):                                                            # if the file does not exist
+        if not Files.exists(token_file):                                                                # if the file does not exist
+            if os.getenv('AWS_REGION') is not None:                                                     # check if we are running in AWS
+                Files.write(token_file, secret_data['token.json'])                                      # if we are, use the token.json value from the AWS secret_data
+            else:
+                credentials_file = '/tmp/gsuite_credentials.json'                                       # file to hold the credentials.json value
+                Files.write(credentials_file, secret_data['credentials.json'])                          # save value received from AWS into file
 
-            store         = file.Storage(token_file)                                                # create a gsuite Storage object
-            scopes        = 'https://www.googleapis.com/auth/{0}'.format(desired_scope)             # full qualified name for the desired scopes
+                store         = file.Storage(token_file)                                                # create a gsuite Storage object
+                scopes        = 'https://www.googleapis.com/auth/{0}'.format(desired_scope)             # full qualified name for the desired scopes
 
-            flow = client.flow_from_clientsecrets(credentials_file, scopes)                         # create a gsuite flow object
-            flags = argparser.parse_args('--auth_host_name localhost --logging_level INFO'.split()) # configure the use of a localhost server to received the oauth response
-            run_flow(flow, store, flags)                                                            # open browser and prompt user to follow the OAuth flow
+                flow = client.flow_from_clientsecrets(credentials_file, scopes)                         # create a gsuite flow object
+                flags = argparser.parse_args('--auth_host_name localhost --logging_level INFO'.split()) # configure the use of a localhost server to received the oauth response
+                run_flow(flow, store, flags)                                                            # open browser and prompt user to follow the OAuth flow
 
-            Files.delete(credentials_file)                                                          # delete main gsuite credentials file (since we don't want it hanging around)
+                Files.delete(credentials_file)                                                          # delete main gsuite credentials file (since we don't want it hanging around)
 
         return token_file                                                                           # return file with token credentials
 

@@ -194,6 +194,11 @@ class Elastic_Search:
         for result in results['hits']['hits']:
             yield result['_source']
 
+    def search_on_field_for_values(self, field, values):
+        query = {"query": { "constant_score": { "filter": { "terms": { field: values } } } } }
+
+        return self.search_using_query(query)
+
 
     def set_index_settings(self, settings):
         headers = {'Content-Type': 'application/json'}
