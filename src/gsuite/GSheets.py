@@ -76,7 +76,7 @@ class GSheets:
         return result.get('values')
 
     def set_values(self, file_id, sheet_range, values):
-        value_input_option = 'RAW' # vs USER_ENTERED
+        value_input_option = 'USER_ENTERED' # vs 'RAW'
         body               = { 'values' : values }
         result = self.execute(self.spreadsheets.values().update( spreadsheetId    = file_id,
                                                                  range            = sheet_range,
