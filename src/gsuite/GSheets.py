@@ -16,11 +16,11 @@ class GSheets:
     def execute(self,command):
         return self.gdrive.execute(command)
 
-    def execute_request(self, sheet_id, request):
-        return self.batch_update(sheet_id, [request])
+    def execute_request(self, file_id, request):
+        return self.batch_update(file_id, [request])
 
-    def execute_requests(self, sheet_id, requests):
-        return self.batch_update(sheet_id, requests)
+    def execute_requests(self, file_id, requests):
+        return self.batch_update(file_id, requests)
 
 
     def all_spreadsheets(self):
