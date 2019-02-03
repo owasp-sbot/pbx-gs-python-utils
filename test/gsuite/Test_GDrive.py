@@ -17,10 +17,10 @@ class Test_GDrive(TestCase):
         assert self.gdrive.find_by_name('aaaa') is None
 
     def test_file_export(self):
-        id = '1rWCUAh2y4AY-RrqyK5JywDskGjJe4GydrPSrX1td6Lk'   # test document
-        id = '1CA-uqZj9HVr2_RHiI-esVyHBoHZ1M1sxGzq54EQ2Ek4'   # test slides
+        #id = '1rWCUAh2y4AY-RrqyK5JywDskGjJe4GydrPSrX1td6Lk'   # test document
+        #id = '1CA-uqZj9HVr2_RHiI-esVyHBoHZ1M1sxGzq54EQ2Ek4'   # test slides
         file_id = self.gdrive.find_by_name('GSlides API tests').get('id')
-        pdf_data = self.gdrive.file_export(id)
+        pdf_data = self.gdrive.file_export(file_id)
 
         with open('./test.pdf', "wb") as fh:
             fh.write(pdf_data)
@@ -38,6 +38,23 @@ class Test_GDrive(TestCase):
         Dev.pprint(metadata)
         changes =  self.gdrive.set_file_title(file_id,'GSlides API tests')
         Dev.pprint(changes)
+
+    def test_file_update(self):
+        file   = '/tmp/puml_graph_W64.png'
+        #file   = '/tmp/puml_graph_09Q.png'
+        file   = '/tmp/puml_graph.png'
+        id     = '1H72nAFgqu1OSW_xm-gwDWml6tOzy5UZ_'
+        result = self.gdrive.file_update(file,'image/png',id)
+        Dev.pprint(result)
+
+
+
+    def test_file_upload(self):
+        #file   = '/tmp/puml_graph_W64.png'
+        file   = '/tmp/puml_graph_09Q.png'
+        folder = '1ZXXoYc443-HG6Twr7chTvym8JNgssoNJ'
+        result = self.gdrive.file_upload(file,'image/png',folder)
+        Dev.pprint(result)
 
     def test_files(self):
         files = self.gdrive.files(4)

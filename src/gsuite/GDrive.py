@@ -1,5 +1,8 @@
+from googleapiclient.http import MediaFileUpload
+
 from gsuite.GSuite import GSuite
 from utils.Dev import Dev
+from utils.Files import Files
 
 
 class GDrive:
@@ -17,6 +20,12 @@ class GDrive:
     def file_export(self, file_Id):
         return self.files.export(fileId=file_Id, mimeType='application/pdf').execute()
 
+    def file_export_as_pdf_to(self,file_id,target_file):
+        pdf_data = self.file_export(file_id)
+        with open(target_file, "wb") as fh:
+            fh.write(pdf_data)
+        return target_file
+
     def file_metadata(self, file_Id, fields = "id,name"):
         return self.execute(self.files.get(fileId = file_Id, fields=fields))
 
@@ -26,13 +35,38 @@ class GDrive:
     def file_delete(self, file_Id):
         self.files.delete(fileId= file_Id).execute()
 
+    def file_update(self, local_file, mime_type, file_id):
+        if Files.exists(local_file):
+            file_metadata = {'name': Files.file_name(local_file)}
+            media = MediaFileUpload(local_file, mimetype=mime_type)
+            file = self.files.update(body=file_metadata, media_body=media, fileId= file_id, fields='id').execute()
+            return file.get('id')
+        return None
+
+    def file_upload(self, local_file, mime_type, folder_id=None):
+        if Files.exists(local_file):
+            file_metadata = {'name': Files.file_name(local_file), 'parents': [folder_id]}
+            media = MediaFileUpload(local_file, mimetype=mime_type)
+            file = self.files.create(body=file_metadata, media_body=media, fields='id').execute()
+            return file.get('id')
+        return None
+
+
     def files(self, size):
         results = self.files.list(pageSize=size, fields="files(id,name)").execute()
         return results.get('files', [])
 
-    def find_by_name(self, name):
-        results = self.execute(self.files.list(q="name = '{0}'".format(name)))  # , fields="files(id,name)"))
-        if len(results.get('files')) > 0:
+    def files_in_folder(self, folder_id, size=100):
+        results = self.files.list(q="parents='{0}'".format(folder_id),pageSize=size, fields="files(id,name)").execute()
+        return results.get('files', [])
+
+    def find_by_name(self, name, mime_type = None):
+        if mime_type:
+            query = "name = '{0}' and mimeType = '{1}'".format(name,mime_type)
+        else:
+            query = "name = '{0}'".format(name)
+        results = self.execute(self.files.list(q=query))  # , fields="files(id,name)"))
+        if results and len(results.get('files')) > 0:
             return results.get('files').pop()
         return None
 

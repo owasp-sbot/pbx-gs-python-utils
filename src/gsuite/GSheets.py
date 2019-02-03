@@ -16,6 +16,9 @@ class GSheets:
     def execute(self,command):
         return self.gdrive.execute(command)
 
+    def execute_request(self, sheet_id, request):
+        return self.batch_update(sheet_id, [request])
+
     def execute_requests(self, sheet_id, requests):
         return self.batch_update(sheet_id, requests)
 
@@ -26,6 +29,24 @@ class GSheets:
 
     def sheets_metadata(self, file_id):
         return self.execute(self.spreadsheets.get(spreadsheetId=file_id))
+
+    def sheets_add_sheet(self, file_id, title):
+        request = { "addSheet": { "properties": { "title": title } } }
+
+        result  =  self.execute_request(file_id, [request])
+        return result.get('replies')[0].get('addSheet').get('properties').get('sheetId')
+
+
+    def sheets_delete_sheet(self, file_id, sheet_id):
+        request = { "deleteSheet": { "sheetId": sheet_id } }
+
+        return self.execute_request(file_id, [request])
+
+    def sheets_rename_sheet(self, file_id, sheet_id, new_name):
+        request = {"updateSheetProperties": { "properties": { "sheetId": sheet_id    ,
+                                                              "title"  : new_name   },
+                                              "fields"    :   "title"               }}
+        return self.execute_request(file_id, [request])
 
     def sheets_properties_by_id(self, file_id):
         values = {}
@@ -45,17 +66,20 @@ class GSheets:
            values[sheet_id] = properties
         return values
 
+    def clear_values(self, file_id, sheet_name):
+        sheet_range = "{0}!A1:Z".format(sheet_name)
+        return self.execute(self.spreadsheets.values().clear(spreadsheetId=file_id, range=sheet_range))
+
     def get_values(self, file_id, range):
         values = self.spreadsheets.values()
-        result = self.execute(values.get(spreadsheetId = file_id ,
-                                         range         = range    ))
+        result = self.execute(values.get(spreadsheetId = file_id , range = range    ))
         return result.get('values')
 
-    def set_values(self, file_id, range, values):
+    def set_values(self, file_id, sheet_range, values):
         value_input_option = 'RAW' # vs USER_ENTERED
         body               = { 'values' : values }
         result = self.execute(self.spreadsheets.values().update( spreadsheetId    = file_id,
-                                                                 range            = range,
+                                                                 range            = sheet_range,
                                                                  valueInputOption = value_input_option,
                                                                  body             = body))
         return result

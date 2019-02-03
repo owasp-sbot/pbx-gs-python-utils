@@ -16,11 +16,8 @@ class Test_GDrive(TestCase):
 
     # Helper Methods
 
-    def get_target_slide_id(self):
-        file_id  = self.spreadsheets.gdrive.find_by_name('Test sheet').get('id')
-        #slides   = self.gslides.slides(self.test_id)
-        #slide_id = slides.pop().get('objectId')
-        #return file_id, slide_id
+    def get_target_file_id(self):
+        file_id  = self.gsheets.gdrive.find_by_name('Test sheet').get('id')
         return file_id
 
     # GSheets methods
@@ -30,7 +27,7 @@ class Test_GDrive(TestCase):
         assert len(spreadsheets) > 0
 
     def test_execute_requests(self):
-        sheet_id = self.get_target_slide_id()
+        sheet_id = self.get_target_file_id()
         # this is one wat to add values via the execute requests workflow
         requests = [{   'updateCells': {
                                         'start': {'sheetId': 0, 'rowIndex': 11, 'columnIndex': 0},
@@ -56,21 +53,36 @@ class Test_GDrive(TestCase):
         result = self.gsheets.execute_requests(sheet_id,requests)
         Dev.pprint(result)
 
+    def test_sheet_create(self):
+        file_id = self.get_target_file_id()
+        title    = Misc.random_string_and_numbers(2,'from tests_')
+        sheet_id = self.gsheets.sheets_add_sheet(file_id, title)
+        assert len(set(self.gsheets.sheets_properties_by_title(file_id))) == 2
+        self.gsheets.sheets_rename_sheet(file_id, sheet_id, 'temp title')
+        self.gsheets.sheets_delete_sheet(file_id, sheet_id)
+        assert len(set(self.gsheets.sheets_properties_by_title(file_id))) == 1
+
+
+
+
+
+
+
     def test_sheets_metadata(self):
-        sheet_id = self.get_target_slide_id()
+        sheet_id = self.get_target_file_id()
         metadata = self.gsheets.sheets_metadata(sheet_id)
         sheets = metadata.get('sheets')
 
         assert sheets[0].get('properties').get('title') == 'Sheet1'
 
     def test_values(self):
-        sheet_id = self.get_target_slide_id()
+        sheet_id = self.get_target_file_id()
         range    = "Sheet1!A2:D4"
         values = self.gsheets.get_values(sheet_id, range)
         assert values[0] == ['1 1', '1 2', '1 3']
 
     def test_set_values(self):
-        sheet_id = self.get_target_slide_id()
+        sheet_id = self.get_target_file_id()
         range    = "Sheet1!B17:D18"
         values   = [ ["a","b","c"],[1,2,3]]
         result   = self.gsheets.set_values(sheet_id,range,values)

@@ -196,8 +196,22 @@ class Elastic_Search:
 
     def search_on_field_for_values(self, field, values):
         query = {"query": { "constant_score": { "filter": { "terms": { field: values } } } } }
-
         return self.search_using_query(query)
+
+    # this is not working
+    # def search_get_unique_field_values(self, field,size = 10000):
+    #     query = {
+    #         "size": 0,
+    #         "aggs": {
+    #             "unique_ids": {
+    #                 "terms": {
+    #                     "field": 'field',
+    #                     "size": size
+    #                 }
+    #             }
+    #         }
+    #     }
+    #     return self.search_using_query(query)
 
 
     def set_index_settings(self, settings):
