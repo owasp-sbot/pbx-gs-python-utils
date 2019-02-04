@@ -21,9 +21,12 @@ class Misc:
     @staticmethod
     def convert_to_number(value):
         if value != '':
-            if value[0] == '£':
-                return float(re.sub(r'[^\d.]', '', value))
-            else:
-                return float(value)
+            try:
+                if value[0] == '£':
+                    return float(re.sub(r'[^\d.]', '', value))
+                else:
+                    return float(value)
+            except:
+              return 0
         else:
             return 0
