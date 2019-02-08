@@ -81,6 +81,17 @@ class GSlides:
         requests = [ {  'deleteObject' : { 'objectId': element_id } } ]
         return self.batch_update(file_id, requests)
 
+    def element_set_table_text(self, file_id, table_id, row, col, text):
+        requests = [{ "deleteText": {   "objectId"      : table_id,
+                                        "cellLocation"  : {  "rowIndex": row, "columnIndex": col   },
+                                        "textRange"     : {"type": "ALL"                         }}},
+                    { "insertText": {   "objectId"      : table_id,
+                                        "cellLocation"  : {  "rowIndex": row, "columnIndex": col   },
+                                        "text"          : text,
+                                        "insertionIndex": 0                                       }}]
+
+        self.execute_requests(file_id,requests)
+
     def element_set_text(self, file_id, element_id, text):
 
         requests =  [    {   'deleteText' : { 'objectId'      : element_id         ,
@@ -117,10 +128,11 @@ class GSlides:
         except:
             return None
 
-    def slide_copy(self,presentation_id, slide_id, new_slide_id):
+    def slide_copy(self,presentation_id, slide_id, new_slide_id, objects_ids = {}):
         requests =   [ { "duplicateObject": {
                                                 "objectId" : slide_id,
-                                                "objectIds": { slide_id : new_slide_id }}} ]
+                                                "objectIds": objects_ids}} ]
+        requests[0]['duplicateObject']['objectIds'][slide_id] = new_slide_id
         return self.execute_requests(presentation_id, requests)
 
     def slide_elements(self, presentation_id, page_number):
@@ -137,9 +149,9 @@ class GSlides:
             return slide.get('pageElements')
         return []
 
-    def slide_elements_indexed_by_id(self, presentation_id, page_number):
+    def slide_elements_via_id_indexed_by_id(self, presentation_id, slide_id):
         elements = {}
-        for element in self.slide_elements(presentation_id,page_number):
+        for element in self.slide_elements_via_id(presentation_id,slide_id):
             elements[element.get('objectId')] = element
         return elements
 
