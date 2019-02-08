@@ -81,25 +81,29 @@ class GSlides:
         requests = [ {  'deleteObject' : { 'objectId': element_id } } ]
         return self.batch_update(file_id, requests)
 
-    def element_set_table_text(self, file_id, table_id, row, col, text):
-        requests = [{ "deleteText": {   "objectId"      : table_id,
+    def element_set_table_text_request(self, file_id, table_id, row, col, text):
+        return     [{ "deleteText": {   "objectId"      : table_id,
                                         "cellLocation"  : {  "rowIndex": row, "columnIndex": col   },
                                         "textRange"     : {"type": "ALL"                         }}},
                     { "insertText": {   "objectId"      : table_id,
                                         "cellLocation"  : {  "rowIndex": row, "columnIndex": col   },
                                         "text"          : text,
                                         "insertionIndex": 0                                       }}]
+    def element_set_table_text(self, file_id, table_id, row, col, text):
+        requests = self.element_set_table_text_request(file_id, table_id, row, col, text)
 
         self.execute_requests(file_id,requests)
 
+    def element_set_text_request(self, file_id, element_id, text):
+        return [ {   'deleteText' : { 'objectId'      : element_id         ,
+                                      'textRange'     : { 'type': 'ALL' }}},
+                 {
+                     'insertText': { 'objectId'      : element_id          ,
+                                     'insertionIndex': 0                   ,
+                                     'text'          : text              }}]
     def element_set_text(self, file_id, element_id, text):
 
-        requests =  [    {   'deleteText' : { 'objectId'      : element_id         ,
-                                              'textRange'     : { 'type': 'ALL' }}},
-                         {
-                             'insertText': { 'objectId'      : element_id          ,
-                                             'insertionIndex': 0                   ,
-                                             'text'          : text             }}]
+        requests =  self.element_set_text_request(file_id, element_id, text)
 
         return self.batch_update(file_id, requests)
 
@@ -128,12 +132,23 @@ class GSlides:
         except:
             return None
 
+    def slide_delete(self,presentation_id, slide_id):
+        requests =   [ { "deleteObject": { "objectId" : slide_id}} ]
+        return self.execute_requests(presentation_id, requests)
+
     def slide_copy(self,presentation_id, slide_id, new_slide_id, objects_ids = {}):
         requests =   [ { "duplicateObject": {
                                                 "objectId" : slide_id,
                                                 "objectIds": objects_ids}} ]
         requests[0]['duplicateObject']['objectIds'][slide_id] = new_slide_id
         return self.execute_requests(presentation_id, requests)
+
+    def slide_move_to_pos_request(self, presentation_id, slide_id, pos):
+        return [{ "updateSlidesPosition": { "slideObjectIds": [ slide_id],
+                                            "insertionIndex": pos }}]
+    def slide_move_to_pos(self, presentation_id, slide_id, pos):
+        requests = self.slide_move_to_pos_request(presentation_id, slide_id, pos)
+        return self.execute_requests(presentation_id,requests)
 
     def slide_elements(self, presentation_id, page_number):
         slides = self.slides(presentation_id)
