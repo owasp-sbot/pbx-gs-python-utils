@@ -1,7 +1,11 @@
+import hashlib
+import pprint
 import random
 import string
 import textwrap
 import re
+
+from utils.Dev import Dev
 
 
 class Misc:
@@ -9,6 +13,12 @@ class Misc:
     @staticmethod
     def random_string_and_numbers(length=6,prefix=''):
         return prefix + ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
+
+    @staticmethod
+    def md5(target):
+        if target:
+            return hashlib.md5('{0}'.format(target).encode()).hexdigest()
+        return None
 
     @staticmethod
     def word_wrap(text,length = 40):
