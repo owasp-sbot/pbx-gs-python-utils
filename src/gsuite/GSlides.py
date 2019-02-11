@@ -126,6 +126,11 @@ class GSlides:
         presentation = self.presentations.create(body=body).execute()
         return presentation.get('presentationId')
 
+    def presentation_copy(self, file_id, title):
+        body  = { 'name': title }
+        result = self.execute(self.gdrive.files.copy(fileId = file_id, body=body))
+        return result.get('id')
+
     def presentation_metadata(self,presentation_id):
         try:
             return self.presentations.get(presentationId = presentation_id).execute()
@@ -142,6 +147,14 @@ class GSlides:
                                                 "objectIds": objects_ids}} ]
         requests[0]['duplicateObject']['objectIds'][slide_id] = new_slide_id
         return self.execute_requests(presentation_id, requests)
+
+    def slide_create(self, presentation_id, insert_at=1, layout='TITLE', new_slide_id=None):
+        requests =   [ { "createSlide": {       "objectId"      : new_slide_id,
+                                                'insertionIndex': insert_at,
+                                                'slideLayoutReference': { 'predefinedLayout': layout } }}]
+        result = self.execute_requests(presentation_id, requests)
+        return result.get('replies')[0].get('createSlide').get('objectId')
+
 
     def slide_move_to_pos_request(self, presentation_id, slide_id, pos):
         return [{ "updateSlidesPosition": { "slideObjectIds": [ slide_id],

@@ -9,12 +9,16 @@ from utils.aws.secrets import Secrets
 
 
 class Elastic_Search:
-    def __init__(self, index = 'iis-logs-'):
+    def __init__(self, index = 'iis-logs-', aws_secret_id = None):
         self.timestamp      = datetime.datetime.utcnow()
         self.index          = index
         self._setup_Elastic_on_localhost()                  # default to localhost
         self._setup_Elastic_on_localhost()                  # default to localhost
         self._result        = None
+
+        if index and aws_secret_id:
+            self._setup_Elastic_on_cloud_via_AWS_Secret(index, aws_secret_id)
+
 
     def _setup_Elastic_on_localhost(self):
         self.host   = 'localhost'

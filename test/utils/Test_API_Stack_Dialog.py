@@ -1,8 +1,7 @@
 from unittest                   import TestCase
 
-from utils.API_Slack_Attachment import API_Slack_Attachment
-from utils.API_Slack_Dialog     import API_Slack_Dialog
-from utils.Dev import Dev
+from utils.slack.API_Slack_Attachment import API_Slack_Attachment
+from utils.slack.API_Slack_Dialog import API_Slack_Dialog
 from utils.Lambdas_Helpers      import slack_message
 from utils.aws.Lambdas import Lambdas
 

@@ -7,34 +7,34 @@ from   utils.aws.secrets     import Secrets
 from   utils.aws.Lambdas     import    load_dependency
 
 
-def upload_png_file(channel_id, file):
-    import requests
-    bot_token = Secrets('slack-gs-bot').value()
+def send_file_to_slack(file_path, title, bot_token, channel):                  # refactor into Slack_API class
+    load_dependency('requests')          ;   import requests
+
     my_file = {
-        'file': ('/tmp/file.pdf', open(file, 'rb'), 'pdf')
+        'file': ('/tmp/file.pdf', open(file_path, 'rb'), 'pdf')
     }
 
     payload = {
-        "filename"  : 'file.pdf',
+        "filename"  : '{0}.pdf'.format(title),
         "token"     : bot_token,
-        "channels"  : [channel_id],
+        "channels"  : [channel],
     }
     requests.post("https://slack.com/api/files.upload", params=payload, files=my_file)
 
-    return 'image sent .... '
+    return 'send pdf: {0}'.format(title)
 
 
 def run(event, context):
-    load_dependency('requests')
 
     channel         = event.get('channel')
     pdf_data        = event.get('pdf_data')
-    (fd, tmp_file) = tempfile.mkstemp('png)')
-    slack_message(len(pdf_data), [], channel)
+    title           = event.get('title')
+    aws_secrets_id  = event.get('aws_secrets_id')
+    bot_token       = Secrets(aws_secrets_id).value()
+
+    (fd, tmp_file) = tempfile.mkstemp('pdf)')
 
     with open(tmp_file, "wb") as fh:
         fh.write(base64.decodebytes(pdf_data.encode()))
 
-    return upload_png_file(channel, tmp_file)
-    return Files.find('/tmp/*')
-    return {}
+    return send_file_to_slack(tmp_file, title, bot_token, channel)

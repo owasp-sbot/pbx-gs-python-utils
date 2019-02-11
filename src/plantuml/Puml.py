@@ -80,7 +80,7 @@ class Puml:
     # other util method to be used during developemt
 
     def _dev_send_to_slack(self):
-        from utils.API_Slack import API_Slack
+        from utils.slack.API_Slack import API_Slack
         API_Slack().puml_to_slack(self.puml)
 
 

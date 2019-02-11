@@ -1,4 +1,4 @@
-from utils.API_Slack import API_Slack
+from utils.slack.API_Slack import API_Slack
 
 def run(event, context):
     trigger_id = event['trigger_id']

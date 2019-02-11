@@ -53,6 +53,16 @@ class Test_GDrive(TestCase):
         result = self.gslides.slide_copy(file_id,slide_id,new_slide_id)
         Dev.pprint(result)
 
+    def test_slide_create(self):
+        file_id = self.gdrive.find_by_name('GSlides API tests').get('id')
+        new_slide_id = 'new_slide_id'
+        self.gslides.slide_delete(file_id, new_slide_id)
+        result = self.gslides.slide_create(file_id, 2, 'TITLE_AND_BODY', new_slide_id)
+        assert result == new_slide_id
+        self.gslides.slide_delete(file_id, new_slide_id)
+        result = self.gslides.slide_create(file_id)
+        self.gslides.slide_delete(file_id, result)
+
     def test_slide_elements(self):
         test_id = self.gdrive.find_by_name('GSlides API tests').get('id')
         elements = self.gslides.slide_elements(test_id, 1)

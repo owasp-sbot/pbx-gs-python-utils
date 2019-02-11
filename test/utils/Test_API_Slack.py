@@ -1,6 +1,6 @@
 import unittest
 
-from utils.API_Slack import API_Slack
+from utils.slack.API_Slack import API_Slack
 from utils.Dev import Dev
 
 class Test_API_Slack(unittest.TestCase):
