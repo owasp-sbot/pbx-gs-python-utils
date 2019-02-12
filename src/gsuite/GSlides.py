@@ -97,9 +97,9 @@ class GSlides:
         return { 'insertText': { 'objectId': objectId, 'insertionIndex': 0, 'text': text }}
 
     def element_set_table_text_requests(self, table_id, row, col, text):
-        return     [{ "deleteText": {   "objectId"      : table_id,
-                                        "cellLocation"  : {  "rowIndex": row, "columnIndex": col   },
-                                        "textRange"     : {"type": "ALL"                         }}},
+        return     [#{ "deleteText": {   "objectId"      : table_id,
+                    #                    "cellLocation"  : {  "rowIndex": row, "columnIndex": col   },
+                    #                    "textRange"     : {"type": "ALL"                         }}},
                     { "insertText": {   "objectId"      : table_id,
                                         "cellLocation"  : {  "rowIndex": row, "columnIndex": col   },
                                         "text"          : text,
@@ -164,8 +164,8 @@ class GSlides:
         presentation = self.presentations.create(body=body).execute()
         return presentation.get('presentationId')
 
-    def presentation_copy(self, file_id, title):
-        body  = { 'name': title }
+    def presentation_copy(self, file_id, title, parent_folder):
+        body  = { 'name': title, 'parents':[parent_folder] }
         result = self.execute(self.gdrive.files.copy(fileId = file_id, body=body))
         return result.get('id')
 
@@ -243,3 +243,32 @@ class GSlides:
         return slides
 
 
+
+    # Helper methods
+
+    def slide_add_table_from_object(self, file_id, slide_id, title, data):
+
+        title_id = '{0}_title'.format(slide_id)
+        table_id = '{0}_table'.format(slide_id)
+        headers  = list(set(data))
+        rows     = len(headers)                        # number of fields to show
+        cols     = 2                                   # name:value pair
+        requests = [ self.slide_create_request(slide_id),
+                     self.element_create_shape_request              (slide_id, 10, 10, 500,  50, title_id                ),
+                     self.element_insert_text_request               (title_id,title                                      ),
+                     self.element_set_text_style_requests__for_title(title_id, 26                                        ),
+                     self.element_create_table_request              (slide_id, rows , cols, 12, 80, 700, 270, table_id   ),
+                     self.element_set_table_column_width_request    (table_id, 0 ,110                                    ),
+                     self.element_set_table_column_width_request    (table_id, 1, 585                                    )]
+
+        for index, header in enumerate(headers):
+           requests.extend(self.element_set_table_text_requests(table_id, index, 0, header))
+           requests.extend(self.element_set_table_text_requests(table_id, index, 1, str(data[header])))
+
+        #requests.extend(self.element_set_table_text_requests        (table_id, 1, 0, headers.pop()))
+
+        self.execute_requests(file_id, requests)
+
+        #requests = [self.element_set_table_text_requests(table_id, 1, 1, 'headers.pop()')]
+
+        #self.execute_requests(file_id, requests)
