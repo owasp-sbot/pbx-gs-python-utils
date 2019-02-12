@@ -1,5 +1,6 @@
 import unittest
 
+from utils.aws.secrets import Secrets
 from utils.slack.API_Slack import API_Slack
 from utils.Dev import Dev
 
@@ -28,7 +29,7 @@ class Test_API_Slack(unittest.TestCase):
     def test_delete_message(self):
         reply_send   = self.api.send_message('to delete 123')      # send message
         ts           = reply_send['message']['ts']                 # get timestamp of message posted
-        reply_delete = self.api.delete_message(ts)                 # delete message
+        reply_delete = self.api.delete_message(ts, self.channel)   # delete message
         assert reply_delete['ok'] is True
         assert reply_delete['ts'] == ts
 

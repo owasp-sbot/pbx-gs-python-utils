@@ -23,6 +23,9 @@ class API_Slack:
             logins.extend(entries)
         return logins
 
+    def channels_history(self,channel):
+        return self.slack.api_call("channels.history", channel = channel)
+
     def channels_public(self):
         channels = {}
         cursor = None
@@ -39,8 +42,8 @@ class API_Slack:
             channels[channel['name']] = channel
         return channels
 
-    def delete_message(self,ts):
-        return self.slack.api_call("chat.delete", channel=self.channel,ts=ts)
+    def delete_message(self,ts, channel):
+        return self.slack.api_call("chat.delete", channel=channel,ts=ts)
 
     def get_channel(self, channel):
         return self.slack.api_call("channels.info", channel=channel)

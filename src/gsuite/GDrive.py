@@ -32,8 +32,9 @@ class GDrive:
     def file_metadata_update(self, file_Id, changes):
         return self.files.update(fileId=file_Id, body=changes).execute()
 
-    def file_delete(self, file_Id):
-        self.files.delete(fileId= file_Id).execute()
+    def file_delete(self, file_id):
+        if file_id:
+            self.files.delete(fileId= file_id).execute()
 
     def file_update(self, local_file, mime_type, file_id):
         if Files.exists(local_file):
@@ -51,6 +52,8 @@ class GDrive:
             return file.get('id')
         return None
 
+    def file_weblink(self, file_id):
+        return 'https://drive.google.com/open?id={0}'.format(file_id)
 
     def files(self, size):
         results = self.files.list(pageSize=size, fields="files(id,name)").execute()

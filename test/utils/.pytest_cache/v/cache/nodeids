@@ -1,7 +1,0 @@
-[
-  "Test_Save_To_ELK.py::Test_Save_To_ELK::test___init__",
-  "Test_Save_To_ELK.py::Test_Save_To_ELK::test_add_document",
-  "Test_Save_To_ELK.py::Test_Save_To_ELK::test_delete_documents_with_type",
-  "Test_Save_To_ELK.py::Test_Save_To_ELK::test_find_document_by_type",
-  "Test_Save_To_ELK.py::Test_Save_To_ELK::test_get_most_recent_version_of_document"
-]

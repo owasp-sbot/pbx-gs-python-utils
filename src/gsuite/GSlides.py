@@ -44,26 +44,38 @@ class GSlides:
         result = self.batch_update(file_id, requests)
         return result.get('replies')[0].get('createImage').get('objectId')
 
-    def element_create_table(self, file_id, slide_id, rows = 3, cols = 3):
-        requests = [   { "createTable": { "elementProperties": { "pageObjectId": slide_id  },
-                                          "rows"             : rows                         ,
-                                          "columns"          : cols                       }}]
+    def element_create_table_request(self, slide_id, rows=3, cols=3, x_pos=200, y_pos=200, width=100, height=100, objectId=None):
+        return { "createTable": { "objectId"         : objectId,
+                                  "elementProperties": { "pageObjectId": slide_id,
+                                                         "size"        : {  "width": {"magnitude":  width, "unit": "PT"},
+                                                                            "height": {"magnitude": height,"unit": "PT"}},
+                                                         "transform"   : { "scaleX": 1, "scaleY": 1, "translateX": x_pos, "translateY": y_pos,"unit": "PT" }},
+                                  "rows"             : rows                         ,
+                                  "columns"          : cols                       }}
+    def element_create_table(self, file_id, slide_id, rows=3, cols=3, x_pos=200, y_pos=200, width=100, height=100, objectId=None):
+        requests = [  self.element_create_table_request(slide_id, rows, cols, x_pos, y_pos, width, height, objectId) ]
         result = self.batch_update(file_id, requests)
-        return result.get('replies')[0].get('createTable').get('objectId')
+        if result:
+            return result.get('replies')[0].get('createTable').get('objectId')
 
-    def element_create_text(self,file_id, page_id, text = "Text...", x_pos=200, y_pos=200, width=100, height=100):
-        element_id = self.random_id('Textbox')
-        requests = [ { 'createShape': { 'objectId': element_id,
-                                        'shapeType': 'TEXT_BOX',
-                                        'elementProperties': {
-                                            'pageObjectId': page_id,
-                                            'size'        : { 'height': { 'magnitude': height, 'unit': 'PT'},
-                                                              'width' : { 'magnitude': width , 'unit': 'PT'}},
-                                            'transform'   : { 'scaleX': 1, 'scaleY': 1, 'translateX': x_pos, 'translateY': y_pos, 'unit': 'PT' }}}},
-                    { 'insertText': { 'objectId': element_id, 'insertionIndex': 0, 'text': text                                                  }}]
+    def element_create_shape_request(self, page_id, x_pos=200, y_pos=200, width=100, height=100, objectId=None):
+        return { 'createShape': { 'objectId': objectId,
+                                  'shapeType': 'TEXT_BOX',
+                                  'elementProperties': {
+                                      'pageObjectId': page_id,
+                                      'size'        : { 'height': { 'magnitude': height, 'unit': 'PT'},
+                                                        'width' : { 'magnitude': width , 'unit': 'PT'}},
+                                      'transform'   : { 'scaleX': 1, 'scaleY': 1, 'translateX': x_pos, 'translateY': y_pos, 'unit': 'PT' }}}}
 
+    def element_create_text_requests(self, page_id, text = "Text...", x_pos=200, y_pos=200, width=100, height=100, objectId=None):
+        return [ self.element_create_shape_request(page_id, x_pos, y_pos, width, height, objectId),
+                 self.element_insert_text_request(objectId,text)]
+
+    def element_create_text(self,file_id, page_id, text = "Text...", x_pos=200, y_pos=200, width=100, height=100, objectId=None):
+        requests = self.element_create_text_requests(page_id, text, x_pos, y_pos, width, height, objectId)
         result = self.batch_update(file_id, requests)
-        return result.get('replies')[0].get('createShape').get('objectId')
+        if result:
+            return result.get('replies')[0].get('createShape').get('objectId')
 
     def element_create_shape(self,file_id, page_id, shape_type, x_pos=200, y_pos=200, width=100, height=100):
         requests = [ { 'createShape': { 'shapeType': shape_type,
@@ -81,7 +93,10 @@ class GSlides:
         requests = [ {  'deleteObject' : { 'objectId': element_id } } ]
         return self.batch_update(file_id, requests)
 
-    def element_set_table_text_request(self, file_id, table_id, row, col, text):
+    def element_insert_text_request(self, objectId, text):
+        return { 'insertText': { 'objectId': objectId, 'insertionIndex': 0, 'text': text }}
+
+    def element_set_table_text_requests(self, table_id, row, col, text):
         return     [{ "deleteText": {   "objectId"      : table_id,
                                         "cellLocation"  : {  "rowIndex": row, "columnIndex": col   },
                                         "textRange"     : {"type": "ALL"                         }}},
@@ -89,12 +104,21 @@ class GSlides:
                                         "cellLocation"  : {  "rowIndex": row, "columnIndex": col   },
                                         "text"          : text,
                                         "insertionIndex": 0                                       }}]
+
     def element_set_table_text(self, file_id, table_id, row, col, text):
-        requests = self.element_set_table_text_request(file_id, table_id, row, col, text)
+        requests = self.element_set_table_text_requests(table_id, row, col, text)
 
         self.execute_requests(file_id,requests)
 
-    def element_set_text_request(self, file_id, element_id, text):
+
+    def element_set_table_column_width_request(self,table_id, column_index, column_width):
+
+        return { 'updateTableColumnProperties': { 'objectId': table_id, "columnIndices": [column_index],
+                                                  "tableColumnProperties": { 'columnWidth': { "magnitude": column_width, "unit": "PT" } },
+                                                  "fields": "columnWidth" } }
+
+
+    def element_set_text_requests(self, file_id, element_id, text):
         return [ {   'deleteText' : { 'objectId'      : element_id         ,
                                       'textRange'     : { 'type': 'ALL' }}},
                  {
@@ -103,17 +127,31 @@ class GSlides:
                                      'text'          : text              }}]
     def element_set_text(self, file_id, element_id, text):
 
-        requests =  self.element_set_text_request(file_id, element_id, text)
+        requests =  self.element_set_text_requests(file_id, element_id, text)
 
         return self.batch_update(file_id, requests)
+
+    def element_set_text_style_requests(self, shape_id, style, fields):
+        return {'updateTextStyle': { 'objectId': shape_id  ,
+                                     'style'   : style     ,
+                                     'fields'  : fields   }}
 
     def element_set_text_style(self, file_id, shape_id,style, fields):
-        requests = [{'updateTextStyle': { 'objectId': shape_id  ,
-                                          'style'   : style     ,
-                                          'fields'  : fields  }}]
+        requests = [ self.element_set_text_style_requests(shape_id, style, fields) ]
         return self.batch_update(file_id, requests)
 
-    def element_set_shape_properties(self, file_id, shape_id,properties , fields=None):
+
+    def element_set_text_style_requests__for_title(self, shape_id, font_size, blue=0.5, green=0.5, red=0.5):
+        style = {  'bold'            : True,
+                   'fontFamily'      : 'Avenir',
+                   'fontSize'        : { 'magnitude'  : font_size, 'unit': 'PT' },
+                   'foregroundColor' : {'opaqueColor': {'rgbColor': {'blue': blue, 'green': green, 'red': red}}}}
+        fields   = 'bold,fontFamily,fontSize,foregroundColor'
+
+
+        return self.element_set_text_style_requests(shape_id, style, fields)
+
+    def element_set_shape_properties(self, shape_id,properties , fields=None):
         if fields is None:
             fields = ",".join(list(set(properties)))
         requests = [{'updateShapeProperties': { 'objectId'         : shape_id     ,
@@ -137,8 +175,11 @@ class GSlides:
         except:
             return None
 
+    def slide_delete_request(self, slide_id):
+        return { "deleteObject": { "objectId" : slide_id}}
+
     def slide_delete(self,presentation_id, slide_id):
-        requests =   [ { "deleteObject": { "objectId" : slide_id}} ]
+        requests =   [ self.slide_delete_request(slide_id) ]
         return self.execute_requests(presentation_id, requests)
 
     def slide_copy(self,presentation_id, slide_id, new_slide_id, objects_ids = {}):
@@ -148,12 +189,16 @@ class GSlides:
         requests[0]['duplicateObject']['objectIds'][slide_id] = new_slide_id
         return self.execute_requests(presentation_id, requests)
 
+    def slide_create_request(self, new_slide_id=None, layout='BLANK' , insert_at= None ):
+        return { "createSlide": {       "objectId"      : new_slide_id,
+                                        'insertionIndex': insert_at,
+                                        'slideLayoutReference': { 'predefinedLayout': layout } }}
+
     def slide_create(self, presentation_id, insert_at=1, layout='TITLE', new_slide_id=None):
-        requests =   [ { "createSlide": {       "objectId"      : new_slide_id,
-                                                'insertionIndex': insert_at,
-                                                'slideLayoutReference': { 'predefinedLayout': layout } }}]
+        requests =   [ self.slide_create_request(new_slide_id, layout, insert_at)]
         result = self.execute_requests(presentation_id, requests)
-        return result.get('replies')[0].get('createSlide').get('objectId')
+        if result:
+            return result.get('replies')[0].get('createSlide').get('objectId')
 
 
     def slide_move_to_pos_request(self, presentation_id, slide_id, pos):

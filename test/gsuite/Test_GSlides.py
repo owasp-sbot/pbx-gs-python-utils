@@ -190,7 +190,7 @@ class Test_GDrive(TestCase):
                    'italic'          : True,
                    'fontFamily'      : 'Times New Roman',
                    'fontSize'        : { 'magnitude'  : 74, 'unit': 'PT' },
-                   'foregroundColor' : { 'opaqueColor': { 'rgbColor': { 'blue': 0.5, 'green': 1.0, 'red': 0.0 }}},
+                   'foregroundColor' : { 'opaqueColor': { 'rgbColor': { 'blue': 0.49803922, 'green': 1.0, 'red': 0.0 }}},
                     'link'           : { 'url': 'https://news.bbc.co.uk'         } }
         fields   = 'bold,italic,fontFamily,fontSize, foregroundColor,link'
 
