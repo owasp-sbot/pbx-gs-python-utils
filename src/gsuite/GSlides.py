@@ -96,6 +96,17 @@ class GSlides:
     def element_insert_text_request(self, objectId, text):
         return { 'insertText': { 'objectId': objectId, 'insertionIndex': 0, 'text': text }}
 
+    def element_set_table_cell_size_bold_requests(self, table_id, row, col, size, bold):
+        style = {"bold": bold, "fontSize": { "magnitude": size, "unit": "PT" }}
+        fields = "bold,fontSize"
+        return self.element_set_table_text_style_requests(table_id, row,col,style,fields)
+
+    def element_set_table_text_style_requests(self, shape_id, row, col,style, fields):
+        return {'updateTextStyle': { 'objectId'    : shape_id  ,
+                                     "cellLocation": {"rowIndex": row, "columnIndex": col},
+                                     'style'       : style     ,
+                                     'fields'      : fields   }}
+
     def element_set_table_text_requests(self, table_id, row, col, text):
         return     [#{ "deleteText": {   "objectId"      : table_id,
                     #                    "cellLocation"  : {  "rowIndex": row, "columnIndex": col   },
@@ -117,6 +128,14 @@ class GSlides:
                                                   "tableColumnProperties": { 'columnWidth': { "magnitude": column_width, "unit": "PT" } },
                                                   "fields": "columnWidth" } }
 
+    def element_set_table_cell_aligment_request(self):
+        return { "updateTableCellProperties": { "objectId": table_id,
+                                                "tableRange": {
+                                                    "location": { "rowIndex":  0,"columnIndex": 0 },
+                                                                  "rowSpan": 6, "columnSpan": 2 },
+                                                "tableCellProperties": { "contentAlignment": "BOTTOM" },
+                                                                         #"tableCellBackgroundFill": {"solidFill": {"color": {"rgbColor": {        "red": 1.0,        "green": 1.0,        "blue": 1.0    }}}
+                                                "fields": "contentAlignment, tableCellBackgroundFill.solidFill.color"}}
 
     def element_set_text_requests(self, file_id, element_id, text):
         return [ {   'deleteText' : { 'objectId'      : element_id         ,
@@ -131,8 +150,8 @@ class GSlides:
 
         return self.batch_update(file_id, requests)
 
-    def element_set_text_style_requests(self, shape_id, style, fields):
-        return {'updateTextStyle': { 'objectId': shape_id  ,
+    def element_set_text_style_requests(self, object_id, style, fields):
+        return {'updateTextStyle': { 'objectId': object_id  ,
                                      'style'   : style     ,
                                      'fields'  : fields   }}
 
@@ -246,7 +265,7 @@ class GSlides:
 
     # Helper methods
 
-    def slide_add_table_from_object(self, file_id, slide_id, title, data):
+    def add_slide_with_table_from_object(self, file_id, slide_id, title, data):
 
         title_id = '{0}_title'.format(slide_id)
         table_id = '{0}_table'.format(slide_id)
@@ -262,8 +281,10 @@ class GSlides:
                      self.element_set_table_column_width_request    (table_id, 1, 585                                    )]
 
         for index, header in enumerate(headers):
-           requests.extend(self.element_set_table_text_requests(table_id, index, 0, header))
-           requests.extend(self.element_set_table_text_requests(table_id, index, 1, str(data[header])))
+           requests.extend(self.element_set_table_text_requests          (table_id, index, 0, header))
+           requests.extend(self.element_set_table_text_requests          (table_id, index, 1, str(data[header])))
+           requests.append(self.element_set_table_cell_size_bold_requests(table_id, index, 0, 10, True))
+           requests.append(self.element_set_table_cell_size_bold_requests(table_id, index, 1, 9 , False))
 
         #requests.extend(self.element_set_table_text_requests        (table_id, 1, 0, headers.pop()))
 

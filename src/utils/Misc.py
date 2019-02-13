@@ -40,3 +40,8 @@ class Misc:
               return 0
         else:
             return 0
+
+    @staticmethod
+    def remove_html_tags(html):
+        TAG_RE = re.compile(r'<[^>]+>')
+        return TAG_RE.sub('', html).replace('&nbsp;', ' ')
