@@ -54,7 +54,8 @@ class GSlides:
                                                                             "height": {"magnitude": height,"unit": "PT"}},
                                                          "transform"   : { "scaleX": 1, "scaleY": 1, "translateX": x_pos, "translateY": y_pos,"unit": "PT" }},
                                   "rows"             : rows                         ,
-                                  "columns"          : cols                       }}
+                                  "columns"          : cols                        }}
+                                  #"tableRows"        : [{'rowHeight':{ 'magnitude': 10, 'unit': 'PT'}},{'rowHeight':{ 'magnitude': 100, 'unit': 'PT'}}]}}
     def element_create_table(self, file_id, slide_id, rows=3, cols=3, x_pos=200, y_pos=200, width=100, height=100, objectId=None):
         requests = [  self.element_create_table_request(slide_id, rows, cols, x_pos, y_pos, width, height, objectId) ]
         result = self.batch_update(file_id, requests)
@@ -102,9 +103,9 @@ class GSlides:
     def element_set_table_cell_size_bold_requests(self, table_id, row, col, size, bold):
         style = {"bold": bold, "fontSize": { "magnitude": size, "unit": "PT" }}
         fields = "bold,fontSize"
-        return self.element_set_table_text_style_requests(table_id, row,col,style,fields)
+        return self.element_set_table_text_style_request(table_id, row,col,style,fields)
 
-    def element_set_table_text_style_requests(self, shape_id, row, col,style, fields):
+    def element_set_table_text_style_request(self, shape_id, row, col,style, fields):
         return {'updateTextStyle': { 'objectId'    : shape_id  ,
                                      "cellLocation": {"rowIndex": row, "columnIndex": col},
                                      'style'       : style     ,
@@ -131,14 +132,19 @@ class GSlides:
                                                   "tableColumnProperties": { 'columnWidth': { "magnitude": column_width, "unit": "PT" } },
                                                   "fields": "columnWidth" } }
 
-    def element_set_table_cell_aligment_request(self):
+    def element_set_table_cell_aligment_request(self, table_id, row_index, column_index, row_span, column_span, alignment='MIDDLE'):
         return { "updateTableCellProperties": { "objectId": table_id,
                                                 "tableRange": {
-                                                    "location": { "rowIndex":  0,"columnIndex": 0 },
-                                                                  "rowSpan": 6, "columnSpan": 2 },
-                                                "tableCellProperties": { "contentAlignment": "BOTTOM" },
-                                                                         #"tableCellBackgroundFill": {"solidFill": {"color": {"rgbColor": {        "red": 1.0,        "green": 1.0,        "blue": 1.0    }}}
-                                                "fields": "contentAlignment, tableCellBackgroundFill.solidFill.color"}}
+                                                    "location": { "rowIndex":  row_index,"columnIndex": column_index },
+                                                                  "rowSpan": row_span, "columnSpan": column_span },
+                                                "tableCellProperties": { "contentAlignment": alignment },
+                                                "fields": "contentAlignment"}}
+
+    def element_set_table_row_height_request(self, table_id, height):
+        return  { "updateTableRowProperties": {   "objectId": table_id,
+                                                  "rowIndices": 0,
+                                                  "tableRowProperties": { "minRowHeight":  { 'magnitude': height, 'unit': 'PT'}},
+                                                  "fields"            : "minRowHeight"}}
 
     def element_set_text_requests(self, file_id, element_id, text):
         return [ {   'deleteText' : { 'objectId'      : element_id         ,
@@ -200,7 +206,7 @@ class GSlides:
     def slide_delete_request(self, slide_id):
         return { "deleteObject": { "objectId" : slide_id}}
 
-    def slide_delete(self,presentation_id, slide_id):
+    def slide_delete(self, presentation_id, slide_id):
         requests =   [ self.slide_delete_request(slide_id) ]
         return self.execute_requests(presentation_id, requests)
 
@@ -267,6 +273,38 @@ class GSlides:
 
 
     # Helper methods
+
+    def add_slide_with_table_from_array(self, file_id, slide_id, title, data, row_widths = []):
+        title_id = '{0}_title'.format(slide_id)
+        table_id = '{0}_table'.format(slide_id)
+        headers  = data.pop(0)
+        cols     = len(headers)
+        rows     = len(data) + 1
+        self.slide_delete(file_id, slide_id)
+        requests = [ self.slide_create_request                      (slide_id                           ),
+                     self.element_create_shape_request              (slide_id, 10, 10, 500, 50, title_id),
+                     self.element_insert_text_request               (title_id, title),
+                     self.element_set_text_style_requests__for_title(title_id, 26),
+                     self.element_create_table_request              (slide_id, rows, cols, 12, 80, 700, 270, table_id),
+                     #self.element_set_table_row_height_request      (table_id, 10)
+                    ]
+
+        for col_index, header in enumerate(headers):
+            requests.extend(self.element_set_table_text_requests          (table_id, 0,col_index, header  ))
+            requests.append(self.element_set_table_cell_size_bold_requests(table_id, 0,col_index, 14, True))
+
+        for row_index, row in enumerate(data):
+            for col_index, cell in enumerate(row):
+                requests.extend(self.element_set_table_text_requests(table_id          , row_index + 1, col_index, cell))
+                requests.append(self.element_set_table_cell_size_bold_requests(table_id, row_index + 1, col_index, 10, False))
+
+        for index, row_width in enumerate(row_widths):
+            requests.append(self.element_set_table_column_width_request(table_id, index, row_width))
+
+        requests.append(self.element_set_table_cell_aligment_request(table_id, 0,0, rows,cols))
+
+        self.execute_requests(file_id, requests)
+        return table_id
 
     def add_slide_with_table_from_object(self, file_id, slide_id, title, data):
 
