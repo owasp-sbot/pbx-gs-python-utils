@@ -33,14 +33,17 @@ class GSlides:
 
 
     # Elements
+    def element_create_image_request(self, page_id, image_url, x_pos=200, y_pos=200, width=100, height=100):
+        return {  "createImage": {
+                  "url"        : image_url,
+                  "elementProperties": {
+                      "pageObjectId": page_id,
+                      "size": { "width" : { "magnitude": width, "unit": "PT" },
+                                "height": { "magnitude": height,"unit": "PT" }},
+                      "transform": { "scaleX": 1, "scaleY": 1, "translateX": x_pos, "translateY": y_pos, "unit": "PT" }}}}
+
     def element_create_image(self, file_id, page_id, image_url, x_pos=200, y_pos=200, width=100, height=100):
-        requests = [ {  "createImage": {
-                        "url"        : image_url,
-                        "elementProperties": {
-                            "pageObjectId": page_id,
-                            "size": { "width" : { "magnitude": width, "unit": "PT" },
-                                      "height": { "magnitude": height,"unit": "PT" }},
-                            "transform": { "scaleX": 1, "scaleY": 1, "translateX": x_pos, "translateY": y_pos, "unit": "PT" }}}}]
+        requests = [ self.element_create_image_request(page_id, image_url, x_pos, y_pos, width, height)]
         result = self.batch_update(file_id, requests)
         return result.get('replies')[0].get('createImage').get('objectId')
 
