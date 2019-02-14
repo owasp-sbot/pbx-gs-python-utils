@@ -275,11 +275,12 @@ class GSlides:
     # Helper methods
 
     def add_slide_with_table_from_array(self, file_id, slide_id, title, data, row_widths = []):
-        title_id = '{0}_title'.format(slide_id)
-        table_id = '{0}_table'.format(slide_id)
-        headers  = data.pop(0)
-        cols     = len(headers)
-        rows     = len(data) + 1
+        title_id  = '{0}_title'.format(slide_id)
+        table_id  = '{0}_table'.format(slide_id)
+        headers   = data.pop(0)
+        cols      = len(headers)
+        rows      = len(data) + 1
+        cell_size = 7
         self.slide_delete(file_id, slide_id)
         requests = [ self.slide_create_request                      (slide_id                           ),
                      self.element_create_shape_request              (slide_id, 10, 10, 500, 50, title_id),
@@ -291,12 +292,12 @@ class GSlides:
 
         for col_index, header in enumerate(headers):
             requests.extend(self.element_set_table_text_requests          (table_id, 0,col_index, header  ))
-            requests.append(self.element_set_table_cell_size_bold_requests(table_id, 0,col_index, 14, True))
+            requests.append(self.element_set_table_cell_size_bold_requests(table_id, 0,col_index, 11, True))
 
         for row_index, row in enumerate(data):
             for col_index, cell in enumerate(row):
                 requests.extend(self.element_set_table_text_requests(table_id          , row_index + 1, col_index, cell))
-                requests.append(self.element_set_table_cell_size_bold_requests(table_id, row_index + 1, col_index, 10, False))
+                requests.append(self.element_set_table_cell_size_bold_requests(table_id, row_index + 1, col_index, cell_size, False))
 
         for index, row_width in enumerate(row_widths):
             requests.append(self.element_set_table_column_width_request(table_id, index, row_width))
