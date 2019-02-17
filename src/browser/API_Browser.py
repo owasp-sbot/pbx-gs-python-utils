@@ -1,4 +1,6 @@
 from pyppeteer import connect, launch
+
+from utils.Files import Files
 from utils.Http import WS_is_open
 from utils.Json import Json
 from pyquery    import PyQuery
@@ -87,8 +89,10 @@ class API_Browser:
     # helper sync functions
 
     def get_last_chrome_session(self):
-        data = Json.load_json(self.file_tmp_last_chrome_session)
-        return data
+        if Files.exists(self.file_tmp_last_chrome_session):
+            return Json.load_json(self.file_tmp_last_chrome_session)
+        return {}
 
     def set_last_chrome_session(self, data):
         Json.save_json_pretty(self.file_tmp_last_chrome_session, data)
+        return self

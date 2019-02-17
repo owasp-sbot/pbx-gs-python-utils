@@ -48,3 +48,15 @@ class Test_API_Browser(TestCase):
         await self.api.open('https://news.bbc.co.uk')
         file = await self.api.screenshot()
         assert Files.exists(file)
+
+class Test_API_Browser___with_browser_not_closing(TestCase):
+
+    def setUp(self):
+        self.api = API_Browser(headless=False, auto_close=False)
+
+    @sync
+    async def test_html(self):
+        await self.api.open('https://www.google.co.uk')
+        content = await self.api.html()
+        print(content)
+
