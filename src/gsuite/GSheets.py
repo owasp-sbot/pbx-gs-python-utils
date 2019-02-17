@@ -96,3 +96,38 @@ class GSheets:
             values.append(item)
         return values
 
+
+    # helper methods
+    def covert_raw_data_to_flat_objects(self, raw_data):
+        sheet_data = []
+        headers = list(raw_data[0].keys())
+
+        sheet_data.append(headers)
+
+        for item in raw_data:
+            sheet_data.append(list(item.values()))
+
+        # make sure every cell is a string
+        for i, row in enumerate(sheet_data):
+            for j, cell in enumerate(row):
+                if cell is None:
+                    sheet_data[i][j] = ''
+                else:
+                    sheet_data[i][j] = str(sheet_data[i][j])
+        return sheet_data
+
+    def format_headers(self, file_id, sheet_id, end_column):
+        requests =  [   { "repeatCell": { "range": {  "sheetId": sheet_id,
+                                                      "startRowIndex"  : 0,
+                                                      "endRowIndex"    : 1,
+                                                      "endColumnIndex" : end_column},
+                                          "cell" : {  "userEnteredFormat": { "backgroundColor": { "red": 0.8, "green": 0.8, "blue": 0.8 },
+                                                                             "horizontalAlignment" : "CENTER",
+                                                                             "textFormat"  : { "foregroundColor": { "red": 0.0, "green": 0.0, "blue": 0.0 },
+                                                                                               "fontSize": 12,
+                                                                                               "bold": True } }},
+                                          "fields": "userEnteredFormat(backgroundColor,textFormat,horizontalAlignment)" } },
+                        { "updateSheetProperties": { "properties": { "sheetId": sheet_id,
+                                                                     "gridProperties": { "frozenRowCount": 1 }},
+                                                     "fields": "gridProperties.frozenRowCount"}} ]
+        self.execute_requests(file_id,requests)
