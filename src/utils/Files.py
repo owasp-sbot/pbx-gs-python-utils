@@ -43,6 +43,12 @@ class Files:
         return os.path.basename(path)
 
     @staticmethod
+    def file_extension(path):
+        if path:
+            return os.path.splitext(path)[1]
+        return ''
+
+    @staticmethod
     def folder_exists(path):          # add check to see if it is a folder
         return Files.exists(path)
 

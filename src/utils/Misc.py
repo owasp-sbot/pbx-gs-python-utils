@@ -11,8 +11,8 @@ from utils.Dev import Dev
 class Misc:
 
     @staticmethod
-    def random_filename(extension='.tmp', length=10):
-        return ''.join(random.choices(string.ascii_lowercase + string.digits, k=length)) + extension
+    def random_filename(extension='tmp', length=10):
+        return '{0}.{1}'.format(''.join(random.choices(string.ascii_lowercase + string.digits, k=length)) ,  extension)
 
     @staticmethod
     def random_number(min=1,max=65000):

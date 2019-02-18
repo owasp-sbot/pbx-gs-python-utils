@@ -17,6 +17,13 @@ class Web_Server:
         self.port        = Misc.random_number(10000,60000)
         self.server_proc = None
 
+    def __enter__(self):
+        self.start()
+        return self
+
+    def __exit__(self, type, value, traceback):
+        self.stop()
+
     def html(self, path=''):
         Dev.pprint(self.url()+ path)
         return requests.get(self.url(path)).text
@@ -46,3 +53,21 @@ class Web_Server:
             if port_is_open(self.port):
                 return True
         return False
+
+class Web_Server_Temp_File():
+    def __init__(self, web_server, html):
+        self.web_server = web_server
+        self.tmp_file   = Misc.random_filename('html')
+        self.file_path  = self.web_server.path_to_file(self.tmp_file)
+        self.html       = html
+
+    def __enter__(self):
+        Files.write(self.file_path, self.html)
+        return self
+
+    def __exit__(self, type, value, traceback):
+        Files.delete(self.file_path)
+        pass
+
+    def url(self):
+        return self.web_server.url(self.tmp_file)
