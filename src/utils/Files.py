@@ -102,7 +102,8 @@ class Files:
     @staticmethod
     def temp_file(extension = '.tmp'):
         (fd, tmp_file) = tempfile.mkstemp(extension)
-        return '/tmp/{0}'.format(os.path.basename(tmp_file))
+        return tmp_file
+        #return '/tmp/{0}'.format(os.path.basename(tmp_file))
 
     @staticmethod
     def temp_folder(prefix=None, suffix=None,parent_folder=None):

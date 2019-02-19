@@ -1,16 +1,19 @@
-from pyppeteer import connect, launch
-
+import base64
+import os
+from syncer import sync
 from utils.Files import Files
-from utils.Http import WS_is_open
+from utils.Http  import WS_is_open
 from utils.Json import Json
-from pyquery    import PyQuery
+from utils.Process import Process
+from utils.aws.Lambdas import load_dependency
 
 
 class API_Browser:
 
     def __init__(self, headless = True, auto_close = True, url_chrome = None):
         self.file_tmp_last_chrome_session = '/tmp/browser-last_chrome_session.json'
-        self.file_tmp_screenshot          = '/tmp/browser-page-screenshot.png'
+        #self.file_tmp_screenshot          = '/tmp/browser-page-screenshot.png'
+        self.file_tmp_screenshot          = Files.temp_file('.png')
         self._browser                     = None
         self.headless                     = headless
         self.auto_close                   = auto_close
@@ -22,6 +25,7 @@ class API_Browser:
         return self._browser
 
     async def browser_connect(self):
+        from pyppeteer import connect, launch                               # we can only import this here or we will have a conflict with the AWS headless version
         if not self.url_chrome:
             url_chrome = self.get_last_chrome_session().get('url_chrome')
         if url_chrome and WS_is_open(url_chrome):
@@ -65,9 +69,13 @@ class API_Browser:
         return self
 
     async def html(self):
-        page = await self.page()
-        content = await page.content()
+        from pyquery import PyQuery         # add it here since there was some import issues with running it in lambda (etree). Also this method should not be that useful inside an lambda
+        content = await self.html_raw()
         return PyQuery(content)
+
+    async def html_raw(self):
+        page = await self.page()
+        return await page.content()
 
     async def screenshot(self, url= None, full_page = True, file_screenshot = None, clip=None, viewport=None):
         if url:
@@ -96,8 +104,6 @@ class API_Browser:
         await page.setViewport(viewport)
         return self
 
-    # helper sync functions
-
     def get_last_chrome_session(self):
         if Files.exists(self.file_tmp_last_chrome_session):
             return Json.load_json(self.file_tmp_last_chrome_session)
@@ -106,3 +112,60 @@ class API_Browser:
     def set_last_chrome_session(self, data):
         Json.save_json_pretty(self.file_tmp_last_chrome_session, data)
         return self
+
+    # helper sync functions
+
+    def sync__setup_aws_browser(self):                                                          # weirdly this works but the version below (using @sync) doesn't (we get an 'Read-only file system' error)
+        load_dependency('pyppeteer')
+        import asyncio
+
+        path_headless_shell          = '/tmp/lambdas-dependencies/pyppeteer/headless_shell'     # path to headless_shell AWS Linux executable
+        os.environ['PYPPETEER_HOME'] = '/tmp'                                                   # tell pyppeteer to use this read-write path in Lambda aws
+        async def take_screenshot():
+            from pyppeteer import launch                                                        # import pyppeteer dependency
+            Process.run("chmod", ['+x', path_headless_shell])                                   # set the privs of path_headless_shell to execute
+            self._browser = await launch(executablePath=path_headless_shell,                    # lauch chrome (i.e. headless_shell)
+                                         args=['--no-sandbox',
+                                               '--single-process'])                             # two key settings or the requests will not work
+        asyncio.get_event_loop().run_until_complete(take_screenshot())
+        return self
+
+    # @sync
+    # async def sync__setup_aws_browser(self):
+    #
+    #     load_dependency('pyppeteer')
+    #     from pyppeteer import launch
+    #     path_headless_shell          = '/tmp/lambdas-dependencies/pyppeteer/headless_shell'
+    #     os.environ['PYPPETEER_HOME'] = '/tmp'
+    #     Process.run("chmod", ['+x', path_headless_shell])
+    #     self._browser = await launch(executablePath=path_headless_shell,
+    #                                  args=['--no-sandbox',
+    #                                        '--single-process'])
+    #     return self
+
+    @sync
+    async def sync__close_browser(self):
+        await self._browser.close()
+        return self
+
+    @sync
+    async def sync__html_raw(self):
+        return await self.html_raw()
+
+    @sync
+    async def sync__open(self, url):
+        await self.open(url)
+        return self
+
+    @sync
+    async def sync__url(self):
+        return await self.url()
+
+    @sync
+    async def sync__screenshot(self, url):
+        return await self.screenshot(url)
+
+    @sync
+    async def sync__screenshot_base64(self, url):
+        screenshot_file = await self.screenshot(url)
+        return base64.b64encode(open(screenshot_file, 'rb').read()).decode()
