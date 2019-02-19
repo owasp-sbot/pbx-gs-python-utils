@@ -105,6 +105,10 @@ class Files:
         return '/tmp/{0}'.format(os.path.basename(tmp_file))
 
     @staticmethod
+    def temp_folder(prefix=None, suffix=None,parent_folder=None):
+        return tempfile.mkdtemp(suffix, prefix, parent_folder)
+
+    @staticmethod
     def write(path,contents):
         with open(path, "w") as file:
             return file.write(contents)
@@ -113,7 +117,12 @@ class Files:
     def zip_folder(root_dir):
         return shutil.make_archive(root_dir, "zip", root_dir)
 
-    # @staticmethod
+    @staticmethod
+    def unzip_file(zip_file, target_folder):
+        shutil.unpack_archive(zip_file, extract_dir=target_folder)
+        return target_folder
+
+        # @staticmethod
     # def save_string(file_Path,data):
     #     with open(file_Path, "w") as f:
     #         f.write(data)

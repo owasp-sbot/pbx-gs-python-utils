@@ -26,3 +26,7 @@ class Test_Files(TestCase):
         assert Files.file_extension('/a/b.c/a.git'         ) == '.git'
         assert Files.file_extension('/a/b.c/a.git.abc'     ) == '.abc'
         assert Files.file_extension(None)                    == ''
+
+    def test_temp_folder(self):
+        assert Files.exists(Files.temp_folder())
+        assert '/tmp/aa_'  in Files.temp_folder('_bb','aa_','/tmp')

@@ -16,6 +16,10 @@ class Render_Page:
     def render_file(self, html_file):
         return self.render_html(Files.contents(html_file))
 
+    def render_folder(self, web_root):
+        with self.web_server.set_web_root(web_root):
+            return self.get_page_html_via_browser(self.web_server.url())
+
     def render_html(self, html):
         temp_file = Web_Server_Temp_File(self.web_server,html)
         with self.web_server:
@@ -31,10 +35,19 @@ class Render_Page:
     def screenshot_file(self,html_file,img_file=None, clip=None):
         return self.screenshot_html(Files.contents(html_file),img_file, clip)
 
+    def screenshot_folder(self,web_root, png_file=None, clip=None):
+        with self.web_server.set_web_root(web_root):
+            return self.get_screenshot_via_browser(png_file=png_file, clip=clip)
+
+    def screenshot_file_in_folder(self, web_root, html_file, png_file=None, clip=None):
+        with self.web_server.set_web_root(web_root):
+            url = self.web_server.url(html_file)
+            return self.get_screenshot_via_browser(url=url,png_file=png_file, clip=clip)
+
     def screenshot_url(self, url, img_file, clip=None):
         return self.get_screenshot_via_browser(url, img_file, clip=clip)
 
-
+    # Sync Helpped method (to allow calls to the Async methods to feel like Sync calls)
     @sync
     async def get_page_html_via_browser(self, url):
         await self.api_browser.browser()
@@ -42,12 +55,10 @@ class Render_Page:
         return await self.api_browser.html()
 
     @sync
-    async def get_screenshot_via_browser(self, url, target_file=None,full_page=True, clip=None,viewport=None    ):
-        if clip        is not None: full_page    = False
-        if target_file is None    : target_file = Files.temp_file('.png')
+    async def get_screenshot_via_browser(self, url = None, png_file=None,full_page=True, clip=None,viewport=None    ):
+        if clip        is not None: full_page = False
+        if png_file    is None    : png_file  = Files.temp_file('.png')
+        if url         is None    : url       = self.web_server.url()
         await self.api_browser.browser()
-        #await self.api_browser.open(url)
-        #viewport = { 'width': 5000, 'height': 4000}
-        #full_page = False
-        return await self.api_browser.screenshot(url,full_page=full_page,file_screenshot=target_file, clip=clip, viewport=viewport)
+        return await self.api_browser.screenshot(url,full_page=full_page,file_screenshot=png_file, clip=clip, viewport=viewport)
 

@@ -34,6 +34,10 @@ class Web_Server:
             file_path = file_path[1:]
         return Files.path_combine(self.web_root, file_path)
 
+    def set_web_root(self,web_root):
+        self.web_root = web_root
+        return self
+
     def start(self):
         if Files.not_exists(self.web_root):  Files.folder_create(self.web_root)     # make sure root folder exists
         self.server_proc = subprocess.Popen(["python", "-m", "SimpleHTTPServer", str(self.port)], cwd=self.web_root)
@@ -44,6 +48,7 @@ class Web_Server:
         self.server_proc.kill()
 
     def url(self,path=''):
+        if len(path)>0 and path[0] == '/': path = path[1:]
         return 'http://localhost:{0}/{1}'.format(self.port, path)
 
     def wait_for_server_started(self, max_number_of_tries = 30):           # 0.75 of a Sec should be enough to start the server
