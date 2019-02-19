@@ -25,6 +25,9 @@ class Files:
             return file.read()
 
     @staticmethod
+    def current_folder():
+        return Files.path_combine(".","")
+    @staticmethod
     def delete(path):
         if Files.exists(path):
             os.remove(path)
@@ -32,7 +35,9 @@ class Files:
 
     @staticmethod
     def exists(path):
-        return os.path.exists(path)
+        if path:
+            return os.path.exists(path)
+        return False
 
     @staticmethod
     def find(path_pattern):
@@ -107,6 +112,7 @@ class Files:
     @staticmethod
     def zip_folder(root_dir):
         return shutil.make_archive(root_dir, "zip", root_dir)
+
     # @staticmethod
     # def save_string(file_Path,data):
     #     with open(file_Path, "w") as f:

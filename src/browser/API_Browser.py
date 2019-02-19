@@ -69,14 +69,16 @@ class API_Browser:
         content = await page.content()
         return PyQuery(content)
 
-    async def screenshot(self, url= None, full_page = True, file_screenshot = None):
+    async def screenshot(self, url= None, full_page = True, file_screenshot = None, clip=None, viewport=None):
         if url:
             await self.open(url)
         if file_screenshot is None:
             file_screenshot = self.file_tmp_screenshot
 
         page = await self.page()
-        await page.screenshot({'path': file_screenshot, 'fullPage': full_page})
+        if viewport:
+            await self.viewport(viewport)
+        await page.screenshot({'path': file_screenshot,'fullPage': full_page, 'clip' : clip})
         return file_screenshot
 
 
@@ -84,7 +86,15 @@ class API_Browser:
         page = await self.page()
         return page.url
 
+    async def page_size(self, width, height):
+        page = await self.page()
+        await page.setViewport({'width': width, 'height': height})
+        return self
 
+    async def viewport(self, viewport):
+        page = await self.page()
+        await page.setViewport(viewport)
+        return self
 
     # helper sync functions
 
