@@ -21,7 +21,8 @@ class Slack_Commands_Helper:
         text = prefix + "*Here are the `{0}` commands available:*".format(self.target.__name__)
         return text, attachments.render()
 
-    def invoke(self, team_id, channel, params):
+    def invoke(self, team_id=None, channel=None, params=None):
+        if params is None: params = []
         attachments = []
         if len(params) == 0:
             (text, attachments) = self.help()
@@ -31,7 +32,12 @@ class Slack_Commands_Helper:
             if command in self.available_methods():
                 method  = getattr(self.target, command)
                 try:
-                    text, attachments = method(team_id, channel, params)
+                    result = method(team_id, channel, params)
+                    if type(result).__name__ == 'tuple':
+                        text, attachments = result
+                    else:
+                        text, attachments = result,[]
+
                 except Exception as error:
                     text = ':red_circle: Error processing params `{0}`: _{1}_'.format(original_params, pprint.pformat(error))
                     log_to_elk("Error in Lambda_Graph.handle_lambda_event :{0}".format(text), level='error')
@@ -39,3 +45,4 @@ class Slack_Commands_Helper:
                 (text,attachments) = self.help(':red_circle: command not found `{0}`\n\n'.format(command))
         if channel and text is not None:                                           # if there is a text value, then send it as a slack message
             slack_message(text, attachments, channel, team_id)
+        return text,attachments
