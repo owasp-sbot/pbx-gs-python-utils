@@ -4,7 +4,7 @@ import os
 
 from utils.Files import Files
 from utils.Process import Process
-from utils.aws.Lambdas import load_dependency
+from utils.aws.Lambdas import load_dependency, Lambdas
 
 
 class Browser_Commands:
@@ -39,15 +39,29 @@ class Browser_Commands:
     #     return base64_data
 
     @staticmethod
-    def screenshot_url(team_id, channel, params):
-        #url = params.pop()
-        #return Browser_Commands.run_pyppeteer(url)
+    def _get_png_data_from_url_screenshot(url):
+        if not url: return ''
         load_dependency('syncer')
         from browser.API_Browser import API_Browser
-
-        url = params.pop()
-        return API_Browser().sync__setup_aws_browser()       \
+        return API_Browser().sync__setup_aws_browser()          \
                             .sync__screenshot_base64(url)
+
+
+    @staticmethod
+    def screenshot_url(team_id, channel, params):
+        return Browser_Commands._get_png_data_from_url_screenshot(params.pop())
+
+    @staticmethod
+    def screenshot_url_to_slack(team_id, channel, params):
+        url          = params.pop(0)
+        png_data     = Browser_Commands._get_png_data_from_url_screenshot(url)
+        png_to_slack = Lambdas('utils.png_to_slack')
+        payload      = {"png_data": png_data, 'team_id':team_id, 'channel': channel, 'title': url }
+        png_to_slack.invoke(payload)
+        return None,None
+
+
+
 
 
 # @staticmethod
