@@ -28,20 +28,20 @@ class Test_Lambda_lambda_browser(unittest.TestCase):
         url = 'https://www.google.co.uk'
         url = 'http://news.bbc.co.uk/aaaa'
         #url = 'http://visjs.org/'
-        url ='https://www.o2.co.uk'
-        url = 'https://www.slack.com'
+        #url ='https://www.o2.co.uk'
+        #url = 'https://www.slack.com'
         payload = {"params": ['screenshot_png',url]}
         png_data = self.lambda_browser.update_with_src().invoke(payload)
         self._save_png_file(png_data)
 
-    def test_screenshot_url_to_slack(self):
+    def test_screenshot(self):
         team_id = 'T7F3AUXGV'
         channel = 'DDKUZTK6X'
         url = 'https://www.google.co.uk/aaa'
         url = 'https://news.bbc.co.uk/aaa'
         #url = 'http://visjs.org/'
 
-        payload = {"params": ['screenshot_url_to_slack', url,], 'data': {'channel':channel, 'team_id': team_id}}
+        payload = {"params": ['screenshot', url,], 'data': {'channel':channel, 'team_id': team_id}}
         self.lambda_browser.update_with_src()
         result = self.lambda_browser.invoke(payload)
         Dev.pprint(result)

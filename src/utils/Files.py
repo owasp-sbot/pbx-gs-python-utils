@@ -106,6 +106,12 @@ class Files:
         #return '/tmp/{0}'.format(os.path.basename(tmp_file))
 
     @staticmethod
+    def temp_filename(extension='.tmp'):
+        if len(extension) >0 and extension[0] !='.' :           # make sure the extension starts with a dot
+            extension = '.' + extension
+        return Files.file_name(Files.temp_file(extension))
+
+    @staticmethod
     def temp_folder(prefix=None, suffix=None,parent_folder=None):
         return tempfile.mkdtemp(suffix, prefix, parent_folder)
 

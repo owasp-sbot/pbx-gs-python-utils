@@ -6,6 +6,7 @@ from utils.Files import Files
 from utils.Lambdas_Helpers import slack_message
 from utils.Process import Process
 from utils.aws.Lambdas import load_dependency, Lambdas
+from utils.aws.s3 import S3
 
 
 class Browser_Commands:
@@ -54,10 +55,17 @@ class Browser_Commands:
 
     @staticmethod
     def screenshot(team_id, channel, params):
+        s3_bucket    = 'gs-lambda-tests'
         url          = params.pop(0).replace('<', '').replace('>', '')  # fix extra chars added by Slack
+        slack_message(":point_right: taking screenshot of url: {0}".format(url),[], channel,team_id)
+
         png_data     = Browser_Commands._get_png_data_from_url_screenshot(url)
+        png_file     = Files.temp_file('.png')
+        with open(png_file, "wb") as fh:
+            fh.write(base64.decodebytes(png_data.encode()))
+        s3_key = S3().file_upload_as_temp_file(png_file, s3_bucket)
         png_to_slack = Lambdas('utils.png_to_slack')
-        payload      = {"png_data": png_data, 'team_id':team_id, 'channel': channel, 'title': url }
+        payload      = { 's3_bucket': s3_bucket, 's3_key':s3_key, 'team_id':team_id, 'channel': channel, 'title': url }
         png_to_slack.invoke_async(payload)
         return None,None
 

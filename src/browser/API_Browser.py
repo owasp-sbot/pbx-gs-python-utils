@@ -121,9 +121,12 @@ class API_Browser:
     # helper sync functions
 
     def sync__setup_aws_browser(self):                                                          # weirdly this works but the version below (using @sync) doesn't (we get an 'Read-only file system' error)
-        load_dependency('pyppeteer')
         import asyncio
+        if os.getenv('OSX_CHROME')== 'True':
+            asyncio.get_event_loop().run_until_complete(self.browser_connect())
+            return self
 
+        load_dependency('pyppeteer')
         path_headless_shell          = '/tmp/lambdas-dependencies/pyppeteer/headless_shell'     # path to headless_shell AWS Linux executable
         os.environ['PYPPETEER_HOME'] = '/tmp'                                                   # tell pyppeteer to use this read-write path in Lambda aws
         async def take_screenshot():
@@ -171,7 +174,7 @@ class API_Browser:
         return await self.screenshot(url)
 
     @sync
-    async def sync__screenshot_base64(self, url,full_page=False,close_browser=False):
+    async def sync__screenshot_base64(self, url,full_page=True,close_browser=False):
         screenshot_file = await self.screenshot(url=url,full_page=full_page)
         if close_browser:
             await self.browser_close()

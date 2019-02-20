@@ -3,6 +3,7 @@ import tempfile
 
 from utils.Files import Files
 from   utils.Lambdas_Helpers import slack_message
+from utils.aws.s3 import S3
 from   utils.aws.secrets     import Secrets
 from   utils.aws.Lambdas     import    load_dependency
 
@@ -28,17 +29,24 @@ def run(event, context):
 
     channel         = event.get('channel')
     png_data        = event.get('png_data')
+    s3_bucket       = event.get('s3_bucket')
+    s3_key          = event.get('s3_key')
     title           = event.get('title')
     team_id         = event.get('team_id')
     aws_secrets_id  = event.get('aws_secrets_id')
     if  team_id == 'T7F3AUXGV':
         aws_secrets_id = 'slack-gs-bot'
-
     bot_token       = Secrets(aws_secrets_id).value()
 
-    (fd, tmp_file) = tempfile.mkstemp('png)')
-
-    with open(tmp_file, "wb") as fh:
-        fh.write(base64.decodebytes(png_data.encode()))
+    if png_data:
+        #(fd, tmp_file) = tempfile.mkstemp('png')
+        tmp_file = Files.temp_file('.png')
+        with open(tmp_file, "wb") as fh:
+            fh.write(base64.decodebytes(png_data.encode()))
+    else:
+        if s3_bucket and s3_key:
+            tmp_file = S3().file_download_and_delete(s3_bucket, s3_key)
+        else:
+            return None
 
     return send_file_to_slack(tmp_file, title, bot_token, channel)

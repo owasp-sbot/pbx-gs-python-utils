@@ -12,7 +12,8 @@ from utils.Files import Files
 
 class S3:
     def __init__(self):
-        self.boto_client_s3 = None
+        self.boto_client_s3  = None
+        self.tmp_file_folder = 's3_temp_files'
 
     def buckets(self):
         data = []
@@ -58,9 +59,15 @@ class S3:
         return GzipFile(None, 'rb', fileobj=bytestream).read().decode('utf-8')
 
     def file_download           (self, bucket, key , use_cache = False               ):
-        #tmp_file = '/tmp/' + key.split('/')[-1]
-        tmp_file = '/tmp/' + key.replace('/','_')      # todo: check side effects since this changed recently
+        tmp_file = '/tmp/' + key.replace('/','_')
         if self.file_download_to(bucket, key, tmp_file, use_cache):
+            return tmp_file
+        return None
+
+    def file_download_and_delete(self, bucket, key):
+        tmp_file = '/tmp/' + key.replace('/','_')
+        if self.file_download_to(bucket, key, tmp_file):
+            self.file_delete(bucket,key)
             return tmp_file
         return None
 
@@ -122,12 +129,18 @@ class S3:
 
         key = os.path.join(folder, os.path.basename(file))                      # create key from folder and file's filename
 
-        self.s3().upload_file(file, bucket, key)                              # upload file
-        return key                                                             # return path to file uploaded (if succeeded)
+        self.s3().upload_file(file, bucket, key)                                # upload file
+        return key                                                              # return path to file uploaded (if succeeded)
 
     def file_upload_to_key     (self, file, bucket, key                             ):
-        self.s3().upload_file(file, bucket, key)                              # upload file
+        self.s3().upload_file(file, bucket, key)                                # upload file
         return True                                                             # return true (if succeeded)
+
+    def file_upload_as_temp_file(self, file, bucket):
+        key = '{0}/{1}'.format(self.tmp_file_folder, Files.temp_filename(Files.file_extension(file)))
+        self.file_upload_to_key(file, bucket, key)
+        return key
+
 
     def folder_upload          (self, folder, s3_bucket, s3_key                                            ):
         file = Files.zip_folder(folder)
