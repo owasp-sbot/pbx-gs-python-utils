@@ -52,9 +52,10 @@ class Test_Lambda_lambda_browser(unittest.TestCase):
         Dev.pprint(result)
 
     def test_render_file(self):
-        payload = {"params": ['render_file']}
-        result = self.lambda_browser.update_with_src().invoke(payload)
-        Dev.pprint(result)
+        payload = {"params": ['render_file','/examples/bootstrap-cdn.html',0,'25',600,50]}
+        self.lambda_browser.update_with_src()
+        png_data = self.lambda_browser.invoke(payload)
+        self._save_png_file(png_data)
 
     # def test_use_api_browser(self):
     #     url = 'https://www.google.co.uk/aaaaaasd'

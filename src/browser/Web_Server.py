@@ -3,10 +3,9 @@ from time import sleep
 
 import requests
 
-from utils.Dev import Dev
 from utils.Files import Files
 from utils.Misc  import Misc
-from utils.Http  import GET,port_is_open
+from utils.Http  import port_is_open
 
 
 class Web_Server:
@@ -25,9 +24,7 @@ class Web_Server:
         self.stop()
 
     def html(self, path=''):
-        Dev.pprint(self.url()+ path)
         return requests.get(self.url(path)).text
-        #GET(self.url()+ path)
 
     def path_to_file(self, file_path):                                  # has path traversal vulnerability
         if file_path and len(file_path) >0 and file_path[0] == '/':
@@ -40,11 +37,7 @@ class Web_Server:
 
     def start(self):
         if Files.not_exists(self.web_root):  Files.folder_create(self.web_root)     # make sure root folder exists
-        Dev.pprint(self.web_root)
-        #self.port = "1234"
-
-        self.server_proc = subprocess.Popen(["python", "-m", "http.server", str(self.port)], cwd=self.web_root)
-        Dev.pprint(self.server_proc)
+        self.server_proc = subprocess.Popen(["python3", "-m", "http.server", str(self.port)], cwd=self.web_root)
         self.wait_for_server_started()
         return self
 
