@@ -3,6 +3,7 @@ import base64
 import os
 
 from utils.Files import Files
+from utils.Lambdas_Helpers import slack_message
 from utils.Process import Process
 from utils.aws.Lambdas import load_dependency, Lambdas
 
@@ -44,20 +45,20 @@ class Browser_Commands:
         load_dependency('syncer')
         from browser.API_Browser import API_Browser
         return API_Browser().sync__setup_aws_browser()          \
-                            .sync__screenshot_base64(url)
-
-
-    @staticmethod
-    def screenshot_url(team_id, channel, params):
-        return Browser_Commands._get_png_data_from_url_screenshot(params.pop())
+                            .sync__screenshot_base64(url,close_browser=True)
 
     @staticmethod
-    def screenshot_url_to_slack(team_id, channel, params):
-        url          = params.pop(0)
+    def screenshot_png(team_id, channel, params):
+        #slack_message('screenshot_url for: `{0}`'.format(url), [], channel, team_id)
+        return Browser_Commands._get_png_data_from_url_screenshot(params.pop(0))
+
+    @staticmethod
+    def screenshot(team_id, channel, params):
+        url          = params.pop(0).replace('<', '').replace('>', '')  # fix extra chars added by Slack
         png_data     = Browser_Commands._get_png_data_from_url_screenshot(url)
         png_to_slack = Lambdas('utils.png_to_slack')
         payload      = {"png_data": png_data, 'team_id':team_id, 'channel': channel, 'title': url }
-        png_to_slack.invoke(payload)
+        png_to_slack.invoke_async(payload)
         return None,None
 
 

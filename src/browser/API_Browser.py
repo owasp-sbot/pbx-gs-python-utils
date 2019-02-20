@@ -1,6 +1,8 @@
 import base64
 import os
 from syncer import sync
+
+from utils.Dev import Dev
 from utils.Files import Files
 from utils.Http  import WS_is_open
 from utils.Json import Json
@@ -35,9 +37,12 @@ class API_Browser:
             self.set_last_chrome_session({'url_chrome': self._browser.wsEndpoint})
         return self._browser
 
-    async def browser_close(self):
+    async def browser_close(self):          # bug: this is not working 100% since there are still tons of "headless_shell <defunct>" proccess left (one per execution)
         browser = await self.browser()
         if browser is not None:
+            pages = await browser.pages()
+            for page in pages:              # not sure if this makes any difference
+               await page.close()
             await browser.close()
 
     async def js_eval(self, code):
@@ -166,6 +171,8 @@ class API_Browser:
         return await self.screenshot(url)
 
     @sync
-    async def sync__screenshot_base64(self, url):
-        screenshot_file = await self.screenshot(url)
+    async def sync__screenshot_base64(self, url,full_page=False,close_browser=False):
+        screenshot_file = await self.screenshot(url=url,full_page=full_page)
+        if close_browser:
+            await self.browser_close()
         return base64.b64encode(open(screenshot_file, 'rb').read()).decode()
