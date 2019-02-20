@@ -46,13 +46,24 @@ class Test_Lambda_lambda_browser(unittest.TestCase):
         result = self.lambda_browser.invoke(payload)
         Dev.pprint(result)
 
+    def test_list(self):
+        payload = {"params": ['list']}
+        result = self.lambda_browser.update_with_src().invoke(payload)
+        Dev.pprint(result)
+
     def test_lambda_status(self):
         payload = {"params": ['lambda_status']}
         result = self.lambda_browser.update_with_src().invoke(payload)
         Dev.pprint(result)
 
-    def test_render_file(self):
-        payload = {"params": ['render_file','/examples/bootstrap-cdn.html',0,'25',600,50]}
+    def test_render__bootstrap_cdn(self):
+        payload = {"params": ['render','/examples/bootstrap-cdn.html',0,'25',600,50]}
+        self.lambda_browser.update_with_src()
+        png_data = self.lambda_browser.invoke(payload)
+        self._save_png_file(png_data)
+
+    def test_render__cup_of_team(self):
+        payload = {"params": ['render','examples/wardley_map/cup-of-tea.html']}
         self.lambda_browser.update_with_src()
         png_data = self.lambda_browser.invoke(payload)
         self._save_png_file(png_data)

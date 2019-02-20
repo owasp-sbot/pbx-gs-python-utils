@@ -41,7 +41,7 @@ class Files:
 
     @staticmethod
     def find(path_pattern):
-        return glob.glob(path_pattern)
+        return glob.glob(path_pattern, recursive=True)
 
     @staticmethod
     def file_name(path):

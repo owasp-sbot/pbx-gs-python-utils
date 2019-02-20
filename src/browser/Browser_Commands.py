@@ -58,7 +58,17 @@ class Browser_Commands:
         return text,attachments
 
     @staticmethod
-    def render_file(team_id, channel, params):
+    def list(team_id, channel, params):
+        text = "Here are the current examples files:"
+        attachments = []
+        files       = ''
+        for file in Files.find('./web_root/**/*.html'):
+            files += '{0} \n'.format(file.replace('./web_root/',''))
+        attachments.append({'text': files })
+        return text, attachments
+
+    @staticmethod
+    def render(team_id, channel, params):
         load_dependency('syncer')
         load_dependency('requests')
         if params:
