@@ -22,6 +22,16 @@ class Browser_Commands:
                             .sync__screenshot_base64(url,close_browser=True)
 
     @staticmethod
+    def _send_to_slack__png_file(team_id, channel, target, png_file):
+        png_data = base64.b64encode(open(png_file, 'rb').read()).decode()
+
+        if team_id and channel:
+            Browser_Commands._send_to_slack(team_id, channel, target, png_data)
+            return None, None
+        else:
+            return png_data
+
+    @staticmethod
     def _send_to_slack(team_id, channel, url, png_data):
         if team_id and channel:
             s3_bucket = 'gs-lambda-tests'
@@ -68,6 +78,41 @@ class Browser_Commands:
         return text, attachments
 
     @staticmethod
+    def markdown(team_id, channel, params):
+        load_dependency('syncer')
+        load_dependency('requests')
+        from browser.API_Browser import API_Browser
+        from browser.Render_Page import Render_Page
+
+        #web_root = '../../../../src/web_root'
+        web_root = './web_root'
+        api_browser = API_Browser().sync__setup_aws_browser()
+        render_page = Render_Page(api_browser=api_browser,web_root=web_root)
+
+        target  = 'examples/markdown.html'
+        js_code = {'name': 'convert', 'params': '# Markdown code! \n 123 \n - bullet point \n - another one ![](http://visjs.org/images/gettingstartedSlide.png)'}
+        if len(params) > 0:
+            js_code['params']= ' '.join(params).replace('```','')
+
+        with render_page.web_server as web_server:
+           url      = web_server.url(target)
+           #png_file = render_page.get_page_html_via_browser(url,js_code)
+           slack_message("url: {0}",channel,team_id)
+           png_file = render_page.get_screenshot_via_browser(url, js_code=js_code)
+
+
+        #png_file = render_page.screenshot_file_in_folder(web_root, target)
+
+        #return png_file
+        return Browser_Commands._send_to_slack__png_file(team_id, channel, target, png_file)
+
+        #
+        #result = self.view_examples.open_file_in_browser('/examples/markdown.html', js_code)
+
+
+
+
+    @staticmethod
     def render(team_id, channel, params):
         load_dependency('syncer')
         load_dependency('requests')
@@ -88,17 +133,8 @@ class Browser_Commands:
         api_browser = API_Browser().sync__setup_aws_browser()
         render_page = Render_Page(api_browser)
 
-
         png_file = render_page.screenshot_file_in_folder(web_root, target, clip=clip)
-        png_data = base64.b64encode(open(png_file, 'rb').read()).decode()
 
-        if team_id and channel:
-            Browser_Commands._send_to_slack(team_id, channel, target, png_data)
-            return None,None
-        else:
-            return png_data
+        return Browser_Commands._send_to_slack__png_file(team_id, channel, target, png_file)
 
-        # content = render_page.render_html("<h1>an test 123<h1>")
-        # api_browser.sync__close_browser()
-        # Dev.pprint(Process.run("ps", ["-A"]).get('stdout'))
-        # return content
+

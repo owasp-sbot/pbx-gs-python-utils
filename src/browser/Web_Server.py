@@ -9,9 +9,10 @@ from utils.Http  import port_is_open
 
 
 class Web_Server:
-    def __init__(self):
+    def __init__(self, web_root=None):
         self.src_tmp     = '/tmp/temp_web_server'
-        self.web_root    = self.src_tmp + '/html'
+        if web_root      : self.web_root = web_root
+        else             : self.web_root = self.src_tmp + '/html'
         self.html_file   = Files.path_combine(self.web_root, 'index.html')
         self.port        = Misc.random_number(10000,60000)
         self.server_proc = None

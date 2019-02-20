@@ -1,3 +1,5 @@
+import base64
+
 from syncer import sync
 from unittest import TestCase
 
@@ -10,7 +12,7 @@ from utils.Http import WS_is_open
 class Test_API_Browser(TestCase):
 
     def setUp(self):
-         self.api = API_Browser()
+         self.api = API_Browser(headless = False, auto_close = False)
 
     @sync
     async def test_browser_connect(self):
@@ -23,6 +25,27 @@ class Test_API_Browser(TestCase):
         self.api.set_last_chrome_session(data)
         assert self.api.get_last_chrome_session() == data
         Files.delete(self.api.file_tmp_last_chrome_session)
+
+    @sync
+    async def test_js_eval(self):
+        markdown = """
+# some title "with double quotes"
+some text  and 'single quotes'
+"""
+        encoded_text = base64.b64encode(markdown.encode()).decode()
+        js_script = "convert(atob('{0}'))".format(encoded_text)
+
+        result = await self.api.js_eval(js_script)
+        Dev.pprint(result)
+
+    @sync
+    async def test_invoke_js_function(self):
+        markdown = """
+# changed title "via js function"
+some text  and 'single quotes'
+"""
+        result = await self.api.js_invoke_function('convert',markdown)
+        Dev.pprint(result)
 
     @sync
     async def test_html(self):

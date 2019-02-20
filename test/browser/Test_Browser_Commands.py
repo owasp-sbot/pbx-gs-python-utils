@@ -25,3 +25,8 @@ class Test_Browser_Commands(TestCase):
         os.environ['OSX_CHROME'] = 'True'
         result = self.browser_commands.render_file(None,None,None)
         Dev.pprint(result)
+
+    def test_markdown(self):
+        os.environ['OSX_CHROME'] = 'True'
+        result = self.browser_commands.markdown(None,None,None)
+        Dev.pprint(result)

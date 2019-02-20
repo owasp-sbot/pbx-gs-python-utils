@@ -9,7 +9,7 @@ from utils.Temp_File import Temp_File
 
 class Test_Render_Page(TestCase):
     def setUp(self):
-        self.render_page  = Render_Page(headless = True, auto_close = False)
+        self.render_page  = Render_Page(headless = False, auto_close = False)
         self.random_value = Misc.random_string_and_numbers(6, "dynamic text ")
         self.html         = "<html><script>document.write('{0}')</script></html>".format(self.random_value)
 

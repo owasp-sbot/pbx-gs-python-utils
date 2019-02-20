@@ -9,8 +9,8 @@ from utils.Misc import Misc
 
 class Render_Page:
 
-    def __init__(self, api_browser=None, headless = True, auto_close = True):
-        self.web_server = Web_Server()
+    def __init__(self, api_browser=None, headless = True, auto_close = True, web_root=None):
+        self.web_server = Web_Server(web_root)
         if api_browser:
             self.api_browser = api_browser
         else:
@@ -52,16 +52,17 @@ class Render_Page:
 
     # Sync Helpped method (to allow calls to the Async methods to feel like Sync calls)
     @sync
-    async def get_page_html_via_browser(self, url):
+    async def get_page_html_via_browser(self, url,js_code=None):
         await self.api_browser.browser()
         await self.api_browser.open(url)
+        await self.api_browser.js_execute(js_code)
         return await self.api_browser.html()
 
     @sync
-    async def get_screenshot_via_browser(self, url = None, png_file=None,full_page=True, clip=None,viewport=None    ):
+    async def get_screenshot_via_browser(self, url = None, png_file=None,full_page=True, clip=None,viewport=None, js_code=None):
         if clip        is not None: full_page = False
         if png_file    is None    : png_file  = Files.temp_file('.png')
         if url         is None    : url       = self.web_server.url()
         await self.api_browser.browser()
-        return await self.api_browser.screenshot(url,full_page=full_page,file_screenshot=png_file, clip=clip, viewport=viewport)
+        return await self.api_browser.screenshot(url,full_page=full_page,file_screenshot=png_file, clip=clip, viewport=viewport,js_code=js_code)
 

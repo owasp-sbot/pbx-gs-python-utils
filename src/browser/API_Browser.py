@@ -1,4 +1,5 @@
 import base64
+import json
 import os
 from syncer import sync
 
@@ -45,9 +46,32 @@ class API_Browser:
                await page.close()
             await browser.close()
 
+    async def js_execute(self, js_code):
+        if js_code:
+            if type(js_code).__name__ == 'str':
+                return await self.js_eval(js_code)
+            else:
+                name   = js_code.get('name')
+                params = js_code.get('params'  )
+                return await self.js_invoke_function(name, params)
+            #from time import sleep                                 # we might need to add some kind of timeout or callback (to handle cases when actions need a bit more time to stabilize after the js execution)
+            #sleep(0.250)
+
     async def js_eval(self, code):
         page = await self.page()
-        return await page.evaluate(code)
+        try:
+            return await page.evaluate(code)
+        except Exception as error:
+            return "[js eval error]: {0}".format(error)
+
+    async def js_invoke_function(self, name, params):
+        if type(params).__name__ != 'str':
+            params = json.dumps(params)
+
+        encoded_text = base64.b64encode(params.encode()).decode()
+        js_script = "{0}(atob('{1}'))".format(name, encoded_text )
+        return await self.js_eval(js_script)
+
 
     # async def js_invoke(self, method, *args):
     #     page = await self.page()
@@ -85,9 +109,11 @@ class API_Browser:
         page = await self.page()
         return await page.content()
 
-    async def screenshot(self, url= None, full_page = True, file_screenshot = None, clip=None, viewport=None):
+    async def screenshot(self, url= None, full_page = True, file_screenshot = None, clip=None, viewport=None, js_code=None):
         if url:
             await self.open(url)
+        await self.js_execute(js_code)
+
         if file_screenshot is None:
             file_screenshot = self.file_tmp_screenshot
 
