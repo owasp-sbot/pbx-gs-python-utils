@@ -45,10 +45,14 @@ class Test_Lambda_lambda_browser(unittest.TestCase):
         self.lambda_browser.update_with_src()
         result = self.lambda_browser.invoke(payload)
         Dev.pprint(result)
-        #Dev.print(result[3])
+
+    def test_lambda_status(self):
+        payload = {"params": ['lambda_status']}
+        result = self.lambda_browser.update_with_src().invoke(payload)
+        Dev.pprint(result)
 
     # def test_use_api_browser(self):
     #     url = 'https://www.google.co.uk/aaaaaasd'
     #     payload  = {"params": ['use_api_browser', url]}
-    #     png_data = self.lambda_browser.update_with_src().invoke(payload)
+    #
     #     self._save_png_file(png_data)

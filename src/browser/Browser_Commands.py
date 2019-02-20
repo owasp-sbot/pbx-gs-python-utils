@@ -67,10 +67,22 @@ class Browser_Commands:
         png_to_slack = Lambdas('utils.png_to_slack')
         payload      = { 's3_bucket': s3_bucket, 's3_key':s3_key, 'team_id':team_id, 'channel': channel, 'title': url }
         png_to_slack.invoke_async(payload)
+        return "stats", [{ 'title':'Processes','text'  : Process.run("ps", ["-A"]        ).get('stdout') }]
+
         return None,None
 
-
-
+    @staticmethod
+    def lambda_status(team_id, channel, params):
+        text = "Here are the current status of the `graph` lambda function"
+        attachments = []
+        attachments.append({ 'title':'Processes','text'  : Process.run("ps", ["-A"]        ).get('stdout') })
+        attachments.append({'title': 'Temp Files', 'text': Process.run("ls", ["-ls",'/tmp']).get('stdout') })
+        #attachments.append({'title': 'Processes', 'text': )
+        return text,attachments
+# return data, \
+#        Process.run("ps",["-A"]).get('stdout'), \
+#        Files.find('/tmp/core.headless_shell.*')
+#        #Process.run("ls", ["-ls",'/tmp']).get('stdout'), \
 
 
 # @staticmethod
