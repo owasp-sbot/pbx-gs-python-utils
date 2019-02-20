@@ -51,6 +51,11 @@ class Test_Lambda_lambda_browser(unittest.TestCase):
         result = self.lambda_browser.update_with_src().invoke(payload)
         Dev.pprint(result)
 
+    def test_render_file(self):
+        payload = {"params": ['render_file']}
+        result = self.lambda_browser.update_with_src().invoke(payload)
+        Dev.pprint(result)
+
     # def test_use_api_browser(self):
     #     url = 'https://www.google.co.uk/aaaaaasd'
     #     payload  = {"params": ['use_api_browser', url]}

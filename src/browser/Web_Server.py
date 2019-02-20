@@ -40,7 +40,11 @@ class Web_Server:
 
     def start(self):
         if Files.not_exists(self.web_root):  Files.folder_create(self.web_root)     # make sure root folder exists
-        self.server_proc = subprocess.Popen(["python", "-m", "SimpleHTTPServer", str(self.port)], cwd=self.web_root)
+        Dev.pprint(self.web_root)
+        #self.port = "1234"
+
+        self.server_proc = subprocess.Popen(["python", "-m", "http.server", str(self.port)], cwd=self.web_root)
+        Dev.pprint(self.server_proc)
         self.wait_for_server_started()
         return self
 

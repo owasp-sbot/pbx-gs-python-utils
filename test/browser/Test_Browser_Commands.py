@@ -2,6 +2,7 @@ import os
 from unittest import TestCase
 
 from browser.Browser_Commands import Browser_Commands
+from utils.Dev import Dev
 
 
 class Test_Browser_Commands(TestCase):
@@ -15,3 +16,8 @@ class Test_Browser_Commands(TestCase):
         channel = 'DDKUZTK6X'
         url = 'https://www.google.co.uk/aaa'
         self.browser_commands.screenshot(team_id, channel, [url])
+
+    def test(self):
+        os.environ['OSX_CHROME'] = 'True'
+        result = self.browser_commands.render_file(None,None,None)
+        Dev.pprint(result)

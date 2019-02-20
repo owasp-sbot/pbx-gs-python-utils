@@ -9,9 +9,12 @@ from utils.Misc import Misc
 
 class Render_Page:
 
-    def __init__(self, headless = True, auto_close = True):
+    def __init__(self, api_browser=None, headless = True, auto_close = True):
         self.web_server = Web_Server()
-        self.api_browser = API_Browser(headless,auto_close)
+        if api_browser:
+            self.api_browser = api_browser
+        else:
+            self.api_browser = API_Browser(headless,auto_close)
 
     def render_file(self, html_file):
         return self.render_html(Files.contents(html_file))

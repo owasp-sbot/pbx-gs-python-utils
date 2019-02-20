@@ -23,12 +23,4 @@ def run(event, context):
 
     cleanup_chrome_processes_and_tmp_files()
 
-    # from utils.Process import Process
-    # from utils.Files import Files
-    # return data, \
-    #        Process.run("ps",["-A"]).get('stdout'), \
-    #        Files.find('/tmp/core.headless_shell.*')
-    #        #Process.run("ls", ["-ls",'/tmp']).get('stdout'), \
-
-
     return data

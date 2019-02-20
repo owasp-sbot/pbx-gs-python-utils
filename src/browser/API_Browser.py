@@ -74,9 +74,12 @@ class API_Browser:
         return self
 
     async def html(self):
-        from pyquery import PyQuery         # add it here since there was some import issues with running it in lambda (etree). Also this method should not be that useful inside an lambda
-        content = await self.html_raw()
-        return PyQuery(content)
+        try:
+            from pyquery import PyQuery         # add it here since there was some import issues with running it in lambda (etree). Also this method should not be that useful inside an lambda
+            content = await self.html_raw()
+            return PyQuery(content)
+        except:
+            return await self.html_raw()
 
     async def html_raw(self):
         page = await self.page()
