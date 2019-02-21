@@ -26,7 +26,7 @@ class Test_Lambda_lambda_browser(unittest.TestCase):
 
     def test_markdown(self):
         #payload = {"params": ['markdown'] }
-        payload = {"params": ['markdown', '# title\n', "normal text"]}
+        payload = {"params": ['markdown', '# title from Lambda\n', "normal text"]}
         png_data = self.lambda_browser.update_with_src().invoke(payload)
         #Dev.pprint(png_data)
         self._save_png_file(png_data)

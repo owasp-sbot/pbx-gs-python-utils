@@ -1,3 +1,4 @@
+import base64
 import os
 from unittest import TestCase
 
@@ -9,6 +10,12 @@ class Test_Browser_Commands(TestCase):
 
     def setUp(self):
         self.browser_commands = Browser_Commands()
+
+    def _save_png_data(self, png_data):
+        png_file = '/tmp/lambda_png_file.png'
+        if png_data:
+            with open(png_file, "wb") as fh:
+                fh.write(base64.decodebytes(png_data.encode()))
 
     def test_list(self):
         result = self.browser_commands.list(None, None, None)
@@ -26,7 +33,12 @@ class Test_Browser_Commands(TestCase):
         result = self.browser_commands.render_file(None,None,None)
         Dev.pprint(result)
 
-    def test_markdown(self):
-        os.environ['OSX_CHROME'] = 'True'
+    def test_markdown___no_params(self):
         result = self.browser_commands.markdown(None,None,None)
-        Dev.pprint(result)
+        self._save_png_data(result)
+        #Dev.pprint(result)
+
+    def test_markdown___with_params(self):
+        params = ["# running from unit test \n","2nd paragraph..."]
+        result = self.browser_commands.markdown(None,None,params)
+        self._save_png_data(result)

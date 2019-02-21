@@ -2,6 +2,7 @@ import asyncio
 import base64
 import os
 
+from browser.Browser_Helper import Browser_Helper
 from utils.Dev import Dev
 from utils.Files import Files
 from utils.Lambdas_Helpers import slack_message
@@ -18,26 +19,30 @@ class Browser_Commands:
         if not url: return ''
         load_dependency('syncer')
         from browser.API_Browser import API_Browser
-        return API_Browser().sync__setup_aws_browser()          \
+        return API_Browser().sync__setup_browser()          \
                             .sync__screenshot_base64(url,close_browser=True)
 
     @staticmethod
     def _send_to_slack__png_file(team_id, channel, target, png_file):
-        png_data = base64.b64encode(open(png_file, 'rb').read()).decode()
-
         if team_id and channel:
-            Browser_Commands._send_to_slack(team_id, channel, target, png_data)
+            Browser_Commands._send_to_slack_png_file(team_id, channel, target, png_file)
+            #Browser_Commands._send_to_slack(team_id, channel, target, png_data)
             return None, None
         else:
-            return png_data
+            return base64.b64encode(open(png_file, 'rb').read()).decode()
 
     @staticmethod
     def _send_to_slack(team_id, channel, url, png_data):
+
+        png_file = Files.temp_file('.png')
+        with open(png_file, "wb") as fh:
+            fh.write(base64.decodebytes(png_data.encode()))
+        Browser_Commands._send_to_slack_png_file(team_id, channel, url, png_file)
+
+    @staticmethod
+    def _send_to_slack_png_file(team_id, channel, url, png_file):
         if team_id and channel:
             s3_bucket = 'gs-lambda-tests'
-            png_file = Files.temp_file('.png')
-            with open(png_file, "wb") as fh:
-                fh.write(base64.decodebytes(png_data.encode()))
             s3_key = S3().file_upload_as_temp_file(png_file, s3_bucket)
             png_to_slack = Lambdas('utils.png_to_slack')
             payload = {'s3_bucket': s3_bucket, 's3_key': s3_key, 'team_id': team_id, 'channel': channel, 'title': url}
@@ -79,35 +84,15 @@ class Browser_Commands:
 
     @staticmethod
     def markdown(team_id, channel, params):
-        load_dependency('syncer')
-        load_dependency('requests')
-        from browser.API_Browser import API_Browser
-        from browser.Render_Page import Render_Page
-
-        #web_root = '../../../../src/web_root'
-        web_root = './web_root'
-        api_browser = API_Browser().sync__setup_aws_browser()
-        render_page = Render_Page(api_browser=api_browser,web_root=web_root)
-
-        target  = 'examples/markdown.html'
-        js_code = {'name': 'convert', 'params': '# Markdown code! \n 123 \n - bullet point \n - another one ![](http://visjs.org/images/gettingstartedSlide.png)'}
-        if len(params) > 0:
+        path  = 'examples/markdown.html'
+        js_code = {'name': 'convert', 'params': '# Markdown code!!! \n 123 \n - bullet point \n - another one ![](http://visjs.org/images/gettingstartedSlide.png)'}
+        if params and len(params) > 0:
             js_code['params']= ' '.join(params).replace('```','')
 
-        with render_page.web_server as web_server:
-           url      = web_server.url(target)
-           #png_file = render_page.get_page_html_via_browser(url,js_code)
-           slack_message("url: {0}",channel,team_id)
-           png_file = render_page.get_screenshot_via_browser(url, js_code=js_code)
+        browser_helper = Browser_Helper().setup()
+        png_file       = browser_helper.open_local_page_and_get_screenshot(path, js_code)
 
-
-        #png_file = render_page.screenshot_file_in_folder(web_root, target)
-
-        #return png_file
-        return Browser_Commands._send_to_slack__png_file(team_id, channel, target, png_file)
-
-        #
-        #result = self.view_examples.open_file_in_browser('/examples/markdown.html', js_code)
+        return Browser_Commands._send_to_slack__png_file(team_id, channel, path, png_file)
 
 
 
@@ -130,7 +115,7 @@ class Browser_Commands:
         web_root = './web_root/'
         target   = url_path
         slack_message(":point_right: rending file `{0}`".format(target),[], channel, team_id)
-        api_browser = API_Browser().sync__setup_aws_browser()
+        api_browser = API_Browser().sync__setup_browser()
         render_page = Render_Page(api_browser)
 
         png_file = render_page.screenshot_file_in_folder(web_root, target, clip=clip)

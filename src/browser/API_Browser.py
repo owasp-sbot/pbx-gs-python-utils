@@ -113,7 +113,7 @@ class API_Browser:
         if url:
             await self.open(url)
         await self.js_execute(js_code)
-
+    
         if file_screenshot is None:
             file_screenshot = self.file_tmp_screenshot
 
@@ -149,9 +149,9 @@ class API_Browser:
 
     # helper sync functions
 
-    def sync__setup_aws_browser(self):                                                          # weirdly this works but the version below (using @sync) doesn't (we get an 'Read-only file system' error)
+    def sync__setup_browser(self):                                                          # weirdly this works but the version below (using @sync) doesn't (we get an 'Read-only file system' error)
         import asyncio
-        if os.getenv('OSX_CHROME')== 'True':
+        if os.getenv('AWS_REGION') is None:                                                 # we not in AWS so run the normal browser connect using pyppeteer normal method
             asyncio.get_event_loop().run_until_complete(self.browser_connect())
             return self
 
