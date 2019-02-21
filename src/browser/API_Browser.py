@@ -158,13 +158,14 @@ class API_Browser:
         load_dependency('pyppeteer')
         path_headless_shell          = '/tmp/lambdas-dependencies/pyppeteer/headless_shell'     # path to headless_shell AWS Linux executable
         os.environ['PYPPETEER_HOME'] = '/tmp'                                                   # tell pyppeteer to use this read-write path in Lambda aws
-        async def take_screenshot():
+
+        async def set_up_browser():
             from pyppeteer import launch                                                        # import pyppeteer dependency
             Process.run("chmod", ['+x', path_headless_shell])                                   # set the privs of path_headless_shell to execute
             self._browser = await launch(executablePath=path_headless_shell,                    # lauch chrome (i.e. headless_shell)
-                                         args=['--no-sandbox',
-                                               '--single-process'])                             # two key settings or the requests will not work
-        asyncio.get_event_loop().run_until_complete(take_screenshot())
+                                         args=['--no-sandbox'              ,
+                                               '--single-process'         ])                             # two key settings or the requests will not work
+        asyncio.get_event_loop().run_until_complete(set_up_browser())
         return self
 
     # @sync

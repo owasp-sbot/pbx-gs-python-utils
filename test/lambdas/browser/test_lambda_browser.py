@@ -26,26 +26,16 @@ class Test_Lambda_lambda_browser(unittest.TestCase):
 
     def test_markdown(self):
         #payload = {"params": ['markdown'] }
-        payload = {"params": ['markdown', '# title from Lambda\n', "normal text"]}
+        payload = {"params": ['markdown', '# Created from Lambda\n', "normal text"]}
         png_data = self.lambda_browser.update_with_src().invoke(payload)
         #Dev.pprint(png_data)
-        self._save_png_file(png_data)
-
-    def test_screenshot_png(self):
-        url = 'https://www.google.co.uk'
-        url = 'http://news.bbc.co.uk/aaaa'
-        #url = 'http://visjs.org/'
-        #url ='https://www.o2.co.uk'
-        #url = 'https://www.slack.com'
-        payload = {"params": ['screenshot_png',url]}
-        png_data = self.lambda_browser.update_with_src().invoke(payload)
         self._save_png_file(png_data)
 
     def test_screenshot(self):
         team_id = 'T7F3AUXGV'
         channel = 'DDKUZTK6X'
         url = 'https://www.google.co.uk/aaa'
-        url = 'https://news.bbc.co.uk/aaa'
+        #url = 'https://news.bbc.co.uk/aaa'
         #url = 'http://visjs.org/'
 
         payload = {"params": ['screenshot', url,], 'data': {'channel':channel, 'team_id': team_id}}
@@ -65,13 +55,13 @@ class Test_Lambda_lambda_browser(unittest.TestCase):
 
     def test_render__bootstrap_cdn(self):
         payload = {"params": ['render','/examples/bootstrap-cdn.html',0,0,600,50]}
-        #self.lambda_browser.update_with_src()
+        self.lambda_browser.update_with_src()
         png_data = self.lambda_browser.invoke(payload)
         self._save_png_file(png_data)
 
-    def test_render__cup_of_team(self):
+    def test_render__cup_of_tea(self):
         payload = {"params": ['render','examples/wardley_map/cup-of-tea.html']}
-        #self.lambda_browser.update_with_src()
+        self.lambda_browser.update_with_src()
         png_data = self.lambda_browser.invoke(payload)
         self._save_png_file(png_data)
 
