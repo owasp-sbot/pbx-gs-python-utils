@@ -11,6 +11,12 @@ from utils.Dev import Dev
 class Misc:
 
     @staticmethod
+    def class_name(target):
+        if target:
+            return type(target).__name__
+        return None
+
+    @staticmethod
     def object_data(target):
         #fields = [field for field in dir(target) if not callable(getattr(target, field)) and not field.startswith("a__")]
         return target.__dict__ # this one seems to do the trick (if not look at the code sample above)

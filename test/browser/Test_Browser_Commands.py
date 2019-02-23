@@ -4,6 +4,7 @@ from unittest import TestCase
 
 from browser.Browser_Commands import Browser_Commands
 from utils.Dev import Dev
+from utils.aws.Lambdas import Lambdas
 
 
 class Test_Browser_Commands(TestCase):
@@ -59,3 +60,18 @@ class Test_Browser_Commands(TestCase):
         params = ["# Created from unit test \n","2nd paragraph --- 123"]
         result = self.browser_commands.markdown(None,None,params)
         self._save_png_data(result)
+
+
+    def test_vis_js(self):
+        js_code= """
+        network.body.data.nodes.add({id:'12',label:'new node'})
+        network.body.data.edges.add({from:'12',to:'1'})
+        """
+        params = [js_code]
+        #params = None
+        result = self.browser_commands.vis_js(params=params)
+        Dev.pprint(result)
+
+
+    def test_update_lambda(self):
+        Lambdas('browser.lambda_browser').update_with_src()

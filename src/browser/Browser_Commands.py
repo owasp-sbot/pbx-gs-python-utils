@@ -96,8 +96,8 @@ class Browser_Commands:
         slack_message(":point_right: rendering file `{0}`".format(target), [], channel, team_id)
         return Browser_Lamdba_Helper().setup().render_file(team_id, channel, target,clip=clip)
 
-        png_file = browser_helper.render_page.screenshot_file_in_folder(browser_helper.web_root(), target, clip=clip)
-        return browser_helper.send_png_file_to_slack(team_id, channel, target, png_file)
+        #png_file = browser_helper.render_page.screenshot_file_in_folder(browser_helper.web_root(), target, clip=clip)
+        #return browser_helper.send_png_file_to_slack(team_id, channel, target, png_file)
 
         # return None
         # load_dependency('syncer')
@@ -116,5 +116,21 @@ class Browser_Commands:
         #
         # return browser_helper.send_png_file_to_slack(team_id, channel, 'markdown', png_file)
         # #return Browser_Commands._send_to_slack__png_file(team_id, channel, target, png_file)
+
+    @staticmethod
+    def vis_js(team_id=None, channel=None, params=None):
+        path = 'examples/vis-js.html'
+        if params and len(params) > 0:
+            js_code = params.pop(0)
+        else:
+            js_code= """
+                        network.body.data.nodes.add({id:'12',label:'new Dynamic Node'})
+                        network.body.data.edges.add({from:'12',to:'1'})
+                    """
+        browser = Browser_Lamdba_Helper().setup()
+
+        return browser.open_local_page_and_get_html(path,js_code=js_code)
+
+        #return browser.render_file(team_id, channel,path, js_code=js_code)
 
 

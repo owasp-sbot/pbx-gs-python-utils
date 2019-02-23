@@ -51,12 +51,13 @@ class Render_Page:
         return self.get_screenshot_via_browser(url, img_file, clip=clip)
 
     # Sync Helpped method (to allow calls to the Async methods to feel like Sync calls)
+
     @sync
     async def get_page_html_via_browser(self, url,js_code=None):
-        await self.api_browser.browser()
-        await self.api_browser.open(url)
-        await self.api_browser.js_execute(js_code)
-        return await self.api_browser.html()
+        await self.api_browser.browser()                # make sure browser is connected
+        await self.api_browser.open(url)                # open url
+        await self.api_browser.js_execute(js_code)      # execute Javascript
+        return await self.api_browser.html()            # return Html (localy via PyQuery)
 
     @sync
     async def get_screenshot_via_browser(self, url = None, png_file=None,full_page=True, clip=None,viewport=None, js_code=None):

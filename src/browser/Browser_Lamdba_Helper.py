@@ -10,17 +10,27 @@ class Browser_Lamdba_Helper:
     def __init__(self):
         self.api_browser = None
         self.render_page = None
-
-    def open_local_page_and_get_screenshot(self, path, js_code,clip=None):
-        with self.render_page.web_server as web_server:
-           url      = web_server.url(path)
-           return self.render_page.get_screenshot_via_browser(url, js_code=js_code, clip=clip)
+        self.headless    = False
+        self.auto_close  = False
 
 
     def get_screenshot_png(self,url):
         if not url: return ''
         load_dependency('syncer')
         return self.api_browser.sync__screenshot_base64(url, close_browser=True)
+
+    def open_local_file(self, path, js_code=None):
+        return self.open_local_page_and_get_html(path,js_code)
+
+    def open_local_page_and_get_html(self, path, js_code=None):
+        with self.render_page.web_server as web_server:
+           url      = web_server.url(path)
+           return self.render_page.get_page_html_via_browser(url, js_code=js_code)
+
+    def open_local_page_and_get_screenshot(self, path, js_code=None,clip=None):
+        with self.render_page.web_server as web_server:
+           url      = web_server.url(path)
+           return self.render_page.get_screenshot_via_browser(url, js_code=js_code, clip=clip)
 
     def render_file(self,team_id, channel, path,js_code=None,clip=None):
         #browser_helper = Browser_Lamdba_Helper().setup()
@@ -55,7 +65,7 @@ class Browser_Lamdba_Helper:
 
         from browser.API_Browser import API_Browser
         from browser.Render_Page import Render_Page
-        self.api_browser = API_Browser().sync__setup_browser()
+        self.api_browser = API_Browser(headless=self.headless, auto_close=self.auto_close).sync__setup_browser()
         self.render_page = Render_Page(api_browser=self.api_browser, web_root=self.web_root())
 
         return self
@@ -72,4 +82,7 @@ class Browser_Lamdba_Helper:
             return Files.path_combine('.','./web_root')
         if 'test/browser' in Files.current_folder():    # if we are in an unit test
             return  Files.path_combine('.','../../../../src/web_root')
+        parent_folder = Files.folder_name(__file__)
+        if 'pbx-gs-python-utils/src/browser' in parent_folder:
+            return Files.path_combine(parent_folder,'../../../../src/web_root')
         return None

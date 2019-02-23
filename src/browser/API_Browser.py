@@ -21,6 +21,7 @@ class API_Browser:
         self.headless                     = headless
         self.auto_close                   = auto_close
         self.url_chrome                   = url_chrome
+        self.log_js_errors_to_console     = True
 
     async def browser(self):
         if self._browser is None:
@@ -62,7 +63,10 @@ class API_Browser:
         try:
             return await page.evaluate(code)
         except Exception as error:
-            return "[js eval error]: {0}".format(error)
+            error_message = "[js eval error]: {0}".format(error)
+            if self.log_js_errors_to_console:
+                print(error_message)
+            return error_message
 
     async def js_invoke_function(self, name, params):
         if type(params).__name__ != 'str':
@@ -112,6 +116,7 @@ class API_Browser:
     async def screenshot(self, url= None, full_page = True, file_screenshot = None, clip=None, viewport=None, js_code=None):
         if url:
             await self.open(url)
+
         await self.js_execute(js_code)
     
         if file_screenshot is None:
@@ -163,8 +168,7 @@ class API_Browser:
             from pyppeteer import launch                                                        # import pyppeteer dependency
             Process.run("chmod", ['+x', path_headless_shell])                                   # set the privs of path_headless_shell to execute
             self._browser = await launch(executablePath=path_headless_shell,                    # lauch chrome (i.e. headless_shell)
-                                         args=['--no-sandbox'              ,
-                                               '--single-process'         ])                             # two key settings or the requests will not work
+                                         args=['--no-sandbox'              ,                                               '--single-process'         ])                             # two key settings or the requests will not work
         asyncio.get_event_loop().run_until_complete(set_up_browser())
         return self
 
@@ -184,6 +188,11 @@ class API_Browser:
     @sync
     async def sync__close_browser(self):
         await self._browser.close()
+        return self
+
+    @sync
+    async def sync__js_execute(self, js_code):
+        await self.js_execute(js_code)
         return self
 
     @sync

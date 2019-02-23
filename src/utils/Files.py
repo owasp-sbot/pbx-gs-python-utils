@@ -44,6 +44,11 @@ class Files:
         return glob.glob(path_pattern, recursive=True)
 
     @staticmethod
+    def files(path):
+        search_path = Files.path_combine(path,'**/*.*')
+        return Files.find(search_path)
+
+    @staticmethod
     def file_name(path):
         return os.path.basename(path)
 
