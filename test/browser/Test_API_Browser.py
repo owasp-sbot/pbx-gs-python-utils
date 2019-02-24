@@ -72,6 +72,7 @@ some text  and 'single quotes'
         file = await self.api.screenshot()
         assert Files.exists(file)
 
+
 class Test_API_Browser___with_browser_not_closing(TestCase):
 
     def setUp(self):
@@ -82,4 +83,3 @@ class Test_API_Browser___with_browser_not_closing(TestCase):
         await self.api.open('https://www.google.co.uk')
         content = await self.api.html()
         print(content)
-

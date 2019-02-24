@@ -11,10 +11,15 @@ class Test_Lambda_lambda_browser(unittest.TestCase):
         self.lambda_browser = Lambdas('browser.lambda_browser',memory=3008)
 
     def _save_png_file(self, png_data):
-        png_file = '/tmp/lambda_png_file.png'
-        if png_data:
-            with open(png_file, "wb") as fh:
-                fh.write(base64.decodebytes(png_data.encode()))
+        try:
+            png_file = '/tmp/lambda_png_file.png'
+            if png_data:
+                with open(png_file, "wb") as fh:
+                    fh.write(base64.decodebytes(png_data.encode()))
+                Dev.pprint("Png data with size {0} saved to {1}".format(len(png_data),png_file))
+        except Exception as error:
+            Dev.print("[_save_png_file][Error] {0}".format(error))
+            Dev.print(png_data)
 
     def test_just_update(self):
         self.lambda_browser.update_with_src()
@@ -64,6 +69,14 @@ class Test_Lambda_lambda_browser(unittest.TestCase):
         self.lambda_browser.update_with_src()
         png_data = self.lambda_browser.invoke(payload)
         self._save_png_file(png_data)
+
+
+    def test_elk(self):
+        payload = {"params": ['elk','dashboards']}
+        png_data = self.lambda_browser.update_with_src().invoke(payload)
+        #Dev.pprint(png_data)
+        self._save_png_file(png_data)
+
 
     # def test_use_api_browser(self):
     #     url = 'https://www.google.co.uk/aaaaaasd'

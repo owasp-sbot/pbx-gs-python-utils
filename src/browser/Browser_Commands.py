@@ -1,8 +1,11 @@
+from time import sleep
+
 from browser.Browser_Lamdba_Helper  import Browser_Lamdba_Helper
 from utils.Files                    import Files
 from utils.Lambdas_Helpers          import slack_message
 from utils.Process                  import Process
 from utils.aws.Lambdas              import load_dependency, Lambdas
+from utils.slack.Slack_Commands_Helper import Slack_Commands_Helper
 
 
 class Browser_Commands:
@@ -133,4 +136,27 @@ class Browser_Commands:
 
         #return browser.render_file(team_id, channel,path, js_code=js_code)
 
+    @staticmethod
+    def elk(team_id=None, channel=None, params=None):
+        load_dependency('syncer')
+        from browser.sites.Site_ELK import ELK_Commands
+        from browser.sites.Site_ELK import Site_ELK
 
+        if len(params) == 0:
+            Slack_Commands_Helper(ELK_Commands).invoke(team_id, channel, params)
+            return None
+
+        browser_helper = Browser_Lamdba_Helper().setup()
+        elk = Site_ELK(browser_helper.api_browser, team_id, channel)
+
+        elk.sync__connect_and_login()
+
+        params.append(browser_helper)
+        params.append(elk)
+
+        result = Slack_Commands_Helper(ELK_Commands).invoke(team_id, channel, params)
+
+        if team_id:
+            return None
+        else:
+            return result

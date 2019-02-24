@@ -83,13 +83,19 @@ class API_Browser:
     #     return await page.evaluate(method, *args)
 
 
-    async def open(self, url):
+    async def open(self, url, wait_until=None):
         page      = await self.page()
-        response  = await page.goto(url)  # returns response object
-        headers   = response.headers
-        status    = response.status
-        url       = response.url
-        return headers, status, url, self
+        if wait_until:
+            response  = await page.goto(url, waitUntil= wait_until)  # returns response object
+        else:
+            response = await page.goto(url)
+
+        if response:
+            headers   = response.headers
+            status    = response.status
+            url       = response.url
+            return headers, status, url, self
+        return None, None, url, self
 
     async def page(self):
         browser = await self.browser()
@@ -186,6 +192,10 @@ class API_Browser:
     #     return self
 
     @sync
+    async def sync__browser_width(self, width):
+        return await self.page_size(width, width)
+
+    @sync
     async def sync__close_browser(self):
         await self._browser.close()
         return self
@@ -209,12 +219,18 @@ class API_Browser:
         return await self.url()
 
     @sync
-    async def sync__screenshot(self, url):
-        return await self.screenshot(url)
+    async def sync__screenshot(self, url=None,file_screenshot = None):
+        return await self.screenshot(url,file_screenshot = file_screenshot)
 
     @sync
-    async def sync__screenshot_base64(self, url,full_page=True,close_browser=False):
+    async def sync__screenshot_base64(self, url=None,full_page=True,close_browser=False):
         screenshot_file = await self.screenshot(url=url,full_page=full_page)
         if close_browser:
             await self.browser_close()
         return base64.b64encode(open(screenshot_file, 'rb').read()).decode()
+
+    @sync
+    async def sync__await_for_element(self, selector, timeout=10000):
+        page = await self.page()
+        await page.waitForSelector(selector, {'timeout': timeout })
+        return self

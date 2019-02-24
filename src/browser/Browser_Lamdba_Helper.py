@@ -1,6 +1,5 @@
 import base64
 import os
-
 from utils.Files import Files
 from utils.aws.Lambdas import load_dependency, Lambdas
 from utils.aws.s3 import S3
@@ -14,8 +13,8 @@ class Browser_Lamdba_Helper:
         self.auto_close  = False
 
 
-    def get_screenshot_png(self,url):
-        if not url: return ''
+    def get_screenshot_png(self,url=None):
+        #if not url: return ''
         load_dependency('syncer')
         return self.api_browser.sync__screenshot_base64(url, close_browser=True)
 
