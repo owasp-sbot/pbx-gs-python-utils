@@ -25,6 +25,9 @@ class Files:
             return file.read()
 
     @staticmethod
+    def current_folder():
+        return Files.path_combine(".","")
+    @staticmethod
     def delete(path):
         if Files.exists(path):
             os.remove(path)
@@ -32,11 +35,18 @@ class Files:
 
     @staticmethod
     def exists(path):
-        return os.path.exists(path)
+        if path:
+            return os.path.exists(path)
+        return False
 
     @staticmethod
     def find(path_pattern):
-        return glob.glob(path_pattern)
+        return glob.glob(path_pattern, recursive=True)
+
+    @staticmethod
+    def files(path):
+        search_path = Files.path_combine(path,'**/*.*')
+        return Files.find(search_path)
 
     @staticmethod
     def file_name(path):
@@ -97,7 +107,18 @@ class Files:
     @staticmethod
     def temp_file(extension = '.tmp'):
         (fd, tmp_file) = tempfile.mkstemp(extension)
-        return '/tmp/{0}'.format(os.path.basename(tmp_file))
+        return tmp_file
+        #return '/tmp/{0}'.format(os.path.basename(tmp_file))
+
+    @staticmethod
+    def temp_filename(extension='.tmp'):
+        if len(extension) >0 and extension[0] !='.' :           # make sure the extension starts with a dot
+            extension = '.' + extension
+        return Files.file_name(Files.temp_file(extension))
+
+    @staticmethod
+    def temp_folder(prefix=None, suffix=None,parent_folder=None):
+        return tempfile.mkdtemp(suffix, prefix, parent_folder)
 
     @staticmethod
     def write(path,contents):
@@ -107,7 +128,13 @@ class Files:
     @staticmethod
     def zip_folder(root_dir):
         return shutil.make_archive(root_dir, "zip", root_dir)
-    # @staticmethod
+
+    @staticmethod
+    def unzip_file(zip_file, target_folder):
+        shutil.unpack_archive(zip_file, extract_dir=target_folder)
+        return target_folder
+
+        # @staticmethod
     # def save_string(file_Path,data):
     #     with open(file_Path, "w") as f:
     #         f.write(data)

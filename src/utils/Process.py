@@ -1,3 +1,5 @@
+import os
+import signal
 import subprocess
 
 class Process:
@@ -12,3 +14,8 @@ class Process:
             "stdout"    : result.stdout.decode(),
             "stderr"    : result.stderr.decode(),
         }
+
+    @staticmethod
+    def stop(pid):
+        print('killing process {0} with {1}'.format(pid, signal.SIGKILL))
+        print(os.kill(pid, signal.SIGKILL))
