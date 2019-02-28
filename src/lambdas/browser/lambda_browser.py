@@ -11,7 +11,6 @@ def cleanup_chrome_processes_and_tmp_files():               # remote temp files
 
 
 def run(event, context):
-
     params  = event.get('params')
     data    = event.get('data')
     channel = None

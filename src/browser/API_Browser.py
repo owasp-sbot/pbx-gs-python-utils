@@ -223,8 +223,8 @@ class API_Browser:
         return await self.screenshot(url,file_screenshot = file_screenshot)
 
     @sync
-    async def sync__screenshot_base64(self, url=None,full_page=True,close_browser=False):
-        screenshot_file = await self.screenshot(url=url,full_page=full_page)
+    async def sync__screenshot_base64(self, url=None,full_page=True,close_browser=False, clip=None):
+        screenshot_file = await self.screenshot(url=url,full_page=full_page, clip=clip)
         if close_browser:
             await self.browser_close()
         return base64.b64encode(open(screenshot_file, 'rb').read()).decode()

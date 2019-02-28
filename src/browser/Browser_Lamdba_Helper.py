@@ -9,14 +9,14 @@ class Browser_Lamdba_Helper:
     def __init__(self):
         self.api_browser = None
         self.render_page = None
-        self.headless    = False
-        self.auto_close  = False
+        self.headless    = True
+        self.auto_close  = True
 
 
-    def get_screenshot_png(self,url=None):
+    def get_screenshot_png(self,url=None, clip=None,full_page=None):
         #if not url: return ''
         load_dependency('syncer')
-        return self.api_browser.sync__screenshot_base64(url, close_browser=True)
+        return self.api_browser.sync__screenshot_base64(url, close_browser=True, clip=clip,full_page=full_page)
 
     def open_local_file(self, path, js_code=None):
         return self.open_local_page_and_get_html(path,js_code)
@@ -26,14 +26,14 @@ class Browser_Lamdba_Helper:
            url      = web_server.url(path)
            return self.render_page.get_page_html_via_browser(url, js_code=js_code)
 
-    def open_local_page_and_get_screenshot(self, path, js_code=None,clip=None):
+    def open_local_page_and_get_screenshot(self, path, png_file=None,js_code=None,clip=None):
         with self.render_page.web_server as web_server:
            url      = web_server.url(path)
-           return self.render_page.get_screenshot_via_browser(url, js_code=js_code, clip=clip)
+           return self.render_page.get_screenshot_via_browser(url, js_code=js_code, clip=clip,png_file=png_file)
 
     def render_file(self,team_id, channel, path,js_code=None,clip=None):
         #browser_helper = Browser_Lamdba_Helper().setup()
-        png_file = self.open_local_page_and_get_screenshot(path, js_code,clip=clip)
+        png_file = self.open_local_page_and_get_screenshot(path=path, js_code=js_code,clip=clip)
         return self.send_png_file_to_slack(team_id, channel, 'markdown', png_file)
 
     def send_png_file_to_slack(self, team_id, channel, target, png_file):

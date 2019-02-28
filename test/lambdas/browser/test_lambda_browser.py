@@ -77,6 +77,21 @@ class Test_Lambda_lambda_browser(unittest.TestCase):
         #Dev.pprint(png_data)
         self._save_png_file(png_data)
 
+    def test_elk__dashboard_project(self):
+        payload = {"params": ['elk', 'dashboard_project','GSSP-126']}
+        png_data = self.lambda_browser.update_with_src().invoke(payload)
+        # Dev.pprint(png_data)
+        self._save_png_file(png_data)
+
+
+
+    def test_r1_r2_risks(self):
+        payload = {"params": ['render','gs/risk/r1-and-r2.html']}
+        png_data = self.lambda_browser.update_with_src().invoke(payload)
+        #Dev.pprint(png_data)
+        self._save_png_file(png_data)
+
+
 
     # def test_use_api_browser(self):
     #     url = 'https://www.google.co.uk/aaaaaasd'

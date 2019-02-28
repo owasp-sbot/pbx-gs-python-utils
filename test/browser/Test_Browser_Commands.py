@@ -61,6 +61,10 @@ class Test_Browser_Commands(TestCase):
         result = self.browser_commands.markdown(None,None,params)
         self._save_png_data(result)
 
+    def test_risk(self):
+        params = ["r1_1:1,r3_4:2 , r4_4:0"]
+        result = self.browser_commands.risks(params=params)
+        self._save_png_data(result)
 
     def test_vis_js(self):
         js_code= """
@@ -71,6 +75,8 @@ class Test_Browser_Commands(TestCase):
         #params = None
         result = self.browser_commands.vis_js(params=params)
         Dev.pprint(result)
+        
+
 
 
     def test_update_lambda(self):

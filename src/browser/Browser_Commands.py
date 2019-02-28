@@ -1,3 +1,4 @@
+import json
 from time import sleep
 
 from browser.Browser_Lamdba_Helper  import Browser_Lamdba_Helper
@@ -121,6 +122,27 @@ class Browser_Commands:
         # #return Browser_Commands._send_to_slack__png_file(team_id, channel, target, png_file)
 
     @staticmethod
+    def risks(team_id=None, channel=None, params=None):
+        path = '/gs/risk/r1-and-r2.html'
+        data = {}
+        if params and len(params) > 0:
+            fixed_params = ' '.join(params).replace('```','')
+            data = {}
+            for items in fixed_params.split(','):
+                values = items.split(':')
+                data[values[0].strip()] = values[1].strip()
+
+        js_code = "r1_and_r2.set_risks({0})".format(json.dumps(data))
+        clip = {'x': 1, 'y': 1, 'width': 915, 'height': 435}
+        browser = Browser_Lamdba_Helper().setup()
+        return browser.render_file(team_id, channel, path=path, js_code=js_code, clip=clip)
+
+        #return browser.open_local_page_and_get_screenshot(path, js_code=js_code, png_file=png_file)
+
+        #
+        #.set_risks({'r1_2': '1', 'r2_4': '0', 'r5_4': '2'})
+
+    @staticmethod
     def vis_js(team_id=None, channel=None, params=None):
         path = 'examples/vis-js.html'
         if params and len(params) > 0:
@@ -135,6 +157,7 @@ class Browser_Commands:
         return browser.open_local_page_and_get_html(path,js_code=js_code)
 
         #return browser.render_file(team_id, channel,path, js_code=js_code)
+
 
     @staticmethod
     def elk(team_id=None, channel=None, params=None):
