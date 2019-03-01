@@ -30,6 +30,7 @@ class GSuite:
             if os.getenv('AWS_REGION') is not None:                                                     # check if we are running in AWS
                 Files.write(token_file, secret_data['token.json'])                                      # if we are, use the token.json value from the AWS secret_data
             else:
+                secret_data = json.loads(Secrets('gsuite_token').value())   # BUG, need to refactor this
                 credentials_file = '/tmp/gsuite_credentials.json'                                       # file to hold the credentials.json value
                 Files.write(credentials_file, secret_data['credentials.json'])                          # save value received from AWS into file
 
