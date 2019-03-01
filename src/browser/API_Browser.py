@@ -68,12 +68,17 @@ class API_Browser:
                 print(error_message)
             return error_message
 
-    async def js_invoke_function(self, name, params):
-        if type(params).__name__ != 'str':
-            params = json.dumps(params)
-
-        encoded_text = base64.b64encode(params.encode()).decode()
-        js_script = "{0}(atob('{1}'))".format(name, encoded_text )
+    async def js_invoke_function(self, name, params=None):
+        if params:
+            if type(params).__name__ != 'str':
+                params = json.dumps(params)
+                encoded_text = base64.b64encode(params.encode()).decode()
+                js_script = "{0}(JSON.parse(atob('{1}')))".format(name, encoded_text )
+            else:
+                encoded_text = base64.b64encode(params.encode()).decode()
+                js_script = "{0}(atob('{1}'))".format(name, encoded_text)
+        else:
+            js_script = "{0}()".format(name)
         return await self.js_eval(js_script)
 
 
@@ -202,8 +207,11 @@ class API_Browser:
 
     @sync
     async def sync__js_execute(self, js_code):
-        await self.js_execute(js_code)
-        return self
+        return await self.js_execute(js_code)
+
+    @sync
+    async def sync_js_invoke_function(self,name, params=None):
+        return await self.js_invoke_function(name, params)
 
     @sync
     async def sync__html_raw(self):

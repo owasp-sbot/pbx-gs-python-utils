@@ -50,7 +50,7 @@ class Render_Page:
     def screenshot_url(self, url, img_file, clip=None):
         return self.get_screenshot_via_browser(url, img_file, clip=clip)
 
-    # Sync Helpped method (to allow calls to the Async methods to feel like Sync calls)
+    # Sync Helper method (to allow calls to the Async methods to feel like Sync calls)
 
     @sync
     async def get_page_html_via_browser(self, url,js_code=None):
@@ -67,3 +67,7 @@ class Render_Page:
         await self.api_browser.browser()
         return await self.api_browser.screenshot(url,full_page=full_page,file_screenshot=png_file, clip=clip, viewport=viewport,js_code=js_code)
 
+    def open_file_in_browser(self, path, js_code=None):
+        with self.web_server as web_server:
+            url = web_server.url(path)
+            return self.get_page_html_via_browser(url,js_code)
