@@ -92,6 +92,12 @@ class Test_Lambda_lambda_browser(unittest.TestCase):
         Dev.pprint(png_data)
         self._save_png_file(png_data)
 
+    def test_vis_js(self):
+        payload = { "params" : ['vis_js', 'graph_MKF']}
+        png_data = self.lambda_browser.update_with_src().invoke(payload)
+        #Dev.pprint(png_data)
+        self._save_png_file(png_data)
+
 
 
     # def test_use_api_browser(self):

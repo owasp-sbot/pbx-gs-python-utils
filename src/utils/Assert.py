@@ -14,10 +14,7 @@ class Assert:
     def contains(self, text):
         assert text in self.target
 
-    def equal(self, to):
-        assert self.target == to
-
-    def equal(self, to):
+    def is_equal(self, to):
         assert self.target == to
 
     def match_regex(self, regex):

@@ -208,8 +208,9 @@ class API_Browser:
     #     return self
 
     @sync
-    async def sync__browser_width(self, width):
-        return await self.page_size(width, width)
+    async def sync__browser_width(self, width,height=None):
+        if height is None: height = width
+        return await self.page_size(width, height)
 
     @sync
     async def sync__close_browser(self):

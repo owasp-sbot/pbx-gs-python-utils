@@ -1,12 +1,12 @@
 import json
 from time import sleep
 
-from browser.Browser_Lamdba_Helper  import Browser_Lamdba_Helper
-from utils.Files                    import Files
-from utils.Lambdas_Helpers          import slack_message
-from utils.Process                  import Process
-from utils.aws.Lambdas              import load_dependency, Lambdas
-from utils.slack.Slack_Commands_Helper import Slack_Commands_Helper
+from browser.Browser_Lamdba_Helper      import Browser_Lamdba_Helper
+from utils.Files                        import Files
+from utils.Lambdas_Helpers              import slack_message
+from utils.Process                      import Process
+from utils.aws.Lambdas                  import load_dependency, load_dependencies
+from utils.slack.Slack_Commands_Helper  import Slack_Commands_Helper
 
 
 class Browser_Commands:
@@ -160,18 +160,25 @@ class Browser_Commands:
     @staticmethod
     def vis_js(team_id=None, channel=None, params=None):
         path = 'examples/vis-js.html'
-        if params and len(params) > 0:
-            js_code = params.pop(0)
-        else:
-            js_code= """
-                        network.body.data.nodes.add({id:'12',label:'new Dynamic Node'})
-                        network.body.data.edges.add({from:'12',to:'1'})
-                    """
-        browser = Browser_Lamdba_Helper().setup()
 
-        return browser.open_local_page_and_get_html(path,js_code=js_code)
+        if len(params) < 1:
+            return ':red_circle: Hi, for the `vis_js` command, you need to provide a graph name'
+
+        graph_name = params.pop(0)
+        load_dependencies(['syncer', 'requests'])
+
+        from js_apis.Vis_Js import Vis_Js
+        vis_js = Vis_Js()
+        vis_js.show_jira_graph(graph_name)
+        return vis_js.send_screenshot_to_slack(team_id,channel)
+
+        # browser = Browser_Lamdba_Helper().setup()
+        #
+        # return browser.open_local_page_and_get_html(path,js_code=js_code)
 
         #return browser.render_file(team_id, channel,path, js_code=js_code)
+
+        return 'here'
 
 
     @staticmethod

@@ -68,14 +68,11 @@ class Test_Browser_Commands(TestCase):
         self._save_png_data(result)
 
     def test_vis_js(self):
-        js_code= """
-        network.body.data.nodes.add({id:'12',label:'new node'})
-        network.body.data.edges.add({from:'12',to:'1'})
-        """
-        params = [js_code]
-        #params = None
+        params = []
+        params = ['graph_MKF']
         result = self.browser_commands.vis_js(params=params)
-        Dev.pprint(result)
+        #Dev.pprint(result)
+        self._save_png_data(result)
         
 
 

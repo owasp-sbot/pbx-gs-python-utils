@@ -118,6 +118,9 @@ def exec_string_in_lambda(lambda_code):
 def invoke_lambda(file, payload):
     return Lambdas(file).upload_and_invoke(payload)
 
+def load_dependencies(targets):
+    for target in targets:
+        load_dependency(target)
 
 def load_dependency(target):
     s3         = S3()

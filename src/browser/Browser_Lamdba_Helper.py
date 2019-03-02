@@ -6,16 +6,16 @@ from utils.aws.s3 import S3
 
 
 class Browser_Lamdba_Helper:
-    def __init__(self):
+    def __init__(self, headless = True):
         self.api_browser = None
         self.render_page = None
-        self.headless    = True
-        self.auto_close  = True
+        self.headless    = headless
+        self.auto_close  = headless
 
 
-    def get_screenshot_png(self,url=None, clip=None,full_page=None):
+    def get_screenshot_png(self,url=None, clip=None,full_page=None,close_browser=True):
         load_dependency('syncer')
-        return self.api_browser.sync__screenshot_base64(url, close_browser=True, clip=clip,full_page=full_page)
+        return self.api_browser.sync__screenshot_base64(url, close_browser=close_browser, clip=clip,full_page=full_page)
 
     def open_local_file(self, path, js_code=None):
         return self.open_local_page_and_get_html(path,js_code)
