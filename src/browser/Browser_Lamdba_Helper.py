@@ -14,7 +14,6 @@ class Browser_Lamdba_Helper:
 
 
     def get_screenshot_png(self,url=None, clip=None,full_page=None):
-        #if not url: return ''
         load_dependency('syncer')
         return self.api_browser.sync__screenshot_base64(url, close_browser=True, clip=clip,full_page=full_page)
 
@@ -68,6 +67,18 @@ class Browser_Lamdba_Helper:
         self.render_page = Render_Page(api_browser=self.api_browser, web_root=self.web_root())
 
         return self
+
+    @staticmethod
+    def save_png_data(png_data, png_file=None):
+        try:
+            if png_file is None:
+                png_file = '/tmp/lambda_png_file.png'
+            if png_data:
+                with open(png_file, "wb") as fh:
+                    fh.write(base64.decodebytes(png_data.encode()))
+                return "Png data with size {0} saved to {1}".format(len(png_data),png_file)
+        except Exception as error:
+            return "[_save_png_file][Error] {0}\n\n".format(error,png_data)
 
     # def setup_AWS(self):
     #     load_dependency('syncer')
