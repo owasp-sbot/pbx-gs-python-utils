@@ -145,6 +145,8 @@ class API_Browser:
         page = await self.page()
         if viewport:
             await self.viewport(viewport)
+        if clip:
+            full_page = False
         await page.screenshot({'path': file_screenshot,'fullPage': full_page, 'clip' : clip})
         return file_screenshot
 
@@ -236,8 +238,8 @@ class API_Browser:
         return await self.url()
 
     @sync
-    async def sync__screenshot(self, url=None,file_screenshot = None):
-        return await self.screenshot(url,file_screenshot = file_screenshot)
+    async def sync__screenshot(self, url=None,file_screenshot = None,clip=None):
+        return await self.screenshot(url,file_screenshot = file_screenshot,clip=clip)
 
     @sync
     async def sync__screenshot_base64(self, url=None,full_page=True,close_browser=False, clip=None):

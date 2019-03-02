@@ -121,26 +121,41 @@ class Browser_Commands:
         # return browser_helper.send_png_file_to_slack(team_id, channel, 'markdown', png_file)
         # #return Browser_Commands._send_to_slack__png_file(team_id, channel, target, png_file)
 
-    @staticmethod
-    def risks(team_id=None, channel=None, params=None):
-        path = '/gs/risk/r1-and-r2.html'
-        data = {}
-        if params and len(params) > 0:
-            fixed_params = ' '.join(params).replace('```','')
-            data = {}
-            for items in fixed_params.split(','):
-                values = items.split(':')
-                data[values[0].strip()] = values[1].strip()
-
-        js_code = "r1_and_r2.set_risks({0})".format(json.dumps(data))
-        clip = {'x': 1, 'y': 1, 'width': 915, 'height': 435}
-        browser = Browser_Lamdba_Helper().setup()
-        return browser.render_file(team_id, channel, path=path, js_code=js_code, clip=clip)
+    # @staticmethod
+    # def risks(team_id=None, channel=None, params=None):
+    #     path = '/gs/risk/r1-and-r2.html'
+    #     data = {}
+    #     if params and len(params) > 0:
+    #         fixed_params = ' '.join(params).replace('```','')
+    #         data = {}
+    #         for items in fixed_params.split(','):
+    #             values = items.split(':')
+    #             data[values[0].strip()] = values[1].strip()
+    #
+    #     js_code = "r1_and_r2.set_risks({0})".format(json.dumps(data))
+    #     clip = {'x': 1, 'y': 1, 'width': 915, 'height': 435}
+    #     browser = Browser_Lamdba_Helper().setup()
+    #     return browser.render_file(team_id, channel, path=path, js_code=js_code, clip=clip)
 
         #return browser.open_local_page_and_get_screenshot(path, js_code=js_code, png_file=png_file)
 
         #
         #.set_risks({'r1_2': '1', 'r2_4': '0', 'r5_4': '2'})
+
+    @staticmethod
+    def risks(team_id=None, channel=None, params=None):
+        load_dependency('syncer') ;
+        load_dependency('requests')
+
+        from view_helpers.Risk_Dashboard import Risk_Dashboard
+
+        return Risk_Dashboard().create_dashboard_with_test_data().send_screenshot_to_slack(team_id, channel)
+
+        #browser = Risk_Dashboard().create_dashboard_with_test_data().browser()
+
+        #clip = {'x': 1, 'y': 1, 'width': 915, 'height': 435}
+        #png_file =  browser.sync__screenshot(clip = clip)
+        #return Browser_Lamdba_Helper().send_png_file_to_slack(team_id, channel, 'markdown', png_file)
 
     @staticmethod
     def vis_js(team_id=None, channel=None, params=None):
