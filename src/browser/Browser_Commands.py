@@ -1,5 +1,4 @@
 import json
-from time import sleep
 
 from browser.Browser_Lamdba_Helper      import Browser_Lamdba_Helper
 from utils.Files                        import Files
@@ -157,6 +156,7 @@ class Browser_Commands:
         #png_file =  browser.sync__screenshot(clip = clip)
         #return Browser_Lamdba_Helper().send_png_file_to_slack(team_id, channel, 'markdown', png_file)
 
+
     @staticmethod
     def vis_js(team_id=None, channel=None, params=None):
         path = 'examples/vis-js.html'
@@ -169,7 +169,7 @@ class Browser_Commands:
         nodes   = data.get('nodes'  )
         edges   = data.get('edges'  )
         options = data.get('options')
-        from js_apis.Vis_Js import Vis_Js
+        from view_helpers.Vis_Js import Vis_Js
         vis_js = Vis_Js()
         vis_js.create_graph(nodes, edges, options)
         #vis_js.show_jira_graph(graph_name)
@@ -181,8 +181,29 @@ class Browser_Commands:
 
         #return browser.render_file(team_id, channel,path, js_code=js_code)
 
-        return 'here'
+    @staticmethod
+    def graph(team_id=None, channel=None, params=None):
+        if len(params) != 2:
+            text = ':red_circle: Hi, for the `graph` command, you need to provide 2 parameters: '
+            attachment_text = '*graph name* - the nodes and edges you want to view\n' \
+                              '*view name* - the view to render'
+            return text,[{'text': attachment_text}]
 
+        from view_helpers.Vis_Js_Views import Vis_Js_Views
+
+        params[0],params[1] = params[1],params[0]       # swap items (since it is more user friendly to add the graph name first)
+
+        (text, attachments) = Slack_Commands_Helper(Vis_Js_Views).show_duration(False).invoke(team_id, channel, params)
+
+        if team_id is None:
+            return text
+
+        # load_dependencies(['syncer', 'requests']) ; from view_helpers.Vis_Js import Vis_Js
+        #
+        # graph_name = params.pop(0)
+        # vis_js = Vis_Js()
+        # vis_js.show_jira_graph(graph_name)
+        # return vis_js.send_screenshot_to_slack(team_id, channel)
 
     @staticmethod
     def elk(team_id=None, channel=None, params=None):

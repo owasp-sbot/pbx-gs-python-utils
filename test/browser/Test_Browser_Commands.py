@@ -82,9 +82,13 @@ class Test_Browser_Commands(TestCase):
         result = self.browser_commands.vis_js(params=params)
         #Dev.pprint(result)
         self._save_png_data(result)
-        
 
-
+    def test_graph(self):
+        graph_name = 'graph_XKW'
+        params = [graph_name,'default']
+        result = self.browser_commands.graph(params=params)
+        Dev.pprint(result)
+        self._save_png_data(result)
 
     def test_update_lambda(self):
         Lambdas('browser.lambda_browser').update_with_src()

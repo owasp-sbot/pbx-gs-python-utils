@@ -8,7 +8,8 @@ from utils.Lambdas_Helpers import slack_message, log_to_elk
 class Slack_Commands_Helper:
 
     def __init__(self, target):
-        self.target = target
+        self.target        = target
+        self._show_duration = True
 
     def available_methods(self):
         return  [func for func in dir(self.target) if
@@ -39,7 +40,7 @@ class Slack_Commands_Helper:
                         text, attachments = result
                     else:
                         text, attachments = result,[]
-                    if text is None:
+                    if text is None and self._show_duration:
                         duration = time() - start
                         text= 'completed execution in `{0:.0f}` secs'.format(duration)
                 except Exception as error:
@@ -50,3 +51,7 @@ class Slack_Commands_Helper:
         if channel and text is not None:                                           # if there is a text value, then send it as a slack message
             slack_message(text, attachments, channel, team_id)
         return text,attachments
+
+    def show_duration(self,value):
+        self._show_duration = value
+        return self
