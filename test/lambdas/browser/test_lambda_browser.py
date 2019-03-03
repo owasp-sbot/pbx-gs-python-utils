@@ -107,9 +107,22 @@ class Test_Lambda_lambda_browser(unittest.TestCase):
         self._save_png_file(png_data)
 
     def test_graph(self):
-        graph_name = 'graph_XKW'
+        graph_name = 'graph_XKW'        # 7 nodes
+        graph_name = 'graph_MKF'        # 20 nodes
+
         view_name  = 'default'
         payload = {"params": ['graph', graph_name, view_name]}
+        png_data = self.lambda_browser.update_with_src().invoke(payload)
+        #Dev.pprint(png_data)
+        self._save_png_file(png_data)
+
+    def test_graph__view__node_label(self):
+        graph_name = 'graph_XKW'        # 7 nodes
+        graph_name = 'graph_DEQ'        # 20 nodes
+
+        view_name  = 'node_label'
+        label_key  = 'Status'
+        payload = {"params": ['graph', graph_name, view_name,label_key]}
         png_data = self.lambda_browser.update_with_src().invoke(payload)
         #Dev.pprint(png_data)
         self._save_png_file(png_data)

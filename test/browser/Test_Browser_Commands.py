@@ -90,5 +90,12 @@ class Test_Browser_Commands(TestCase):
         Dev.pprint(result)
         self._save_png_data(result)
 
+    def test_graph__view__node_label(self):
+        graph_name = 'graph_DEQ'
+        params = [graph_name,'node_label', 'Labels']
+        result = self.browser_commands.graph(params=params)
+        Dev.pprint(result)
+        self._save_png_data(result)
+
     def test_update_lambda(self):
         Lambdas('browser.lambda_browser').update_with_src()
