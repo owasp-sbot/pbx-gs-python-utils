@@ -161,15 +161,18 @@ class Browser_Commands:
     def vis_js(team_id=None, channel=None, params=None):
         path = 'examples/vis-js.html'
 
-        if len(params) < 1:
-            return ':red_circle: Hi, for the `vis_js` command, you need to provide a graph name'
+        params = ' '.join(params).replace('“','"').replace('”','"')
+        data = json.loads(params)
 
-        graph_name = params.pop(0)
         load_dependencies(['syncer', 'requests'])
 
+        nodes   = data.get('nodes'  )
+        edges   = data.get('edges'  )
+        options = data.get('options')
         from js_apis.Vis_Js import Vis_Js
         vis_js = Vis_Js()
-        vis_js.show_jira_graph(graph_name)
+        vis_js.create_graph(nodes, edges, options)
+        #vis_js.show_jira_graph(graph_name)
         return vis_js.send_screenshot_to_slack(team_id,channel)
 
         # browser = Browser_Lamdba_Helper().setup()

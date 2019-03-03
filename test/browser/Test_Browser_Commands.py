@@ -1,4 +1,5 @@
 import base64
+import json
 import os
 from unittest import TestCase
 
@@ -68,8 +69,16 @@ class Test_Browser_Commands(TestCase):
         self._save_png_data(result)
 
     def test_vis_js(self):
-        params = []
-        params = ['graph_MKF']
+        nodes = [{'id': '123', 'label': 'this is a label\n in two lines'},
+                 {'id': 'aaa', 'label': '123'}]
+        edges = [{'from': '123', 'to': 'aaa'}]
+
+        options = { 'nodes' : { 'shape' : 'box' } }
+        data = { 'nodes':nodes , 'edges':edges , 'options': options}
+
+        params = [json.dumps(data)]
+
+        #self.vis_js.create_graph(nodes, edges, options)
         result = self.browser_commands.vis_js(params=params)
         #Dev.pprint(result)
         self._save_png_data(result)

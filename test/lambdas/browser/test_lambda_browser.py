@@ -1,4 +1,5 @@
 import base64
+import json
 import unittest
 
 from utils.Dev import Dev
@@ -93,12 +94,17 @@ class Test_Lambda_lambda_browser(unittest.TestCase):
         self._save_png_file(png_data)
 
     def test_vis_js(self):
-        payload = { "params" : ['vis_js', 'graph_MKF']}
+        nodes = [{'id': '123', 'label': 'vis js\n via lambda'},
+                 {'id': 'aaa', 'label': 'another node'}]
+        edges = [{'from': '123', 'to': 'aaa'}]
+
+        options = {'nodes': {'shape': 'box'}}
+        data = {'nodes': nodes, 'edges': edges, 'options': options }
+
+        payload = { "params" : ['vis_js', json.dumps(data)]}
         png_data = self.lambda_browser.update_with_src().invoke(payload)
         #Dev.pprint(png_data)
         self._save_png_file(png_data)
-
-
 
     # def test_use_api_browser(self):
     #     url = 'https://www.google.co.uk/aaaaaasd'
