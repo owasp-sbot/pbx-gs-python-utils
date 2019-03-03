@@ -229,3 +229,21 @@ class Browser_Commands:
             return None
         else:
             return result
+
+    @staticmethod
+    def table(team_id=None, channel=None, params=None):
+
+        if len(params) < 2:
+            text = ':red_circle: Hi, for the `table` command, you need to provide 2 parameters: '
+            attachment_text = '*target* - the jira id or graph to get\n' \
+                              '*view name* - the view to render'
+            return text,[{'text': attachment_text}]
+
+        from view_helpers.DataTable_Js_Views import DataTable_Js_Views
+
+        params[0],params[1] = params[1],params[0]       # swap items (since it is more user friendly to add the graph name first)
+
+        (text, attachments) = Slack_Commands_Helper(DataTable_Js_Views).show_duration(False).invoke(team_id, channel, params)
+
+        if team_id is None:
+            return text

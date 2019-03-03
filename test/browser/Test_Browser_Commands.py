@@ -97,5 +97,11 @@ class Test_Browser_Commands(TestCase):
         Dev.pprint(result)
         self._save_png_data(result)
 
+
+    def test_table(self):
+        result = self.browser_commands.table()
+        Dev.pprint(result)
+        self._save_png_data(result)
+
     def test_update_lambda(self):
         Lambdas('browser.lambda_browser').update_with_src()
