@@ -63,8 +63,8 @@ class Test_Browser_Commands(TestCase):
         self._save_png_data(result)
 
     def test_risk(self):
-        params = ["r1_1:1,r3_4:2 , r4_4:0"]
-        params = []
+        params = ['GSSP-6']
+        params = ['GSSP-113']
         result = self.browser_commands.risks(params=params)
         self._save_png_data(result)
 
