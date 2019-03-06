@@ -20,7 +20,8 @@ def get_local_cache_key(self_obj, function_obj, params):
         function_name = function_obj
     else:
         function_name = function_obj.__name__
-    return '{0}_{1}_{2}'.format(class_name, function_name, '_'.join(str(x) for x in params));
+    params_as_string = '_'.join(str(x) for x in params).replace('/',' ')
+    return '{0}_{1}_{2}'.format(class_name, function_name, params_as_string);
 
 def get_local_cache_path(self_obj, function_obj, params):
     cache_key     = get_local_cache_key(self_obj, function_obj, params)
