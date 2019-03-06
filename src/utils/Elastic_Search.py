@@ -57,7 +57,7 @@ class Elastic_Search:
             else:
                 return self.es.index(index=self.index, doc_type='item', body=data)
         except Exception as error:
-            print(error)
+            print("elk-error", error)
             return {"elk-error": "{0}".format(error)}
 
     def add_bulk(self, data, id_key = None, pipeline = None):
