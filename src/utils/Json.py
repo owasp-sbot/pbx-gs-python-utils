@@ -12,6 +12,14 @@ class Json:
             data = fp.read()
             return json.loads(data)
 
+    def load_json_and_delete(path):
+        if os.path.exists(path) is False:
+            return None
+        with open(path, "rt") as fp:
+            data = json.loads(fp.read())
+        os.remove(path)
+        return data
+
     @staticmethod
     def load_json_gz(path):
         if os.path.exists(path) is False:

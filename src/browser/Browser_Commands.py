@@ -1,11 +1,11 @@
-from time import sleep
+import json
 
-from browser.Browser_Lamdba_Helper  import Browser_Lamdba_Helper
-from utils.Files                    import Files
-from utils.Lambdas_Helpers          import slack_message
-from utils.Process                  import Process
-from utils.aws.Lambdas              import load_dependency, Lambdas
-from utils.slack.Slack_Commands_Helper import Slack_Commands_Helper
+from browser.Browser_Lamdba_Helper      import Browser_Lamdba_Helper
+from utils.Files                        import Files
+from utils.Lambdas_Helpers              import slack_message
+from utils.Process                      import Process
+from utils.aws.Lambdas                  import load_dependency, load_dependencies
+from utils.slack.Slack_Commands_Helper  import Slack_Commands_Helper
 
 
 class Browser_Commands:
@@ -120,21 +120,109 @@ class Browser_Commands:
         # return browser_helper.send_png_file_to_slack(team_id, channel, 'markdown', png_file)
         # #return Browser_Commands._send_to_slack__png_file(team_id, channel, target, png_file)
 
+    # @staticmethod
+    # def risks(team_id=None, channel=None, params=None):
+    #     path = '/gs/risk/r1-and-r2.html'
+    #     data = {}
+    #     if params and len(params) > 0:
+    #         fixed_params = ' '.join(params).replace('```','')
+    #         data = {}
+    #         for items in fixed_params.split(','):
+    #             values = items.split(':')
+    #             data[values[0].strip()] = values[1].strip()
+    #
+    #     js_code = "r1_and_r2.set_risks({0})".format(json.dumps(data))
+    #     clip = {'x': 1, 'y': 1, 'width': 915, 'height': 435}
+    #     browser = Browser_Lamdba_Helper().setup()
+    #     return browser.render_file(team_id, channel, path=path, js_code=js_code, clip=clip)
+
+        #return browser.open_local_page_and_get_screenshot(path, js_code=js_code, png_file=png_file)
+
+        #
+        #.set_risks({'r1_2': '1', 'r2_4': '0', 'r5_4': '2'})
+
+    @staticmethod
+    def risks(team_id=None, channel=None, params=None):
+        load_dependency('syncer') ;
+        load_dependency('requests')
+
+        from view_helpers.Risk_Dashboard import Risk_Dashboard
+
+        jira_key = params.pop(0)
+
+        return ( Risk_Dashboard().create_dashboard_for_jira_key(jira_key)
+                                 .send_graph_name_to_slack(team_id, channel)
+                                 .send_screenshot_to_slack(team_id, channel))
+
+        # graph_name = 'graph_DGK'
+        # root_node = 'GSSP-6'
+        #
+        # return Risk_Dashboard().create_dashboard_for_graph(graph_name,root_node).send_screenshot_to_slack(team_id, channel)
+
+
+    @staticmethod
+    def risks_test_data(team_id=None, channel=None, params=None):
+        load_dependency('syncer') ;
+        load_dependency('requests')
+
+        from view_helpers.Risk_Dashboard import Risk_Dashboard
+
+        return Risk_Dashboard().create_dashboard_with_test_data().send_screenshot_to_slack(team_id, channel)
+
+        #browser = Risk_Dashboard().create_dashboard_with_test_data().browser()
+
+        #clip = {'x': 1, 'y': 1, 'width': 915, 'height': 435}
+        #png_file =  browser.sync__screenshot(clip = clip)
+        #return Browser_Lamdba_Helper().send_png_file_to_slack(team_id, channel, 'markdown', png_file)
+
+
     @staticmethod
     def vis_js(team_id=None, channel=None, params=None):
         path = 'examples/vis-js.html'
-        if params and len(params) > 0:
-            js_code = params.pop(0)
-        else:
-            js_code= """
-                        network.body.data.nodes.add({id:'12',label:'new Dynamic Node'})
-                        network.body.data.edges.add({from:'12',to:'1'})
-                    """
-        browser = Browser_Lamdba_Helper().setup()
 
-        return browser.open_local_page_and_get_html(path,js_code=js_code)
+        params = ' '.join(params).replace('“','"').replace('”','"')
+        data = json.loads(params)
+
+        load_dependencies(['syncer', 'requests'])
+
+        nodes   = data.get('nodes'  )
+        edges   = data.get('edges'  )
+        options = data.get('options')
+        from view_helpers.Vis_Js import Vis_Js
+        vis_js = Vis_Js()
+        vis_js.create_graph(nodes, edges, options)
+        #vis_js.show_jira_graph(graph_name)
+        return vis_js.send_screenshot_to_slack(team_id,channel)
+
+        # browser = Browser_Lamdba_Helper().setup()
+        #
+        # return browser.open_local_page_and_get_html(path,js_code=js_code)
 
         #return browser.render_file(team_id, channel,path, js_code=js_code)
+
+    @staticmethod
+    def graph(team_id=None, channel=None, params=None):
+        if len(params) < 2:
+            text = ':red_circle: Hi, for the `graph` command, you need to provide 2 parameters: '
+            attachment_text = '*graph name* - the nodes and edges you want to view\n' \
+                              '*view name* - the view to render'
+            return text,[{'text': attachment_text}]
+
+        from view_helpers.Vis_Js_Views import Vis_Js_Views
+
+        params[0],params[1] = params[1],params[0]       # swap items (since it is more user friendly to add the graph name first)
+
+        (text, attachments) = Slack_Commands_Helper(Vis_Js_Views).show_duration(False).invoke(team_id, channel, params)
+
+        if team_id is None:
+            return text
+
+        # load_dependencies(['syncer', 'requests']) ; from view_helpers.Vis_Js import Vis_Js
+        #
+        # graph_name = params.pop(0)
+        # vis_js = Vis_Js()
+        # vis_js.show_jira_graph(graph_name)
+        # return vis_js.send_screenshot_to_slack(team_id, channel)
 
     @staticmethod
     def elk(team_id=None, channel=None, params=None):
@@ -160,3 +248,21 @@ class Browser_Commands:
             return None
         else:
             return result
+
+    @staticmethod
+    def table(team_id=None, channel=None, params=None):
+
+        if len(params) < 2:
+            text = ':red_circle: Hi, for the `table` command, you need to provide 2 parameters: '
+            attachment_text = '*target* - the jira id or graph to get\n' \
+                              '*view name* - the view to render'
+            return text,[{'text': attachment_text}]
+
+        from view_helpers.DataTable_Js_Views import DataTable_Js_Views
+
+        params[0],params[1] = params[1],params[0]       # swap items (since it is more user friendly to add the graph name first)
+
+        (text, attachments) = Slack_Commands_Helper(DataTable_Js_Views).show_duration(False).invoke(team_id, channel, params)
+
+        if team_id is None:
+            return text

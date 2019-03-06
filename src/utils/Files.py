@@ -105,6 +105,14 @@ class Files:
         return os.path.exists(path) is False
 
     @staticmethod
+    def parent_folder(path):
+        return os.path.dirname(path)
+
+    @staticmethod
+    def parent_folder_combine(file, path):
+        return Files.path_combine(os.path.dirname(file),path)
+
+    @staticmethod
     def temp_file(extension = '.tmp'):
         (fd, tmp_file) = tempfile.mkstemp(extension)
         return tmp_file

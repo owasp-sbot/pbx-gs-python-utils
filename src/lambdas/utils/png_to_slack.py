@@ -34,8 +34,9 @@ def run(event, context):
     title           = event.get('title')
     team_id         = event.get('team_id')
     aws_secrets_id  = event.get('aws_secrets_id')
-    if  team_id == 'T7F3AUXGV':
-        aws_secrets_id = 'slack-gs-bot'
+    if  team_id == 'T7F3AUXGV': aws_secrets_id = 'slack-gs-bot'             # hard coded values
+    if  team_id == 'T0SDK1RA8': aws_secrets_id = 'slack-gsbot-for-pbx'      # need to move to special function
+
     bot_token       = Secrets(aws_secrets_id).value()
 
     if png_data:

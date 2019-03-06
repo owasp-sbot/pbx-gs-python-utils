@@ -46,8 +46,16 @@ class Test_Site_ELK(TestCase):
 
     def test_sync__dashboard(self):
         #id = '9591ebd0-e65f-11e8-abb1-378e282672cc'
-        goto_id = 'dded0db0874cd83bb992570deb9e1fcf'
+        goto_id = '549e8579f763bc82ed6cd69cf4c62954'
         result = self.elk.sync__dashboard(goto_id)
+
+        result = self.elk.browser().sync__screenshot(file_screenshot='/tmp/lambda_png_file.png')
+        Dev.print(result)
+
+    def test_sync__dashboard_project(self):
+        #id = '9591ebd0-e65f-11e8-abb1-378e282672cc'
+        key = 'GSSP-126'
+        result = self.elk.sync__dashboard_project(key)
 
         result = self.elk.browser().sync__screenshot(file_screenshot='/tmp/lambda_png_file.png')
         Dev.print(result)

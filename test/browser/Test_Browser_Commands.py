@@ -1,4 +1,5 @@
 import base64
+import json
 import os
 from unittest import TestCase
 
@@ -61,17 +62,46 @@ class Test_Browser_Commands(TestCase):
         result = self.browser_commands.markdown(None,None,params)
         self._save_png_data(result)
 
+    def test_risk(self):
+        params = ['GSSP-6']
+        params = ['GSSP-113']
+        result = self.browser_commands.risks(params=params)
+        self._save_png_data(result)
 
     def test_vis_js(self):
-        js_code= """
-        network.body.data.nodes.add({id:'12',label:'new node'})
-        network.body.data.edges.add({from:'12',to:'1'})
-        """
-        params = [js_code]
-        #params = None
-        result = self.browser_commands.vis_js(params=params)
-        Dev.pprint(result)
+        nodes = [{'id': '123', 'label': 'this is a label\n in two lines'},
+                 {'id': 'aaa', 'label': '123'}]
+        edges = [{'from': '123', 'to': 'aaa'}]
 
+        options = { 'nodes' : { 'shape' : 'box' } }
+        data = { 'nodes':nodes , 'edges':edges , 'options': options}
+
+        params = [json.dumps(data)]
+
+        #self.vis_js.create_graph(nodes, edges, options)
+        result = self.browser_commands.vis_js(params=params)
+        #Dev.pprint(result)
+        self._save_png_data(result)
+
+    def test_graph(self):
+        graph_name = 'graph_XKW'
+        params = [graph_name,'default']
+        result = self.browser_commands.graph(params=params)
+        Dev.pprint(result)
+        self._save_png_data(result)
+
+    def test_graph__view__node_label(self):
+        graph_name = 'graph_DEQ'
+        params = [graph_name,'node_label', 'Labels']
+        result = self.browser_commands.graph(params=params)
+        Dev.pprint(result)
+        self._save_png_data(result)
+
+
+    def test_table(self):
+        result = self.browser_commands.table()
+        Dev.pprint(result)
+        self._save_png_data(result)
 
     def test_update_lambda(self):
         Lambdas('browser.lambda_browser').update_with_src()

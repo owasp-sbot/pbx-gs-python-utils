@@ -31,7 +31,7 @@ class Test_Render_Page(TestCase):
         img_file = self.render_page.screenshot_html(self.html,tmp_img)
         assert Files.exists(img_file)
 
-    def test_screensh1ot_file(self):
+    def test_screenshot_file(self):
         with Temp_File(self.html, 'html') as temp_file:
             tmp_img = '/tmp/test_screenshot_html.png'
             clip = {'x': 1, 'y': 1, 'width': 180, 'height': 30}

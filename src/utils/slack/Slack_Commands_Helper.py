@@ -1,4 +1,5 @@
 import pprint
+from time import time
 
 from utils.slack.API_Slack_Attachment import API_Slack_Attachment
 from utils.Lambdas_Helpers import slack_message, log_to_elk
@@ -7,7 +8,8 @@ from utils.Lambdas_Helpers import slack_message, log_to_elk
 class Slack_Commands_Helper:
 
     def __init__(self, target):
-        self.target = target
+        self.target        = target
+        self._show_duration = True
 
     def available_methods(self):
         return  [func for func in dir(self.target) if
@@ -32,12 +34,15 @@ class Slack_Commands_Helper:
             if command in self.available_methods():
                 method  = getattr(self.target, command)
                 try:
+                    start = time()
                     result = method(team_id, channel, params)
                     if type(result).__name__ == 'tuple':
                         text, attachments = result
                     else:
                         text, attachments = result,[]
-
+                    if text is None and self._show_duration:
+                        duration = time() - start
+                        text= 'completed execution in `{0:.0f}` secs'.format(duration)
                 except Exception as error:
                     text = ':red_circle: Error processing params `{0}`: _{1}_'.format(original_params, pprint.pformat(error))
                     log_to_elk("Error in Lambda_Graph.handle_lambda_event :{0}".format(text), level='error')
@@ -46,3 +51,7 @@ class Slack_Commands_Helper:
         if channel and text is not None:                                           # if there is a text value, then send it as a slack message
             slack_message(text, attachments, channel, team_id)
         return text,attachments
+
+    def show_duration(self,value):
+        self._show_duration = value
+        return self

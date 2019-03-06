@@ -1,4 +1,5 @@
 import base64
+import json
 import unittest
 
 from utils.Dev import Dev
@@ -20,9 +21,6 @@ class Test_Lambda_lambda_browser(unittest.TestCase):
         except Exception as error:
             Dev.print("[_save_png_file][Error] {0}".format(error))
             Dev.print(png_data)
-
-    def test_just_update(self):
-        self.lambda_browser.update_with_src()
 
     def test_update_and_invoke(self):
         payload ={ "params" : []}
@@ -77,9 +75,70 @@ class Test_Lambda_lambda_browser(unittest.TestCase):
         #Dev.pprint(png_data)
         self._save_png_file(png_data)
 
+    def test_elk__dashboard_project(self):
+        payload = {"params": ['elk', 'dashboard_project','GSSP-126']}
+        png_data = self.lambda_browser.update_with_src().invoke(payload)
+        # Dev.pprint(png_data)
+        self._save_png_file(png_data)
 
-    # def test_use_api_browser(self):
-    #     url = 'https://www.google.co.uk/aaaaaasd'
-    #     payload  = {"params": ['use_api_browser', url]}
-    #
-    #     self._save_png_file(png_data)
+
+
+    def test_risks(self):
+        #payload = {"params": ['render','gs/risk/risks-dashboard.html']}
+        payload = { "params" : ['risks' , 'GSSP-115']}
+        png_data = self.lambda_browser.update_with_src().invoke(payload)
+        Dev.pprint(png_data)
+        self._save_png_file(png_data)
+
+    def test_vis_js(self):
+        nodes = [{'id': '123', 'label': 'vis js\n via lambda'},
+                 {'id': 'aaa', 'label': 'another node'}]
+        edges = [{'from': '123', 'to': 'aaa'}]
+
+        options = {'nodes': {'shape': 'box'}}
+        data = {'nodes': nodes, 'edges': edges, 'options': options }
+
+        payload = { "params" : ['vis_js', json.dumps(data)]}
+        png_data = self.lambda_browser.update_with_src().invoke(payload)
+        #Dev.pprint(png_data)
+        self._save_png_file(png_data)
+
+    def test_graph(self):
+        graph_name = 'graph_XKW'        # 7 nodes
+        graph_name = 'graph_MKF'        # 20 nodes
+
+        view_name  = 'default'
+        payload = {"params": ['graph', graph_name, view_name]}
+        png_data = self.lambda_browser.update_with_src().invoke(payload)
+        #Dev.pprint(png_data)
+        self._save_png_file(png_data)
+
+    def test_graph__view__node_label(self):
+        graph_name = 'graph_XKW'        # 7 nodes
+        #graph_name = 'graph_VKN'        # 20 nodes
+        #graph_name = 'graph_YT4'   # (199 nodes, 236 edges)
+        graph_name = 'graph_VZ5'   # (367 nodes, 653 edges)
+
+        view_name  = 'node_label'
+        label_key  = 'Status'
+        payload = {"params": ['graph', graph_name, view_name,label_key]}
+        png_data = self.lambda_browser.update_with_src().invoke(payload)
+        #Dev.pprint(png_data)
+        self._save_png_file(png_data)
+
+    def test_table(self):
+        payload = {"params": ['table','graph_MKF', 'graph']}
+        png_data = self.lambda_browser.update_with_src().invoke(payload)
+        Dev.pprint(png_data)
+        self._save_png_file(png_data)
+
+    def test_issue(self):
+        payload = {"params": ['table','graph_MKF', 'issue']}
+        png_data = self.lambda_browser.update_with_src().invoke(payload)
+        Dev.pprint(png_data)
+        self._save_png_file(png_data)
+
+
+
+    def test_just_update(self):
+        self.lambda_browser.update_with_src()

@@ -49,14 +49,23 @@ class API_Browser:
 
     async def js_execute(self, js_code):
         if js_code:
-            if type(js_code).__name__ == 'str':
+            if type(js_code).__name__ == 'str':                             # if it is a string, execute it
                 return await self.js_eval(js_code)
-            else:
-                name   = js_code.get('name')
-                params = js_code.get('params'  )
-                return await self.js_invoke_function(name, params)
-            #from time import sleep                                 # we might need to add some kind of timeout or callback (to handle cases when actions need a bit more time to stabilize after the js execution)
-            #sleep(0.250)
+
+            if type(js_code).__name__ == 'list':                            # if it is an list (i.e. array)
+                list_types = [type(item).__name__ for item in js_code]      # get all array items type
+                all_string = list(set(list_types)) == ['str']               # get unique list and check if all are string
+                if all_string:                                              # if they are
+                    js_code = ";\n".join(js_code)                           # join them all (separated by ;)
+                    return await self.js_eval(js_code)                      # execute it
+
+            name   = js_code.get('name')                                    # if js_code was an object
+            params = js_code.get('params'  )                                # get the name and params values
+            if name and params:
+                return await self.js_invoke_function(name, params)          # execute them as a js method
+
+            #from time import sleep                                         # we might need to add some kind of timeout or callback (to handle cases when actions need a bit more time to stabilize after the js execution)
+            #sleep(0.250)                                                   # but I think this is better done outside this function
 
     async def js_eval(self, code):
         page = await self.page()
@@ -68,12 +77,17 @@ class API_Browser:
                 print(error_message)
             return error_message
 
-    async def js_invoke_function(self, name, params):
-        if type(params).__name__ != 'str':
-            params = json.dumps(params)
-
-        encoded_text = base64.b64encode(params.encode()).decode()
-        js_script = "{0}(atob('{1}'))".format(name, encoded_text )
+    async def js_invoke_function(self, name, params=None):
+        if params:
+            if type(params).__name__ != 'str':
+                params = json.dumps(params)
+                encoded_text = base64.b64encode(params.encode()).decode()
+                js_script = "{0}(JSON.parse(atob('{1}')))".format(name, encoded_text )
+            else:
+                encoded_text = base64.b64encode(params.encode()).decode()
+                js_script = "{0}(atob('{1}'))".format(name, encoded_text)
+        else:
+            js_script = "{0}()".format(name)
         return await self.js_eval(js_script)
 
 
@@ -131,6 +145,8 @@ class API_Browser:
         page = await self.page()
         if viewport:
             await self.viewport(viewport)
+        if clip:
+            full_page = False
         await page.screenshot({'path': file_screenshot,'fullPage': full_page, 'clip' : clip})
         return file_screenshot
 
@@ -192,8 +208,9 @@ class API_Browser:
     #     return self
 
     @sync
-    async def sync__browser_width(self, width):
-        return await self.page_size(width, width)
+    async def sync__browser_width(self, width,height=None):
+        if height is None: height = width
+        return await self.page_size(width, height)
 
     @sync
     async def sync__close_browser(self):
@@ -202,8 +219,11 @@ class API_Browser:
 
     @sync
     async def sync__js_execute(self, js_code):
-        await self.js_execute(js_code)
-        return self
+        return await self.js_execute(js_code)
+
+    @sync
+    async def sync_js_invoke_function(self,name, params=None):
+        return await self.js_invoke_function(name, params)
 
     @sync
     async def sync__html_raw(self):
@@ -219,12 +239,12 @@ class API_Browser:
         return await self.url()
 
     @sync
-    async def sync__screenshot(self, url=None,file_screenshot = None):
-        return await self.screenshot(url,file_screenshot = file_screenshot)
+    async def sync__screenshot(self, url=None,file_screenshot = None,clip=None):
+        return await self.screenshot(url,file_screenshot = file_screenshot,clip=clip)
 
     @sync
-    async def sync__screenshot_base64(self, url=None,full_page=True,close_browser=False):
-        screenshot_file = await self.screenshot(url=url,full_page=full_page)
+    async def sync__screenshot_base64(self, url=None,full_page=True,close_browser=False, clip=None):
+        screenshot_file = await self.screenshot(url=url,full_page=full_page, clip=clip)
         if close_browser:
             await self.browser_close()
         return base64.b64encode(open(screenshot_file, 'rb').read()).decode()

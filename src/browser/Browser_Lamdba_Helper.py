@@ -6,17 +6,16 @@ from utils.aws.s3 import S3
 
 
 class Browser_Lamdba_Helper:
-    def __init__(self):
+    def __init__(self, headless = True):
         self.api_browser = None
         self.render_page = None
-        self.headless    = False
-        self.auto_close  = False
+        self.headless    = headless
+        self.auto_close  = headless
 
 
-    def get_screenshot_png(self,url=None):
-        #if not url: return ''
+    def get_screenshot_png(self,url=None, clip=None,full_page=None,close_browser=True):
         load_dependency('syncer')
-        return self.api_browser.sync__screenshot_base64(url, close_browser=True)
+        return self.api_browser.sync__screenshot_base64(url, close_browser=close_browser, clip=clip,full_page=full_page)
 
     def open_local_file(self, path, js_code=None):
         return self.open_local_page_and_get_html(path,js_code)
@@ -26,14 +25,14 @@ class Browser_Lamdba_Helper:
            url      = web_server.url(path)
            return self.render_page.get_page_html_via_browser(url, js_code=js_code)
 
-    def open_local_page_and_get_screenshot(self, path, js_code=None,clip=None):
+    def open_local_page_and_get_screenshot(self, path, png_file=None,js_code=None,clip=None):
         with self.render_page.web_server as web_server:
            url      = web_server.url(path)
-           return self.render_page.get_screenshot_via_browser(url, js_code=js_code, clip=clip)
+           return self.render_page.get_screenshot_via_browser(url, js_code=js_code, clip=clip,png_file=png_file)
 
     def render_file(self,team_id, channel, path,js_code=None,clip=None):
         #browser_helper = Browser_Lamdba_Helper().setup()
-        png_file = self.open_local_page_and_get_screenshot(path, js_code,clip=clip)
+        png_file = self.open_local_page_and_get_screenshot(path=path, js_code=js_code,clip=clip)
         return self.send_png_file_to_slack(team_id, channel, 'markdown', png_file)
 
     def send_png_file_to_slack(self, team_id, channel, target, png_file):
@@ -68,6 +67,18 @@ class Browser_Lamdba_Helper:
         self.render_page = Render_Page(api_browser=self.api_browser, web_root=self.web_root())
 
         return self
+
+    @staticmethod
+    def save_png_data(png_data, png_file=None):
+        try:
+            if png_file is None:
+                png_file = '/tmp/lambda_png_file.png'
+            if png_data:
+                with open(png_file, "wb") as fh:
+                    fh.write(base64.decodebytes(png_data.encode()))
+                return "Png data with size {0} saved to {1}".format(len(png_data),png_file)
+        except Exception as error:
+            return "[_save_png_file][Error] {0}\n\n".format(error,png_data)
 
     # def setup_AWS(self):
     #     load_dependency('syncer')

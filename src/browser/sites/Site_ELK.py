@@ -13,8 +13,8 @@ from utils.aws.secrets import Secrets
 class Site_ELK:
     def __init__(self,api_browser=None,team_id=None, channel=None):
         self._browser       = None
-        self.headless       = False
-        self.auto_close     = False
+        self.headless       = True
+        self.auto_close     = True
         self.username       = None
         self.password       = None
         self.server_url     = None
@@ -102,6 +102,18 @@ class Site_ELK:
         page = await self.browser().page()
         await page.waitForSelector('.kuiLocalSearch')
 
+    @sync
+    async def sync__dashboard_project(self, key):
+        await self.browser().page_size(1500, 1000)
+        #key = 'GSSP-171'
+        #key = 'GSSP-126'
+        self.log_status('Opening dashboard for project: {0}'.format(key))
+        url = "/app/kibana#/dashboard/12d60b50-3a46-11e9-9a33-8728e06b70ec?_g=(refreshInterval:(pause:!f,value:5000),time:(from:now-15m,mode:quick,to:now))&_a=(description:'',filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:e00d6380-23d9-11e9-b0a8-31c201c03efd,key:project_id,negate:!f,params:(query:{0},type:phrase),type:phrase,value:{0}),query:(match:(project_id:(query:{0},type:phrase))))),fullScreenMode:!f,options:(darkTheme:!f,hidePanelTitles:!f,useMargins:!t),panels:!((embeddableConfig:(),gridData:(h:12,i:'1',w:16,x:0,y:0),id:c2cb0b90-3a42-11e9-9a33-8728e06b70ec,panelIndex:'1',type:visualization,version:'6.6.1'),(embeddableConfig:(),gridData:(h:12,i:'2',w:12,x:16,y:0),id:'89544f80-3a41-11e9-9a33-8728e06b70ec',panelIndex:'2',type:visualization,version:'6.6.1'),(embeddableConfig:(),gridData:(h:15,i:'3',w:28,x:0,y:12),id:fdb7ce30-3a35-11e9-9a33-8728e06b70ec,panelIndex:'3',type:visualization,version:'6.6.1')),query:(language:kuery,query:''),timeRestore:!f,title:'GS%20Budget%20-%20Projects%20Simple',viewMode:view)".format(key)
+        await self.open(url)
+        #await self.open('/goto/{0}'.format(goto_id), 'networkidle0')
+        page = await self.browser().page()
+        await page.waitForSelector('.visWrapper')#''.kbnAggTable__group')
+
 
 
     @sync
@@ -120,13 +132,23 @@ class ELK_Commands:
         elk            = params.pop()
         browser_helper = params.pop()
         dashboard_id   = params.pop()
-
-        #browser_helper.api_browser.sync__browser_width(10000)
         elk.sync__dashboard(dashboard_id)
-
-
-
         png_data = browser_helper.get_screenshot_png()
+        return browser_helper.send_png_data_to_slack(team_id, channel, None, png_data)
+
+    @staticmethod
+    def dashboard_project(team_id=None, channel=None, params=None):
+        elk            = params.pop()
+        browser_helper = params.pop()
+        key            = params.pop()
+        clip           = {'x': 190, 'y': 130, 'width': 755, 'height': 725 }
+
+        elk.sync__dashboard_project(key)
+        #dashboard_id = '549e8579f763bc82ed6cd69cf4c62954'
+        #elk.sync__dashboard(dashboard_id)
+
+        png_data = browser_helper.get_screenshot_png(clip=clip,full_page=False)
+
         return browser_helper.send_png_data_to_slack(team_id, channel, None, png_data)
 
     @staticmethod
