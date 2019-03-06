@@ -59,9 +59,10 @@ class S3:
         return GzipFile(None, 'rb', fileobj=bytestream).read().decode('utf-8')
 
     def file_download           (self, bucket, key , use_cache = False               ):
-        tmp_file = '/tmp/' + key.replace('/','_')
-        if self.file_download_to(bucket, key, tmp_file, use_cache):
-            return tmp_file
+        if bucket and key:
+            tmp_file = '/tmp/' + key.replace('/','_')
+            if self.file_download_to(bucket, key, tmp_file, use_cache):
+                return tmp_file
         return None
 
     def file_download_and_delete(self, bucket, key):
@@ -72,14 +73,17 @@ class S3:
         return None
 
     def file_download_to        (self, bucket, key, target_file, use_cache = False  ):
-        if use_cache is True:
-            if os.path.exists(target_file):
-                return True
-        else:
-            if os.path.exists(target_file):
-                os.remove(target_file)
-        self.s3().download_file(bucket, key, target_file)
-        return os.path.exists(target_file)
+        try:
+            if use_cache is True:
+                if os.path.exists(target_file):
+                    return True
+            else:
+                if os.path.exists(target_file):
+                    os.remove(target_file)
+            self.s3().download_file(bucket, key, target_file)
+            return os.path.exists(target_file)
+        except ClientError:                                     # when file not found
+            return False
 
     def file_copy               (self, src_bucket, src_key, dest_bucket, dest_key   ):
         return self.s3().copy({'Bucket': src_bucket, 'Key': src_key}, dest_bucket,dest_key )

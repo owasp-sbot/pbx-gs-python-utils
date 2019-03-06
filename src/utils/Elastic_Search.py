@@ -61,21 +61,23 @@ class Elastic_Search:
             return {"elk-error": "{0}".format(error)}
 
     def add_bulk(self, data, id_key = None, pipeline = None):
-        actions = []
-        for item in data:
-            item_data = {
-                            "_index": self.index,
-                            "_type": 'item',
-                            "_source": item,
-                        }
-            if id_key is not None:
-                item_data["_id"] = item[id_key]
-            actions.append(item_data)
+        ok = 0
+        if data:
+            actions = []
+            for item in data:
+                item_data = {
+                                "_index": self.index,
+                                "_type": 'item',
+                                "_source": item,
+                            }
+                if id_key is not None:
+                    item_data["_id"] = item[id_key]
+                actions.append(item_data)
 
-        if pipeline is None:
-            ok, _ = helpers.bulk(self.es, actions, index=self.index)
-        else:
-            ok, _ = helpers.bulk(self.es, actions, index=self.index, pipeline=pipeline)
+            if pipeline is None:
+                ok, _ = helpers.bulk(self.es, actions, index=self.index)
+            else:
+                ok, _ = helpers.bulk(self.es, actions, index=self.index, pipeline=pipeline)
         return ok
 
     def create_index(self,body = {}):
