@@ -201,9 +201,9 @@ class Elastic_Search:
             yield result['_source']
 
 
-    def search_on_field_for_value(self, field, value):
+    def search_on_field_for_value(self, field, value, size=10000):
         query = {"query": {"match": { field : {"query": value}}}}
-        return self.search_using_query(query)
+        return self.search_using_query(query, size=size)
 
     def search_on_field_for_values(self, field, values):
         query = {"query": { "constant_score": { "filter": { "terms": { field: values } } } } }

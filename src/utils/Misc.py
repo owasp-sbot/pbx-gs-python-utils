@@ -11,6 +11,11 @@ from utils.Dev import Dev
 class Misc:
 
     @staticmethod
+    def chunks(items, split):
+        for i in range(0, len(items), split):
+            yield items[i:i + split]
+
+    @staticmethod
     def class_name(target):
         if target:
             return type(target).__name__
