@@ -1,4 +1,4 @@
-from api_jira.API_Jira import API_Jira, #use_local_cache_if_available
+from api_jira.API_Jira import API_Jira #use_local_cache_if_available
 from gsuite.GSheets import GSheets
 from utils.Dev import Dev
 
