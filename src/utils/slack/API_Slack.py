@@ -48,6 +48,11 @@ class API_Slack:
     def get_channel(self, channel):
         return self.slack.api_call("channels.info", channel=channel)
 
+    def get_messages(self,channel,limit=10):
+        messages = self.slack.api_call("conversations.history", channel=channel, limit=limit).get('messages')
+        Dev.pprint(messages)
+        return [message.get('text') for message in messages]
+
     def send_message(self, text, attachments = [], channel = None):
         if channel is None:
             channel = self.channel

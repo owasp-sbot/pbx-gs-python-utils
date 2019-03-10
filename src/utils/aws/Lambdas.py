@@ -89,7 +89,7 @@ class Lambdas:
         return self
 
     def upload_and_invoke(self, payload = {}):
-        return self.update().invoke(payload)
+        return self.update_with_src().invoke(payload)
 
     def update(self):
         if (self.exists() is False):
