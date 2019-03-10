@@ -2,6 +2,7 @@ from unittest import TestCase
 
 from api_jira.API_JIRA_Sheets_Sync import API_JIRA_Sheets_Sync
 from utils.Dev import Dev
+from utils.Json import Json
 from utils.aws.Lambdas import Lambdas
 
 
@@ -21,8 +22,31 @@ class Test_API_JIRA_Sheets_Sync(TestCase):
         raw_data = self.api_sync.convert_sheet_data_to_raw_data(sheet_data)
         Dev.pprint(raw_data)
 
+    def test_color_code_cells_based_on_diff_status(self):
+        #sheet_data  = None
+        #issues      = None
+        sheet_data  = self.api_sync.get_sheet_data()
+        issues      = self.api_sync.get_jira_issues_in_sheet_data(sheet_data)
+        diff_cells  = self.api_sync.diff_sheet_data_with_jira_data(sheet_data, issues)
+        result      = self.api_sync.color_code_cells_based_on_diff_status(diff_cells)
+        #Dev.pprint(result)
+
+    def test_diff_sheet(self):
+        self.api_sync.diff_sheet()
+
+    def test_diff_sheet_data_with_jira_data(self):
+        sheet_data = self.api_sync.get_sheet_data()
+        issues     = self.api_sync.get_jira_issues_in_sheet_data(sheet_data)
+        result     = self.api_sync.diff_sheet_data_with_jira_data(sheet_data, issues)
+        Dev.pprint(result)
+
     def test_get_issue_data(self):
         Dev.pprint(self.api_sync.get_issue_data('RISK-1200'))
+
+    def test_get_jira_issues_in_sheet_data(self):
+        sheet_data = self.api_sync.get_sheet_data()
+        issues = self.api_sync.get_jira_issues_in_sheet_data(sheet_data)
+        Dev.pprint(len(issues))
 
     def test_get_sheet_data(self):
         result = self.api_sync.get_sheet_data()

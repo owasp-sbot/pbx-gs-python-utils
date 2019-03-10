@@ -187,6 +187,14 @@ class API_Jira:
     def issue(self, id):
         return self.issue_no_cache(id)
 
+    def issues(self, ids):
+        issues = {}
+        for id in ids:
+            issue = self.issue_no_cache(id)
+            if issue:
+                issues[id] = issue
+        return issues
+
     def issue_no_cache(self, id):
         #log_info('Retrieving issue with from Jira with ID: {0}'.format(id),'API_Jira')
         try:

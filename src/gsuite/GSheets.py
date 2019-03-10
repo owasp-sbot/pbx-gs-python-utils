@@ -67,6 +67,11 @@ class GSheets:
                values[sheet_id] = properties
             return values
 
+    def request_cell_set_background_color(self, sheet_id, col, row, red, green, blue):
+        return {'updateCells': { 'start': {'sheetId': sheet_id, 'rowIndex': row, 'columnIndex': col },
+                                 'rows': [{'values': [ {'userEnteredFormat' : {'backgroundColor': {'red': red, 'blue': blue, 'green': green}}}] } ],
+                                 'fields': 'userEnteredFormat.backgroundColor'}}
+
     def clear_values(self, file_id, sheet_name):
         sheet_range = "{0}!A1:Z".format(sheet_name)
         return self.execute(self.spreadsheets.values().clear(spreadsheetId=file_id, range=sheet_range))

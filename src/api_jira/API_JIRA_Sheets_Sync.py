@@ -1,14 +1,15 @@
-from api_jira.API_Jira import API_Jira #use_local_cache_if_available
+from api_jira.API_Jira import API_Jira, use_local_cache_if_available, save_result_to_local_cache, Json
 from gsuite.GSheets import GSheets
 from utils.Dev import Dev
 
 
 class API_JIRA_Sheets_Sync:
-    def __init__(self, sheet_id, sheet_name = None, gsuite_secret_id=None):
+    def __init__(self, file_id,gsuite_secret_id=None):
         self._gsheets         = None
         self._jira            = None
-        self.file_id          = sheet_id
-        self._sheet_name      = sheet_name
+        self.file_id          = file_id
+        self._sheet_name      = None
+        self._sheet_id        = None
         self.headers          = []
         self.gsuite_secret_id = gsuite_secret_id
         if not self.gsuite_secret_id:
@@ -32,6 +33,13 @@ class API_JIRA_Sheets_Sync:
                 self._sheet_name = list(set(sheets)).pop(0)
         return self._sheet_name
 
+    def sheet_id(self):
+        if self._sheet_id is None:
+            sheets = self.gsheets().sheets_properties_by_id(self.file_id)
+            if sheets:
+                self._sheet_id = list(set(sheets)).pop(0)
+        return self._sheet_id
+
 
     # main methods
 
@@ -47,6 +55,7 @@ class API_JIRA_Sheets_Sync:
     def get_sheet_raw_data(self):
         return self.gsheets().get_values(self.file_id, self.sheet_name())
 
+    #@save_result_to_local_cache
     #@use_local_cache_if_available
     def get_sheet_data(self):
         rows = self.get_sheet_raw_data()
@@ -60,11 +69,53 @@ class API_JIRA_Sheets_Sync:
                         value = None
                     else:
                         value  = row[header_index].strip()
-                    if header == 'Jira Link':
+                    if header == 'Jira Link' and len(row) > 0:
                         value = '=HYPERLINK("https://jira.photobox.com/browse/{0}","{0}")'.format(row[0])
                     item[header] = value
                 data.append(item)
             return data
+
+    def color_code_cells_based_on_diff_status(self, diff_cells):
+        sheet_id = self.sheet_id()
+
+        requests = []
+        for diff_cell in diff_cells:
+            col    = diff_cell.get('col_index')
+            row    = diff_cell.get('row_index')
+            status = diff_cell.get('status')
+            if status == 'diff': requests.append(self.gsheets().request_cell_set_background_color(sheet_id, col ,row, 1   ,0.5 ,0.5))
+            if status == 'same': requests.append(self.gsheets().request_cell_set_background_color(sheet_id, col ,row, 0.5 ,1   ,0.5))
+
+        self.gsheets().execute_requests(self.file_id, requests)
+
+    def diff_sheet(self):
+        sheet_data  = self.get_sheet_data()
+        issues      = self.get_jira_issues_in_sheet_data(sheet_data)
+        diff_cells  = self.diff_sheet_data_with_jira_data(sheet_data, issues)
+        self.color_code_cells_based_on_diff_status(diff_cells)
+
+    def diff_sheet_data_with_jira_data(self,sheet_data, jira_data):
+        diff_cells = []
+        print()
+        for row_index, row in enumerate(sheet_data):
+            for header_index, header in enumerate(self.headers):
+                key = row['Key']
+                issue = jira_data.get(key)
+                if issue:
+                    sheet_value = row.get(header)
+                    jira_value  = issue.get(header,'')
+                    if sheet_value and jira_value:
+                        diff_cell = {
+                                        'row_index'   : row_index + 1,
+                                        'col_index'   : header_index ,
+                                        'sheet_value' : sheet_value  ,
+                                        'jira_value'  : jira_value
+                                    }
+                        if sheet_value   == jira_value: diff_cell['status'] = 'same'
+                        elif sheet_value != jira_value: diff_cell['status'] = 'diff'
+                        #print("{0:10} {1:20} {2:20} {3:20}".format(key, header, sheet_value, jira_value))
+                        diff_cells.append(diff_cell)
+        return diff_cells
 
     def update_sheet_data_with_jira_data(self,sheet_data):
         for item in sheet_data:
@@ -74,6 +125,13 @@ class API_JIRA_Sheets_Sync:
                     value = issue.get(column_id)
                     if value:
                         item[column_id] = value
+
+    def get_jira_issues_in_sheet_data(self, sheet_data):
+        #return Json.load_json('/tmp/tmp_issues.json')
+        keys = [row.get('Key') for row in sheet_data if row.get('Key') != '']
+        issues = self.jira().issues(keys)
+        Json.save_json('/tmp/tmp_issues.json', issues)
+        return issues
 
     #@use_local_cache_if_available
     def get_issue_data(self,issue_id):
