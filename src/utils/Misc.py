@@ -1,4 +1,5 @@
 import hashlib
+import json
 import pprint
 import random
 import string
@@ -21,6 +22,12 @@ class Misc:
         if target:
             return type(target).__name__
         return None
+
+    @staticmethod
+    def json_format(target, message=None):
+        if target:
+            return json.dumps(target, indent=4)
+        return message
 
     @staticmethod
     def object_data(target):

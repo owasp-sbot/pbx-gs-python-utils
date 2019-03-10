@@ -26,13 +26,6 @@ class GS_Bot_Commands:                                      # move to separate c
         text = ':exclamation: Sorry, could not match provided command to a method: `{0}`\n'.format(slack_event['text']) + text
         return (text, attachments)
 
-    # SLACK Utils methods       # refactor into separate class
-
-    def slack_username_to_id(slack_event, params=[]):
-        username_id = params.pop().replace('<@', '').replace('>', '')
-        text = "The id for the provided user is: {0}".format(username_id)
-        return text, []
-
     # refactor into separate class
     @staticmethod
     def dot_render(slack_event, params=[]):
@@ -72,31 +65,36 @@ class GS_Bot_Commands:                                      # move to separate c
         Lambdas('utils.puml_to_slack').invoke_async({'puml': puml, 'channel': channel})
         return text, attachments
 
+    #move to new routing mode
     @staticmethod
     def browser(slack_event, params=[]):
         Lambdas('browser.lambda_browser').invoke_async({'params': params, 'data': slack_event})
         return None, None
 
+    # move to new routing mode
     @staticmethod
     def gdocs(slack_event, params=[]):
         Lambdas('gs.lambda_gdocs'       ).invoke_async({'params': params, 'data': slack_event})
         return None, None
 
-    @staticmethod
-    def graph(slack_event, params=[]):
-        return Lambdas('gs.lambda_graph'       ).invoke({'params': params, 'data': slack_event}) , []
-        return None, None
+    # @staticmethod
+    # def graph(slack_event, params=[]):
+    #     return Lambdas('gs.lambda_graph'       ).invoke({'params': params, 'data': slack_event}) , []
+    #     return None, None
 
+    # move to new routing mode
     @staticmethod
     def slides(slack_event, params=[]):
         Lambdas('gs.lambda_slides'      ).invoke_async({'params': params, 'data': slack_event})
         return (None, None)
 
+    # move to new routing mode
     @staticmethod
     def sheets(slack_event, params=[]):
         Lambdas('gs.lambda_sheets').invoke_async({'params': params, 'data': slack_event})
         return (None, None)
 
+    # move to new routing mode
     @staticmethod
     def jira(slack_event, params=[]):
         Lambdas('gs.elastic_jira').invoke_async({"params": params , "user": slack_event.get('user') , "channel": slack_event.get('channel'), 'team_id': slack_event.get('team_id') },)

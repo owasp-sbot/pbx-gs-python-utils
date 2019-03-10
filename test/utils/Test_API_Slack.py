@@ -70,9 +70,9 @@ class Test_API_Slack(unittest.TestCase):
 
 
     def test_send_and_receive_messages(self):
-        result = self.api.send_message('<@U7ESE1XS7> hello', channel='DDKUZTK6X')
+        result = self.api.send_message('<@UDK5W7W3T> hello', channel='DDKUZTK6X')
         Misc.wait(1)
-        messages = self.api.get_messages(channel='DDKUZTK6X')
+        messages = self.api.get_messages(channel='DDKUZTK6X',limit=2)
         Dev.pprint(messages)
 
 
