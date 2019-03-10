@@ -27,7 +27,7 @@ class GSuite:
         token_file    = '/tmp/gmail_credential_{0}.json'.format(desired_scope)                          # this is the tmp file with the token value for the desired scope
 
         if not Files.exists(token_file):                                                                # if the file does not exist
-            if os.getenv('AWS_REGION') is not None:                                                     # check if we are running in AWS
+            if os.getenv('AWS_REGION') is not None or os.getenv('SYNC_SERVER'):                         # check if we are running in AWS or in the sync server
                 Files.write(token_file, secret_data['token.json'])                                      # if we are, use the token.json value from the AWS secret_data
             else:
                 secret_data = json.loads(Secrets('gsuite_token').value())   # BUG, need to refactor this
