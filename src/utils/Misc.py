@@ -30,6 +30,12 @@ class Misc:
         return message
 
     @staticmethod
+    def json_load(target, message=None):
+        if target:
+            return json.loads(target)
+        return message
+
+    @staticmethod
     def object_data(target):
         #fields = [field for field in dir(target) if not callable(getattr(target, field)) and not field.startswith("a__")]
         return target.__dict__ # this one seems to do the trick (if not look at the code sample above)
