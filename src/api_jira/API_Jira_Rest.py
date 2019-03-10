@@ -67,7 +67,7 @@ class API_Jira_Rest:
         data = { "update" : {}}
         fields_by_name = self.fields_by_name()
         for key,value in fields.items():
-            #if key == 'Rating': key = 'Risk Rating'     # move to special resolver method (needed because 'Risk Rating' was mapped as 'Rating' in ELK)
+            if key == 'Rating': key = 'Risk Rating'     # move to special resolver method (needed because 'Risk Rating' was mapped as 'Rating' in ELK)
             field = fields_by_name.get(key)
             if field:
                 field_id    = field.get('id')

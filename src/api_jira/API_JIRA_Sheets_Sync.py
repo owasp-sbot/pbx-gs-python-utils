@@ -193,14 +193,18 @@ class API_JIRA_Sheets_Sync:
                 raw_data = self.convert_sheet_data_to_raw_data(sheet_data)
                 self.update_file_with_raw_data(raw_data, self.sheet_name())             # add data to both
                 self.update_file_with_raw_data(raw_data, self.sheet_name_backup())      # first one and the gsbot backup one (to be used to calculate update diffs)
-                return "sync done...."
+                return "loaded data from jira completed...."
             except Exception as error:
                 return "Error in load_data_from_jira: {0}".format(error)
         return "Error: no data for file_id: {0}".format(self.file_id)
 
     def sync_sheet(self):
-        diff_cells = self.diff_cells()
-        return self.sync_data_between_jira_and_sheet(diff_cells)
+        try:
+            diff_cells = self.diff_cells()
+            self.sync_data_between_jira_and_sheet(diff_cells)
+            return "sync data with Jira completed...."
+        except Exception as error:
+            return "Error in sync_sheet: {0}".format(error)
 
     def sync_data_between_jira_and_sheet(self,diff_cells):
         jira_rest = API_Jira_Rest()
