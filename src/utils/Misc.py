@@ -4,6 +4,7 @@ import random
 import string
 import textwrap
 import re
+from time import sleep
 
 from utils.Dev import Dev
 
@@ -44,6 +45,10 @@ class Misc:
         if target:
             return hashlib.md5('{0}'.format(target).encode()).hexdigest()
         return None
+
+    @staticmethod
+    def wait(seconds):
+        sleep(seconds)
 
     @staticmethod
     def word_wrap(text,length = 40):
