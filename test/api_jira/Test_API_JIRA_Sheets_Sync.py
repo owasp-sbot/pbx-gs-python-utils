@@ -10,6 +10,7 @@ class Test_API_JIRA_Sheets_Sync(TestCase):
 
     def setUp(self):
         self.file_id  = '1yDxu5YxL9FxY5wQ1EEQlAYGt3flIsm2VTyWwPny5RLA'
+        self.file_id ='1gc3jQelTJ8250kCZqOhqBOOZUywGOy3AiNC6cghgHak'
         self.api_sync = API_JIRA_Sheets_Sync(self.file_id)
 
 
@@ -35,7 +36,8 @@ class Test_API_JIRA_Sheets_Sync(TestCase):
         issues      = self.api_sync.get_jira_issues_in_sheet_data(sheet_data)
         diff_cells  = self.api_sync.diff_sheet_data_with_jira_data(sheet_data, backup_data, issues)
         result      = self.api_sync.color_code_cells_based_on_diff_status(diff_cells)
-        Dev.pprint(diff_cells)
+        #Dev.pprint(result)
+        #Dev.pprint(diff_cells)
 
     def test_diff_sheet(self):
         self.api_sync.diff_sheet()

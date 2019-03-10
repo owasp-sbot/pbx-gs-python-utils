@@ -60,9 +60,10 @@ class API_JIRA_Sheets_Sync:
 
     def sheet_id(self):
         if self._sheet_id is None:
-            sheets = self.gsheets().sheets_properties_by_id(self.file_id)
-            if sheets:
-                self._sheet_id = list(set(sheets)).pop(0)
+            sheets = self.gsheets().sheets_properties_by_title(self.file_id)
+            if self.sheet_title in list(set(sheets)):
+                Dev.pprint(sheets.get(self.sheet_title))
+                self._sheet_id = sheets.get(self.sheet_title).get('sheetId')
         return self._sheet_id
 
 
