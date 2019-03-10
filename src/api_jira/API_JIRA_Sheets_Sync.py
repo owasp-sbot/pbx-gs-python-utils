@@ -87,13 +87,13 @@ class API_JIRA_Sheets_Sync:
             if status == 'same': requests.append(self.gsheets().request_cell_set_background_color(sheet_id, col ,row, 0.5 ,1   ,0.5))
 
         self.gsheets().execute_requests(self.file_id, requests)
-        return "diff completed..."
 
     def diff_sheet(self):
         sheet_data  = self.get_sheet_data()
         issues      = self.get_jira_issues_in_sheet_data(sheet_data)
         diff_cells  = self.diff_sheet_data_with_jira_data(sheet_data, issues)
         self.color_code_cells_based_on_diff_status(diff_cells)
+        return "diff completed..."
 
     def diff_sheet_data_with_jira_data(self,sheet_data, jira_data):
         diff_cells = []
