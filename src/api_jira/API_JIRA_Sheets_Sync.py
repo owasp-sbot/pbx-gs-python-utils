@@ -1,4 +1,4 @@
-from api_jira.API_Jira import API_Jira, use_local_cache_if_available
+from api_jira.API_Jira import API_Jira, #use_local_cache_if_available
 from gsuite.GSheets import GSheets
 from utils.Dev import Dev
 
@@ -27,7 +27,9 @@ class API_JIRA_Sheets_Sync:
 
     def sheet_name(self):
         if self._sheet_name is None:
-            self._sheet_name = list(set(self.gsheets().sheets_properties_by_title(self.file_id))).pop(0)
+            sheets = self.gsheets().sheets_properties_by_title(self.file_id)
+            if sheets:
+                self._sheet_name = list(set(sheets)).pop(0)
         return self._sheet_name
 
 
@@ -48,18 +50,19 @@ class API_JIRA_Sheets_Sync:
     #@use_local_cache_if_available
     def get_sheet_data(self):
         rows = self.get_sheet_raw_data()
-        self.headers = rows.pop(0)
-        data = []
-        for row_index, row in enumerate(rows):
-            item = { 'index':row_index}
-            for header_index, header in enumerate(self.headers):
-                if header_index >= len(row):
-                    value = None
-                else:
-                    value  = row[header_index].strip()
-                item[header] = value
-            data.append(item)
-        return data
+        if rows:
+            self.headers = rows.pop(0)
+            data = []
+            for row_index, row in enumerate(rows):
+                item = { 'index':row_index}
+                for header_index, header in enumerate(self.headers):
+                    if header_index >= len(row):
+                        value = None
+                    else:
+                        value  = row[header_index].strip()
+                    item[header] = value
+                data.append(item)
+            return data
 
     def update_sheet_data_with_jira_data(self,sheet_data):
         for item in sheet_data:
@@ -70,7 +73,7 @@ class API_JIRA_Sheets_Sync:
                     if value:
                         item[column_id] = value
 
-    @use_local_cache_if_available
+    #@use_local_cache_if_available
     def get_issue_data(self,issue_id):
         return self.jira().issue(issue_id)
 
@@ -79,8 +82,10 @@ class API_JIRA_Sheets_Sync:
 
     def sync_sheet_with_jira(self):
         sheet_data = self.get_sheet_data()
-        self.update_sheet_data_with_jira_data(sheet_data)
-        raw_data = self.convert_sheet_data_to_raw_data(sheet_data)
-        self.update_file_with_raw_data(raw_data)
-        return "sync done .... "
+        if sheet_data:
+            self.update_sheet_data_with_jira_data(sheet_data)
+            raw_data = self.convert_sheet_data_to_raw_data(sheet_data)
+            self.update_file_with_raw_data(raw_data)
+            return "sync done .... "
+        return "Error: no data for file_id: {0}".format(self.file_id)
 

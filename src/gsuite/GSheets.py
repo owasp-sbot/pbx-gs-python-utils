@@ -60,20 +60,22 @@ class GSheets:
     def sheets_properties_by_title(self, file_id):
         values = {}
         metadata = self.sheets_metadata(file_id)
-        for sheet in metadata.get('sheets'):
-           properties = sheet.get('properties')
-           sheet_id   = properties.get('title')
-           values[sheet_id] = properties
-        return values
+        if metadata:
+            for sheet in metadata.get('sheets'):
+               properties = sheet.get('properties')
+               sheet_id   = properties.get('title')
+               values[sheet_id] = properties
+            return values
 
     def clear_values(self, file_id, sheet_name):
         sheet_range = "{0}!A1:Z".format(sheet_name)
         return self.execute(self.spreadsheets.values().clear(spreadsheetId=file_id, range=sheet_range))
 
     def get_values(self, file_id, range):
-        values = self.spreadsheets.values()
-        result = self.execute(values.get(spreadsheetId = file_id , range = range    ))
-        return result.get('values')
+        if file_id and range:
+            values = self.spreadsheets.values()
+            result = self.execute(values.get(spreadsheetId = file_id , range = range    ))
+            return result.get('values')
 
     def set_values(self, file_id, sheet_range, values):
         value_input_option = 'USER_ENTERED' # vs 'RAW'

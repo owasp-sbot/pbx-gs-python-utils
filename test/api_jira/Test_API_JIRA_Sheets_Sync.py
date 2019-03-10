@@ -46,5 +46,10 @@ class Test_API_JIRA_Sheets_Sync(TestCase):
         self.api_sync.sync_sheet_with_jira()
 
 
+    def test_sync_sheet_with_jira__bad_file_id(self):
+        self.api_sync.file_id = 'aaaa'
+        Dev.pprint(self.api_sync.sync_sheet_with_jira())
+
+
 
 
