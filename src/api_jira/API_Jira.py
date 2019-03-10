@@ -1,5 +1,4 @@
 from utils.Dev import Dev
-from utils.Local_Cache                import *
 from jira import JIRA
 
 from utils.Log_To_Elk import log_info, log_error
@@ -121,6 +120,14 @@ class API_Jira:
     def fields(self):
         return self.jira().fields()
 
+    def fields_by_name(self):
+        fields = {}
+        for field in self.jira().fields():
+            name = field.get('name')
+            fields[name] = field
+
+        return fields
+
     def issue_add_comment(self, key, comment):
         self.jira().add_comment(key,comment)
         return self
@@ -176,9 +183,29 @@ class API_Jira:
         self.jira().transition_issue(key,transitions_id)
         return self
 
-    def issue_update(self, key, summary = None, description = None):
+    def issue_update(self, issue_data):
+        fields_by_name = self.fields_by_name()
+        #Dev.pprint(fields_by_name)
+        key = issue_data.get('Key')
+        #print('KEY', key)
+        fields_data = {}
+        for name, value in issue_data.items():
+            field = fields_by_name.get(name)
+            if field:
+                field_id = field.get('id')
+                if field_id not in ['issuekey']:
+                    fields_data[field_id] = value
+        #sDev.pprint(fields_data)
+
+        #'rest/api/3/issuetype/'
+        # this is VERY slow
         issue = self.jira().issue(key, fields=['Key'], expand= [])
-        return issue.update(summary = summary, description = description)
+        #return issue
+        return issue.update(fields=fields_data)
+
+    #def issue_update(self, key, summary = None, description = None):
+    #    issue = self.jira().issue(key, fields=['Key'], expand= [])
+    #    return issue.update(summary = summary, description = description)
 
     def issue_worklogs(self, key):
         return self.jira().worklogs(key)

@@ -1,7 +1,8 @@
-from api_jira.API_Jira import API_Jira, use_local_cache_if_available, save_result_to_local_cache, Json
-from gs.API_Issues import API_Issues
-from gsuite.GSheets import GSheets
-from utils.Dev import Dev
+from api_jira.API_Jira_Rest import API_Jira_Rest
+from api_jira.API_Jira      import API_Jira #, use_local_cache_if_available, save_result_to_local_cache, Json
+from gs.API_Issues          import API_Issues
+from gsuite.GSheets         import GSheets
+from utils.Dev              import Dev
 from utils.Elastic_Search import Elastic_Search
 
 
@@ -107,18 +108,24 @@ class API_JIRA_Sheets_Sync:
             col    = diff_cell.get('col_index')
             row    = diff_cell.get('row_index')
             status = diff_cell.get('status')
-            if status == 'same'        : requests.append(self.gsheets().request_cell_set_background_color(sheet_id, col ,row, 0.5 ,1.0 ,0.5))
-            if status == 'sheet_change': requests.append(self.gsheets().request_cell_set_background_color(sheet_id, col ,row, 1.0 ,0.5 ,0.5))
-            if status == 'jira_change' : requests.append(self.gsheets().request_cell_set_background_color(sheet_id, col ,row, 0.5 ,0.5 ,1.0))
-            if status == 'other'       : requests.append(self.gsheets().request_cell_set_background_color(sheet_id, col ,row, 0.5 ,0.5 ,0.5))
+            if status == 'same'          : requests.append(self.gsheets().request_cell_set_background_color(sheet_id, col ,row, 0.5 ,1.0 ,0.5))
+            if status == 'sheet_change'  : requests.append(self.gsheets().request_cell_set_background_color(sheet_id, col ,row, 1.0 ,0.5 ,0.5))
+            if status == 'jira_change'   : requests.append(self.gsheets().request_cell_set_background_color(sheet_id, col ,row, 0.5 ,0.5 ,1.0))
+            if status == 'other'         : requests.append(self.gsheets().request_cell_set_background_color(sheet_id, col ,row, 0.5 ,0.5 ,0.5))
+
+            if status == 'jira-save-ok'  : requests.append(self.gsheets().request_cell_set_background_color(sheet_id, col ,row, 0.0 ,0.5 ,0.5))
+            if status == 'jira-save-fail': requests.append(self.gsheets().request_cell_set_background_color(sheet_id, col ,row, 1.0 ,0.0 ,0.0))
 
         return self.gsheets().execute_requests(self.file_id, requests)
 
-    def diff_sheet(self):
-        sheet_data  = self.get_sheet_data(self.sheet_name())
+    def diff_cells(self):
+        sheet_data = self.get_sheet_data(self.sheet_name())
         backup_data = self.get_sheet_data(self.sheet_name_backup())
         jira_issues = self.get_jira_issues_in_sheet_data(sheet_data)
-        diff_cells  = self.diff_sheet_data_with_jira_data(sheet_data, backup_data, jira_issues)
+        return self.diff_sheet_data_with_jira_data(sheet_data, backup_data, jira_issues)
+
+    def diff_sheet(self):
+        diff_cells = self.diff_cells()
         self.color_code_cells_based_on_diff_status(diff_cells)
         return "diff completed..."
 
@@ -138,6 +145,8 @@ class API_JIRA_Sheets_Sync:
 
                     if sheet_value and jira_value:
                         diff_cell = {
+                                        'key'         : key          ,
+                                        'field'       : header       ,
                                         'row_index'   : row_index + 1,
                                         'col_index'   : header_index ,
                                         'sheet_value' : sheet_value  ,
@@ -166,7 +175,7 @@ class API_JIRA_Sheets_Sync:
         #return Json.load_json('/tmp/tmp_issues.json')
         keys = [row.get('Key') for row in sheet_data if row.get('Key') != '']
         issues = self.jira().issues(keys)
-        Json.save_json('/tmp/tmp_issues.json', issues)
+        #Json.save_json('/tmp/tmp_issues.json', issues)
         return issues
 
     #@use_local_cache_if_available
@@ -176,7 +185,7 @@ class API_JIRA_Sheets_Sync:
     def update_file_with_raw_data(self,raw_data,sheet_name):
         self.gsheets().set_values(self.file_id, sheet_name, raw_data)
 
-    def sync_sheet_with_jira(self):
+    def load_data_from_jira(self):
         sheet_data = self.get_sheet_data(self.sheet_name())
         if sheet_data:
             try:
@@ -186,5 +195,27 @@ class API_JIRA_Sheets_Sync:
                 self.update_file_with_raw_data(raw_data, self.sheet_name_backup())      # first one and the gsbot backup one (to be used to calculate update diffs)
                 return "sync done...."
             except Exception as error:
-                return "Error in sync_sheet_with_jira: {0}".format(error)
+                return "Error in load_data_from_jira: {0}".format(error)
         return "Error: no data for file_id: {0}".format(self.file_id)
+
+    def sync_data_between_jira_and_sheet(self,diff_cells):
+        jira_rest = API_Jira_Rest()
+        #fields_to_update = {}
+        for item in diff_cells:
+            status = item.get('status')
+            if status == 'sheet_change':
+                key   = item.get('key')
+                field = item.get('field')
+                value = item.get('sheet_value')
+                #fields_to_update[key][field] = value
+                message ='[Jira update] for jira issue `{0}` updating field `{1}` with value `{2}` '.format(key, field, value)
+                print(message)
+
+                result = jira_rest.issue_update_field(key, field, value)
+                if result:
+                    item['status'] = 'jira-save-ok'
+                else:
+                    item['status'] = 'jira-save-fail'
+            if status == 'jira_change':
+                Dev.pprint('need to update sheet: {0}'.format(item))
+        self.color_code_cells_based_on_diff_status(diff_cells)

@@ -41,6 +41,11 @@ class Test_API_Jira(unittest.TestCase):
             field = data[name]
             print('| {0:55} | {1:25} | {2:10} |'.format(field['name'], field['id'], str(field['custom'])))
 
+
+    def test_fields_by_name(self):
+        fields_by_name = self.api.fields_by_name()
+        assert len(set(fields_by_name)) > 300
+
     def test_issue(self):                           # this needs to be fixed top reflect the latest added fields
         issue = self.api.issue('RISK-1083')
 
@@ -78,6 +83,17 @@ class Test_API_Jira(unittest.TestCase):
 
         Dev.pprint(statuses)
         #Dev.pprint(list(set(types)))
+
+    def test_issue_update(self):
+        issue_data = { "Key"             : "RISK-12"            ,
+                       "Summary"         : "new summary value"  ,
+                       "Risk Description": "el risk description",
+                       "Description"     : "the description"    ,
+                       "Risk Rating"     : "Low"                ,
+                       "Status"          : "Blocked"            ,}
+
+        result = self.api.issue_update(issue_data)
+        Dev.pprint(result)
 
 
     def test_issues_updated_in_last_hour(self):

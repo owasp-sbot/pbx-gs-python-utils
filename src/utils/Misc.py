@@ -24,6 +24,12 @@ class Misc:
         return None
 
     @staticmethod
+    def json_dumps(target, message=None):
+        if target:
+            return json.dumps(target, indent=4)
+        return message
+
+    @staticmethod
     def json_format(target, message=None):
         if target:
             return json.dumps(target, indent=4)
