@@ -1,7 +1,7 @@
-from gsbot import GS_Bot_Commands
-from    utils.aws.secrets   import Secrets
-from    utils.aws.Lambdas   import Lambdas
-from    utils.Dev           import *
+from    gsbot.GS_Bot_Commands import GS_Bot_Commands
+from    utils.aws.secrets     import Secrets
+from    utils.aws.Lambdas     import Lambdas
+from    utils.Dev             import *
 import  ssl
 import  urllib
 
@@ -51,9 +51,21 @@ class API_GS_Bot:
                                                                                              slack_event.get('team_id'),
                                                                                              slack_event.get('channel'),
                                                                                              slack_event.get('user')), category='API_GS_Bot.handle_command')
-                method             = self.resolve_command_method(command)                    # find method to invoke
-                method_params      = command.split(' ')[1:]
-                (text,attachments) = method(slack_event,method_params)                       # invoke method
+                #refactor code below to separate method
+                method_name = command.split(' ')[0].split('\n')[0]
+                if method_name in ['graph','slack']:        # this is the new way to route commands,where a lambda function is invoked
+                    lambda_name = 'gsbot.gsbot_{0}'.format(method_name)
+                    method_params = command.split(' ')[1:]
+                    Lambdas(lambda_name).invoke_async({'params': method_params, 'data': slack_event})
+                    return None, None
+                else:
+                    method             = self.resolve_command_method(command)                    # find method to invoke
+                    if method:
+                        method_params      = command.split(' ')[1:]
+                        (text,attachments) = method(slack_event,method_params)                       # invoke method
+                    else:
+                        text = ":exclamation: GS bot command `{0}` not found. Use `gsbot help` to see a list of available commands".format(method_name)
+                        attachments = []
             else:
                 return None, None
 
@@ -100,8 +112,11 @@ class API_GS_Bot:
             return  "Error in processing posted data: {0}".format(str(error))
 
     def resolve_command_method(self, command):
-        method_name = command.split(' ')[0].split('\n')[0]
-        return getattr(GS_Bot_Commands,method_name)
+        try:
+            method_name = command.split(' ')[0].split('\n')[0]
+            return getattr(GS_Bot_Commands,method_name)
+        except AttributeError:
+            return None
 
     def upload_png_file(self, channel_id, text, file):
         my_file = {
@@ -121,7 +136,6 @@ class API_GS_Bot:
         return 42
 
     def send_message(self,channel_id, team_id, text, attachments = []):
-
         data     = urllib.parse.urlencode((("token"      , self.bot_token  ),               # oauth token
                                            ("channel"    , channel_id      ),               # channel to send message to
                                            ("team_id"    , team_id         ),

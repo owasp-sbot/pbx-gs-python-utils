@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 
 from utils.aws.Lambdas import Lambdas
 
@@ -19,10 +19,6 @@ class GS_Bot_Commands:                                      # move to separate c
                 attachment_text += " • {0}\n".format(command)
         return title,[{'text': attachment_text, 'color': 'good'}]
 
-    @staticmethod
-    def time(slack_event, params=[]):
-        user = slack_event.get('user')
-        return 'Hi <@{0}>, the time now is: {1}'.format(user, datetime.now()), []
 
     @staticmethod
     def bad_cmd(slack_event, params=[]):
@@ -57,10 +53,6 @@ class GS_Bot_Commands:                                      # move to separate c
         Lambdas('utils.dot_to_slack').invoke_async({'dot': dot , 'channel' : channel_id})
         return text, attachments
 
-    @staticmethod
-    def graph(slack_event, params=[]):
-        Lambdas('gs.lambda_graph').invoke_async({'params': params , 'data' : slack_event})
-        return (None,None)
 
     # refactor into separate class
     @staticmethod
@@ -83,15 +75,21 @@ class GS_Bot_Commands:                                      # move to separate c
     @staticmethod
     def browser(slack_event, params=[]):
         Lambdas('browser.lambda_browser').invoke_async({'params': params, 'data': slack_event})
-        return (None, None)
+        return None, None
+
     @staticmethod
     def gdocs(slack_event, params=[]):
-        Lambdas('gs.lambda_gdocs').invoke_async({'params': params, 'data': slack_event})
-        return (None, None)
+        Lambdas('gs.lambda_gdocs'       ).invoke_async({'params': params, 'data': slack_event})
+        return None, None
+
+    @staticmethod
+    def graph(slack_event, params=[]):
+        return Lambdas('gs.lambda_graph'       ).invoke({'params': params, 'data': slack_event}) , []
+        return None, None
 
     @staticmethod
     def slides(slack_event, params=[]):
-        Lambdas('gs.lambda_slides').invoke_async({'params': params, 'data': slack_event})
+        Lambdas('gs.lambda_slides'      ).invoke_async({'params': params, 'data': slack_event})
         return (None, None)
 
     @staticmethod
@@ -103,6 +101,15 @@ class GS_Bot_Commands:                                      # move to separate c
     def jira(slack_event, params=[]):
         Lambdas('gs.elastic_jira').invoke_async({"params": params , "user": slack_event.get('user') , "channel": slack_event.get('channel'), 'team_id': slack_event.get('team_id') },)
         return None, None
+
+    @staticmethod
+    def time(slack_event, params=[]):
+        user = slack_event.get('user')
+        return 'Hi <@{0}>, the time now is: {1}'.format(user, datetime.now()), []
+
+    @staticmethod
+    def version(slack_event, params=[]):
+        return 'The current version of GSBot is v0.5',None
 
 
 

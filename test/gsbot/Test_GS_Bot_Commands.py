@@ -1,3 +1,9 @@
+import unittest
+
+from gsbot.GS_Bot_Commands import GS_Bot_Commands
+from utils.Dev import Dev
+
+
 class Test_GS_Bot_Commands(unittest.TestCase):
 
     def test_hello(self):

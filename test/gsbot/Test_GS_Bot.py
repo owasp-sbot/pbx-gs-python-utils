@@ -16,12 +16,14 @@ class Test_API_GS_Bot(unittest.TestCase):
         assert 'xoxb-25' in self.api.bot_token
 
     def test_handle_command(self):
-
-        result = self.api.handle_command({'text': '@gsbot hello'})
-        #result = self.api.handle_command('test')
-
+        result = self.api.handle_command({'text': '<@UDK5W7W3T> hello'})
         Dev.pprint(result)
-        #self.api.handle_command('aaa') == 'command to handle: `aaa`'
+
+    def test_handle_command__graph(self):
+
+        result = self.api.handle_command({'text': '<@UDK5W7W3T> graph', 'channel': 'GBMGMK88Z', 'team_id':'T7F3AUXGV'})
+        Dev.pprint(result)
+
 
     def test_process_event(self):
         slack_event = { "text" : '@gsbot (in test)' , 'channel': 'GBMGMK88Z' ,'type': 'message'}
@@ -29,13 +31,10 @@ class Test_API_GS_Bot(unittest.TestCase):
         assert response['ok'] == True
 
     def test_resolve_command_method(self):
-
-        Dev.pprint(self.api.resolve_command_method('help'))
-        return
         assert self.api.resolve_command_method('hello').__class__.__name__ == 'function'
-        assert self.api.resolve_command_method('aaaa' ).__class__.__name__ == 'function'
-        assert self.api.resolve_command_method('hello').__name__ == 'hello'
-        assert self.api.resolve_command_method('aaaa' ).__name__ == 'help'
+        assert self.api.resolve_command_method('help' ).__class__.__name__ == 'function'
+        assert self.api.resolve_command_method('aaaa')  is None
+        #assert self.api.resolve_command_method('aaaa' ).__name__ == 'help'
 
     def test_send_message(self):
         channel_id = 'GBMGMK88Z'
