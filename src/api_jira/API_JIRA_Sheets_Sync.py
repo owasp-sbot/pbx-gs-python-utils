@@ -82,5 +82,5 @@ class API_JIRA_Sheets_Sync:
         self.update_sheet_data_with_jira_data(sheet_data)
         raw_data = self.convert_sheet_data_to_raw_data(sheet_data)
         self.update_file_with_raw_data(raw_data)
-        return "sync done"
+        return "sync done .... "
 
