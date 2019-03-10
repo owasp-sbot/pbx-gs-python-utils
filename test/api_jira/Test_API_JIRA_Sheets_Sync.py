@@ -35,7 +35,7 @@ class Test_API_JIRA_Sheets_Sync(TestCase):
         issues      = self.api_sync.get_jira_issues_in_sheet_data(sheet_data)
         diff_cells  = self.api_sync.diff_sheet_data_with_jira_data(sheet_data, backup_data, issues)
         result      = self.api_sync.color_code_cells_based_on_diff_status(diff_cells)
-        #Dev.pprint(result)
+        Dev.pprint(diff_cells)
 
     def test_diff_sheet(self):
         self.api_sync.diff_sheet()
@@ -47,13 +47,6 @@ class Test_API_JIRA_Sheets_Sync(TestCase):
         result     = self.api_sync.diff_sheet_data_with_jira_data(sheet_data, backup_data, issues)
         #Json.save_json('/tmp/tmp_diff_data.json', result)
         Dev.pprint(result)
-
-    def test_get_elk_data_for_sheet_data(self):
-        sheet_data = self.api_sync.get_sheet_data(self.api_sync.sheet_name())
-
-        elk_data = self.api_sync.get_elk_data_for_sheet_data(sheet_data)
-
-        Dev.pprint(elk_data)
 
     def test_get_issue_data(self):
         Dev.pprint(self.api_sync.get_issue_data('RISK-1200'))

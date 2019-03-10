@@ -156,6 +156,8 @@ class API_JIRA_Sheets_Sync:
                                     }
                         if   sheet_value == jira_value and sheet_value == backup_value: diff_cell['status'] = 'same'
                         elif sheet_value != jira_value and sheet_value == backup_value: diff_cell['status'] = 'jira_change'
+                        elif sheet_value != jira_value and jira_value  == ''          : diff_cell['status'] = 'sheet_change'
+                        elif sheet_value != jira_value and jira_value  is None        : diff_cell['status'] = 'sheet_change'
                         elif sheet_value != jira_value and jira_value  == backup_value: diff_cell['status'] = 'sheet_change'
                         else: diff_cell['status'] = 'other'
                         #print("{0:10} {1:20} {2:20} {3:20}".format(key, header, sheet_value, jira_value))
