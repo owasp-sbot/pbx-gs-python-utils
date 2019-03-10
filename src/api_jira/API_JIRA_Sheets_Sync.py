@@ -143,8 +143,11 @@ class API_JIRA_Sheets_Sync:
     def sync_sheet_with_jira(self):
         sheet_data = self.get_sheet_data()
         if sheet_data:
-            self.update_sheet_data_with_jira_data(sheet_data)
-            raw_data = self.convert_sheet_data_to_raw_data(sheet_data)
-            self.update_file_with_raw_data(raw_data)
-            return "sync done .... "
+            try:
+                self.update_sheet_data_with_jira_data(sheet_data)
+                raw_data = self.convert_sheet_data_to_raw_data(sheet_data)
+                self.update_file_with_raw_data(raw_data)
+                return "sync done...."
+            except Exception as error:
+                return "Error in sync_sheet_with_jira: {0}".format(error)
         return "Error: no data for file_id: {0}".format(self.file_id)
