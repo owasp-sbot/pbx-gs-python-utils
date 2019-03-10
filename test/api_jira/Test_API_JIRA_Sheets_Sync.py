@@ -25,7 +25,7 @@ class Test_API_JIRA_Sheets_Sync(TestCase):
 
 
     def test_convert_sheet_data_to_raw_data(self):
-        sheet_data = self.api_sync.get_sheet_data()
+        sheet_data = self.api_sync.get_sheet_data(self.api_sync.sheet_name())
         raw_data = self.api_sync.convert_sheet_data_to_raw_data(sheet_data)
         Dev.pprint(raw_data)
 
@@ -48,7 +48,7 @@ class Test_API_JIRA_Sheets_Sync(TestCase):
         Dev.pprint(result)
 
     def test_get_elk_data_for_sheet_data(self):
-        sheet_data = self.api_sync.get_sheet_data()
+        sheet_data = self.api_sync.get_sheet_data(self.api_sync.sheet_name())
 
         elk_data = self.api_sync.get_elk_data_for_sheet_data(sheet_data)
 
@@ -58,12 +58,12 @@ class Test_API_JIRA_Sheets_Sync(TestCase):
         Dev.pprint(self.api_sync.get_issue_data('RISK-1200'))
 
     def test_get_jira_issues_in_sheet_data(self):
-        sheet_data = self.api_sync.get_sheet_data()
+        sheet_data = self.api_sync.get_sheet_data(self.api_sync.sheet_name())
         issues = self.api_sync.get_jira_issues_in_sheet_data(sheet_data)
         Dev.pprint(len(issues))
 
     def test_get_sheet_data(self):
-        result = self.api_sync.get_sheet_data()
+        result = self.api_sync.get_sheet_data(self.api_sync.sheet_name())
         Dev.pprint(result)
 
     def test_get_sheet_raw_data(self):
@@ -71,12 +71,12 @@ class Test_API_JIRA_Sheets_Sync(TestCase):
         Dev.pprint(result)
 
     def test_update_sheet_data_with_jira_data(self):
-        sheet_data = self.api_sync.get_sheet_data()
+        sheet_data = self.api_sync.get_sheet_data(self.api_sync.sheet_name())
         self.api_sync.update_sheet_data_with_jira_data(sheet_data)
         Dev.pprint(sheet_data)
 
     def test_update_file_with_raw_data(self):
-        sheet_data = self.api_sync.get_sheet_data()
+        sheet_data = self.api_sync.get_sheet_data(self.api_sync.sheet_name())
         self.api_sync.update_sheet_data_with_jira_data(sheet_data)
         raw_data   = self.api_sync.convert_sheet_data_to_raw_data(sheet_data)
         self.api_sync.update_file_with_raw_data(raw_data)

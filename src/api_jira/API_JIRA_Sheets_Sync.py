@@ -177,7 +177,7 @@ class API_JIRA_Sheets_Sync:
         self.gsheets().set_values(self.file_id, sheet_name, raw_data)
 
     def sync_sheet_with_jira(self):
-        sheet_data = self.get_sheet_data()
+        sheet_data = self.get_sheet_data(self.sheet_name())
         if sheet_data:
             try:
                 self.update_sheet_data_with_jira_data(sheet_data)
