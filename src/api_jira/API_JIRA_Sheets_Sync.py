@@ -60,6 +60,8 @@ class API_JIRA_Sheets_Sync:
                         value = None
                     else:
                         value  = row[header_index].strip()
+                    if header == 'Jira Link':
+                        value = '=HYPERLINK("https://jira.photobox.com/browse/{0}","{0}")'.format(row[0])
                     item[header] = value
                 data.append(item)
             return data
@@ -88,4 +90,3 @@ class API_JIRA_Sheets_Sync:
             self.update_file_with_raw_data(raw_data)
             return "sync done .... "
         return "Error: no data for file_id: {0}".format(self.file_id)
-

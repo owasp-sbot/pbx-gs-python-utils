@@ -2,6 +2,7 @@ from unittest import TestCase
 
 from api_jira.API_JIRA_Sheets_Sync import API_JIRA_Sheets_Sync
 from utils.Dev import Dev
+from utils.aws.Lambdas import Lambdas
 
 
 class Test_API_JIRA_Sheets_Sync(TestCase):
@@ -43,13 +44,16 @@ class Test_API_JIRA_Sheets_Sync(TestCase):
         self.api_sync.update_file_with_raw_data(raw_data)
 
     def test_sync_sheet_with_jira(self):
-        self.api_sync.sync_sheet_with_jira()
+        Dev.pprint(self.api_sync.sync_sheet_with_jira())
 
 
     def test_sync_sheet_with_jira__bad_file_id(self):
         self.api_sync.file_id = 'aaaa'
         Dev.pprint(self.api_sync.sync_sheet_with_jira())
 
+
+    def test__lambda_update(self):
+        Lambdas('gs.elastic_jira').update_with_src()
 
 
 
