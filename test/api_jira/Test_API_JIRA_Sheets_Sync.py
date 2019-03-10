@@ -17,17 +17,23 @@ class Test_API_JIRA_Sheets_Sync(TestCase):
         Dev.pprint(self.api_sync.jira())
         Dev.pprint(self.api_sync.gsheets())
 
+    def test_elastic(self):
+        Dev.pprint(self.api_sync.elastic().elastic.index_list())
+
+    def test_sheet_name_backup(self):
+        Dev.pprint(self.api_sync.sheet_name_backup())
+
+
     def test_convert_sheet_data_to_raw_data(self):
         sheet_data = self.api_sync.get_sheet_data()
         raw_data = self.api_sync.convert_sheet_data_to_raw_data(sheet_data)
         Dev.pprint(raw_data)
 
     def test_color_code_cells_based_on_diff_status(self):
-        #sheet_data  = None
-        #issues      = None
-        sheet_data  = self.api_sync.get_sheet_data()
+        sheet_data  = self.api_sync.get_sheet_data(self.api_sync.sheet_name())
+        backup_data = self.api_sync.get_sheet_data(self.api_sync.sheet_name_backup())
         issues      = self.api_sync.get_jira_issues_in_sheet_data(sheet_data)
-        diff_cells  = self.api_sync.diff_sheet_data_with_jira_data(sheet_data, issues)
+        diff_cells  = self.api_sync.diff_sheet_data_with_jira_data(sheet_data, backup_data, issues)
         result      = self.api_sync.color_code_cells_based_on_diff_status(diff_cells)
         #Dev.pprint(result)
 
@@ -35,10 +41,18 @@ class Test_API_JIRA_Sheets_Sync(TestCase):
         self.api_sync.diff_sheet()
 
     def test_diff_sheet_data_with_jira_data(self):
-        sheet_data = self.api_sync.get_sheet_data()
+        sheet_data  = self.api_sync.get_sheet_data(self.api_sync.sheet_name())
+        backup_data = self.api_sync.get_sheet_data(self.api_sync.sheet_name_backup())
         issues     = self.api_sync.get_jira_issues_in_sheet_data(sheet_data)
-        result     = self.api_sync.diff_sheet_data_with_jira_data(sheet_data, issues)
+        result     = self.api_sync.diff_sheet_data_with_jira_data(sheet_data, backup_data, issues)
         Dev.pprint(result)
+
+    def test_get_elk_data_for_sheet_data(self):
+        sheet_data = self.api_sync.get_sheet_data()
+
+        elk_data = self.api_sync.get_elk_data_for_sheet_data(sheet_data)
+
+        Dev.pprint(elk_data)
 
     def test_get_issue_data(self):
         Dev.pprint(self.api_sync.get_issue_data('RISK-1200'))
