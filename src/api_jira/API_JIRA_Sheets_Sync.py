@@ -68,7 +68,7 @@ class API_JIRA_Sheets_Sync:
                     if header_index >= len(row):
                         value = None
                     else:
-                        value  = row[header_index].strip()
+                        value  = row[header_index]
                     if header == 'Jira Link' and len(row) > 0:
                         value = '=HYPERLINK("https://jira.photobox.com/browse/{0}","{0}")'.format(row[0])
                     item[header] = value
@@ -87,6 +87,7 @@ class API_JIRA_Sheets_Sync:
             if status == 'same': requests.append(self.gsheets().request_cell_set_background_color(sheet_id, col ,row, 0.5 ,1   ,0.5))
 
         self.gsheets().execute_requests(self.file_id, requests)
+        return "diff completed..."
 
     def diff_sheet(self):
         sheet_data  = self.get_sheet_data()
