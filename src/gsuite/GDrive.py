@@ -55,7 +55,7 @@ class GDrive:
     def file_weblink(self, file_id):
         return 'https://drive.google.com/open?id={0}'.format(file_id)
 
-    def files(self, size):
+    def files_all(self, size):
         results = self.files.list(pageSize=size, fields="files(id,name)").execute()
         return results.get('files', [])
 

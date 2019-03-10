@@ -4,12 +4,15 @@ from utils.Dev import Dev
 
 
 class API_JIRA_Sheets_Sync:
-    def __init__(self, sheet_id, sheet_name = None):
-        self._gsheets    = None
-        self._jira       = None
-        self.file_id     = sheet_id
-        self._sheet_name = sheet_name
-        self.headers     = []
+    def __init__(self, sheet_id, sheet_name = None, gsuite_secret_id=None):
+        self._gsheets         = None
+        self._jira            = None
+        self.file_id          = sheet_id
+        self._sheet_name      = sheet_name
+        self.headers          = []
+        self.gsuite_secret_id = gsuite_secret_id
+        if not self.gsuite_secret_id:
+            self.gsuite_secret_id = 'gsuite_gsbot_user'
 
     # Helper methods
     def jira(self):
@@ -19,7 +22,7 @@ class API_JIRA_Sheets_Sync:
 
     def gsheets(self):
         if self._gsheets is None:
-            self._gsheets = GSheets()
+            self._gsheets = GSheets(gsuite_secret_id=self.gsuite_secret_id)
         return self._gsheets
 
     def sheet_name(self):

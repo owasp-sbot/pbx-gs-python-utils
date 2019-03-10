@@ -57,9 +57,19 @@ class Test_GDrive(TestCase):
         Dev.pprint(result)
 
     def test_files(self):
-        files = self.gdrive.files(4)
+        files = self.gdrive.files_all(4)
         for item in files:
             print('{0:22} - {1}'.format(item['name'], item['id']))
+
+    def test_files_in_folder(self):
+        folder_id = '16yOkKyi0TfOy3w4IMW40vo-pr--Wa1Y9'
+        try:
+            files = self.gdrive.files_in_folder(folder_id,size=2)
+            for item in files:
+                print('{0:22} - {1}'.format(item['name'], item['id']))
+        except Exception as error:
+            Dev.pprint(error)
+
 
     def testfiles_with_mime_type(self):
         mime_type_presentations = 'application/vnd.google-apps.presentation'
