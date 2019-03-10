@@ -21,3 +21,9 @@ class Test_lambda_api_gateway_simple_test(unittest.TestCase):
         result = self.simple_test.update().invoke({'queryStringParameters':{'file_id':file_id, 'action':'diff'}})
         message = Misc.json_load(result.get('body'))
         Dev.pprint(message)
+
+    def test_update_and_invoke__action_sync(self):
+        file_id = '1yDxu5YxL9FxY5wQ1EEQlAYGt3flIsm2VTyWwPny5RLA'
+        result = self.simple_test.update().invoke({'queryStringParameters':{'file_id':file_id, 'action':'sync'}})
+        message = Misc.json_load(result.get('body'))
+        Dev.pprint(message)

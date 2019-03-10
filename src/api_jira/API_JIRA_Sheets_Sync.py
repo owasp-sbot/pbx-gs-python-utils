@@ -138,12 +138,12 @@ class API_JIRA_Sheets_Sync:
                 jira_issue    = jira_data.get(key)
                 backup_issue  = backup_data[row_index]
                 if jira_issue and backup_issue:
+                    if header in ['Jira Link']: continue
                     sheet_value  = row.get(header)
                     backup_value = backup_issue.get(header, '')
                     jira_value   = jira_issue.get(header,'')
 
-
-                    if sheet_value and jira_value:
+                    if sheet_value:
                         diff_cell = {
                                         'key'         : key          ,
                                         'field'       : header       ,
@@ -225,5 +225,8 @@ class API_JIRA_Sheets_Sync:
                 else:
                     item['status'] = 'jira-save-fail'
             if status == 'jira_change':
-                Dev.pprint('need to update sheet: {0}'.format(item))
+                key = item.get('key')
+                field = item.get('field')
+                value = item.get('sheet_value')
+                Dev.pprint('need to update sheet, for jira issue `{0}` field `{1}` value `{2}` '.format(key, field, value))
         self.color_code_cells_based_on_diff_status(diff_cells)

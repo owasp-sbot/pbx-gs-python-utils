@@ -85,6 +85,9 @@ class Test_API_JIRA_Sheets_Sync(TestCase):
     def test_load_data_from_jira(self):
         Dev.pprint(self.api_sync.load_data_from_jira())
 
+    def test_sync_sheet(self):
+        self.api_sync.sync_sheet()
+
     def test_sync_data_between_jira_and_sheet(self):
         diff_cells = self.api_sync.diff_cells()
         #Json.save_json('/tmp/tmp_diff_cells.json',diff_cells)
