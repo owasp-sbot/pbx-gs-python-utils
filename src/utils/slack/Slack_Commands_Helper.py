@@ -9,7 +9,7 @@ class Slack_Commands_Helper:
 
     def __init__(self, target):
         self.target        = target
-        self._show_duration = True
+        self._show_duration = False
 
     def available_methods(self):
         return  [func for func in dir(self.target) if
