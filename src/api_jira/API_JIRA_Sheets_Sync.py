@@ -198,6 +198,10 @@ class API_JIRA_Sheets_Sync:
                 return "Error in load_data_from_jira: {0}".format(error)
         return "Error: no data for file_id: {0}".format(self.file_id)
 
+    def sync_sheet(self):
+        diff_cells = self.diff_cells()
+        return self.sync_data_between_jira_and_sheet(diff_cells)
+
     def sync_data_between_jira_and_sheet(self,diff_cells):
         jira_rest = API_Jira_Rest()
         #fields_to_update = {}
