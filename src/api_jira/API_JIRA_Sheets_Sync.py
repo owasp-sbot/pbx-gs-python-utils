@@ -1,9 +1,10 @@
 from api_jira.API_Jira_Rest import API_Jira_Rest
-from api_jira.API_Jira      import API_Jira #, use_local_cache_if_available, save_result_to_local_cache, Json
+from api_jira.API_Jira      import API_Jira
 from gs.API_Issues          import API_Issues
 from gsuite.GSheets         import GSheets
 from utils.Dev              import Dev
 from utils.Elastic_Search import Elastic_Search
+#from utils.Local_Cache import use_local_cache_if_available, save_result_to_local_cache
 
 
 class API_JIRA_Sheets_Sync:
@@ -187,6 +188,10 @@ class API_JIRA_Sheets_Sync:
         return issues
 
     #@use_local_cache_if_available
+    def get_issues_data(self,issues_id):
+        return self.jira_rest().issue(issues_id)
+
+    #@use_local_cache_if_available
     def get_issue_data(self,issue_id):
         return self.jira_rest().issue(issue_id)
         #return self.jira().issue(issue_id)
@@ -239,3 +244,37 @@ class API_JIRA_Sheets_Sync:
                 value = item.get('sheet_value')
                 Dev.pprint('need to update sheet, for jira issue `{0}` field `{1}` value `{2}` '.format(key, field, value))
         self.color_code_cells_based_on_diff_status(diff_cells)
+
+    #@use_local_cache_if_available
+    #@save_result_to_local_cache
+    def get_graph_nodes(self,graph_name):
+        from gs_elk.Lambda_Graph import Lambda_Graph
+        graph = Lambda_Graph().get_gs_graph___by_name(graph_name)
+        if graph:
+            return sorted(graph.nodes)
+        return []
+
+
+    def create_sheet_from_graph(self,graph_name):
+        issues_ids = self.api_sync.get_graph_nodes(graph_name)
+        issues     = self.api_sync.get_issues_data(issues_ids)
+        return len(issues)
+
+        # headers    = ['Key']
+        # for issue in issues:
+        #     for header in issue:
+        #         headers.append(header)
+        # headers = list(set(headers))
+        # values = [headers]
+        # for issue in issues:
+        #     row = []
+        #     for index in range(0,len(headers)):
+        #         value = issue.get(header[index],'')
+        #         row.append(value)
+        #
+        #     values.append(row)
+        #
+        # sheet_name = self.sheet_name()
+        #
+        # return self.gsheets().set_values(self.file_id,sheet_name,values)
+        #return self.gsheets().gdrive.file_weblink(self.file_id)

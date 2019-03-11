@@ -31,7 +31,7 @@ class Test_API_Jira_Rest(TestCase):
     def test_issue(self):
         issue_id = 'RISK-12'
         issue_id = 'SL-118'
-        issue_id = 'IA-12'
+        issue_id = 'RISK-1573'
         result = self.api.issue(issue_id)
         Dev.pprint(result)
 

@@ -11,6 +11,7 @@ class Test_API_JIRA_Sheets_Sync(TestCase):
     def setUp(self):
         self.file_id  = '1yDxu5YxL9FxY5wQ1EEQlAYGt3flIsm2VTyWwPny5RLA'
         #self.file_id ='1gc3jQelTJ8250kCZqOhqBOOZUywGOy3AiNC6cghgHak'
+        #self.file_id  = '1_Bwz6z34wALFGb1ILUXG8CtF1-Km6F9_sGXnAu4gewY'
         self.api_sync = API_JIRA_Sheets_Sync(self.file_id)
 
 
@@ -49,7 +50,7 @@ class Test_API_JIRA_Sheets_Sync(TestCase):
         Dev.pprint(result)
 
     def test_get_issue_data(self):
-        Dev.pprint(self.api_sync.get_issue_data('RISK-1200'))
+        Dev.pprint(self.api_sync.get_issue_data('RISK-1573'))
         Dev.pprint(self.api_sync.get_issue_data('SL-118'))
 
 
@@ -83,10 +84,22 @@ class Test_API_JIRA_Sheets_Sync(TestCase):
         #diff_cells = Json.load_json('/tmp/tmp_diff_cells.json')
         self.api_sync.sync_data_between_jira_and_sheet(diff_cells)
 
-
     def test_sync_sheet_with_jira__bad_file_id(self):
         self.api_sync.file_id = 'aaaa'
         Dev.pprint(self.api_sync.load_data_from_jira())
+
+
+    def test_get_graph_nodes(self):
+        graph_name = 'graph_Y3Y'
+        issues_ids = self.api_sync.get_graph_nodes(graph_name)
+        issues = self.api_sync.get_issues_data(issues_ids)
+        Dev.pprint(issues)
+
+    def test_create_sheet_from_graph(self):
+        graph_name = 'graph_Y3Y'
+        self.api_sync.file_id =  '13YcCCtqCPLeXQ4xb7rDtc4zJvySJ8EANpbY8I2tYQzw'
+        result = self.api_sync.create_sheet_from_graph(graph_name)
+        Dev.pprint(result)
 
     def test_load_data_from_jira(self): Dev.pprint(self.api_sync.load_data_from_jira())
     def test_diff_sheet         (self): Dev.pprint(self.api_sync.diff_sheet         ())
