@@ -189,7 +189,7 @@ class API_JIRA_Sheets_Sync:
 
     #@use_local_cache_if_available
     def get_issues_data(self,issues_id):
-        return self.jira_rest().issue(issues_id)
+        return self.jira_rest().issues(issues_id)
 
     #@use_local_cache_if_available
     def get_issue_data(self,issue_id):
@@ -254,27 +254,33 @@ class API_JIRA_Sheets_Sync:
             return sorted(graph.nodes)
         return []
 
+    def create_sheet_from_graph(self, graph_name):
+        headers = ['Key', 'Jira Link', 'Summary', 'Status', 'Risk Rating', 'Issue Type']
+        return self.create_sheet_from_graph_with_headers(graph_name, headers)
 
-    def create_sheet_from_graph(self,graph_name):
-        issues_ids = self.api_sync.get_graph_nodes(graph_name)
-        issues     = self.api_sync.get_issues_data(issues_ids)
-        return len(issues)
+    def create_sheet_from_graph_with_headers(self,graph_name, headers=None):
+        issues_ids = self.get_graph_nodes(graph_name)
+        issues     = self.get_issues_data(issues_ids)
 
-        # headers    = ['Key']
-        # for issue in issues:
-        #     for header in issue:
-        #         headers.append(header)
-        # headers = list(set(headers))
-        # values = [headers]
-        # for issue in issues:
-        #     row = []
-        #     for index in range(0,len(headers)):
-        #         value = issue.get(header[index],'')
-        #         row.append(value)
-        #
-        #     values.append(row)
-        #
-        # sheet_name = self.sheet_name()
-        #
-        # return self.gsheets().set_values(self.file_id,sheet_name,values)
-        #return self.gsheets().gdrive.file_weblink(self.file_id)
+        if headers is None:
+            headers    = ['Key']
+            for key,values in issues.items():
+                for header in values:
+                    headers.append(header)
+            headers = list(set(headers))
+        values = [headers]
+        for key,issue in issues.items():
+            row = []
+            for index in range(0,len(headers)):
+                header = headers[index]
+                if header == 'Jira Link':
+                    value = '=HYPERLINK("https://jira.photobox.com/browse/{0}","{0}")'.format(key)
+                else:
+                    value = issue.get(header,'')
+                row.append(value)
+
+            values.append(row)
+
+        sheet_name = self.sheet_name()
+        self.gsheets().set_values(self.file_id,sheet_name,values)
+        return self.gsheets().gdrive.file_weblink(self.file_id)
