@@ -10,7 +10,7 @@ class Test_API_JIRA_Sheets_Sync(TestCase):
 
     def setUp(self):
         self.file_id  = '1yDxu5YxL9FxY5wQ1EEQlAYGt3flIsm2VTyWwPny5RLA'
-        self.file_id ='1gc3jQelTJ8250kCZqOhqBOOZUywGOy3AiNC6cghgHak'
+        #self.file_id ='1gc3jQelTJ8250kCZqOhqBOOZUywGOy3AiNC6cghgHak'
         self.api_sync = API_JIRA_Sheets_Sync(self.file_id)
 
 

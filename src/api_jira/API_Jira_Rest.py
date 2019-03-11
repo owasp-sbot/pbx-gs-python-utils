@@ -66,7 +66,7 @@ class API_Jira_Rest:
                           'issuelinks'] # '% complete'
         skip_types     = ['any','progress']
         use_name_value = ['user', 'issuetype','status','project','priority', 'securitylevel']
-        use_value      = ['string', 'number','datetime']
+        use_value      = ['string', 'number','datetime', 'date']
         if issue_raw:
             issue  = {'Key' : issue_id}
             fields = self.fields_by_id()
