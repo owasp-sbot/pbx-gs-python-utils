@@ -22,9 +22,22 @@ class Test_API_Jira_Rest(TestCase):
     def test_fields_by_name(self):
         Dev.pprint(self.api.fields_by_name())
 
-    def test_issue(self):
+    def test_issue_raw(self):
         issue_id= 'RISK-12'
         result = self.api.issue(issue_id)
+        assert set(result) == {'key', 'fields', 'expand', 'id', 'self'}
+        Dev.pprint(result)
+
+    def test_issue(self):
+        issue_id = 'RISK-12'
+        issue_id = 'SL-118'
+        issue_id = 'IA-12'
+        result = self.api.issue(issue_id)
+        Dev.pprint(result)
+
+    def test_issues(self):
+        issues_ids = ['RISK-12','RISK-424','SL-118','IA-12']
+        result = self.api.issues(issues_ids)
         Dev.pprint(result)
 
     def test_issue_update_field(self):

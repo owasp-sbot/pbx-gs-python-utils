@@ -39,8 +39,6 @@ class Test_API_JIRA_Sheets_Sync(TestCase):
         #Dev.pprint(result)
         #Dev.pprint(diff_cells)
 
-    def test_diff_sheet(self):
-        self.api_sync.diff_sheet()
 
     def test_diff_sheet_data_with_jira_data(self):
         sheet_data  = self.api_sync.get_sheet_data(self.api_sync.sheet_name())
@@ -52,6 +50,8 @@ class Test_API_JIRA_Sheets_Sync(TestCase):
 
     def test_get_issue_data(self):
         Dev.pprint(self.api_sync.get_issue_data('RISK-1200'))
+        Dev.pprint(self.api_sync.get_issue_data('SL-118'))
+
 
     def test_get_jira_issues_in_sheet_data(self):
         sheet_data = self.api_sync.get_sheet_data(self.api_sync.sheet_name())
@@ -77,12 +77,6 @@ class Test_API_JIRA_Sheets_Sync(TestCase):
         raw_data   = self.api_sync.convert_sheet_data_to_raw_data(sheet_data)
         self.api_sync.update_file_with_raw_data(raw_data)
 
-    def test_load_data_from_jira(self):
-        Dev.pprint(self.api_sync.load_data_from_jira())
-
-    def test_sync_sheet(self):
-        self.api_sync.sync_sheet()
-
     def test_sync_data_between_jira_and_sheet(self):
         diff_cells = self.api_sync.diff_cells()
         #Json.save_json('/tmp/tmp_diff_cells.json',diff_cells)
@@ -94,6 +88,9 @@ class Test_API_JIRA_Sheets_Sync(TestCase):
         self.api_sync.file_id = 'aaaa'
         Dev.pprint(self.api_sync.load_data_from_jira())
 
+    def test_load_data_from_jira(self): Dev.pprint(self.api_sync.load_data_from_jira())
+    def test_diff_sheet         (self): Dev.pprint(self.api_sync.diff_sheet         ())
+    def test_sync_sheet         (self): Dev.pprint(self.api_sync.sync_sheet         ())
 
     def test__lambda_update(self):
         Lambdas('gs.elastic_jira').update_with_src()

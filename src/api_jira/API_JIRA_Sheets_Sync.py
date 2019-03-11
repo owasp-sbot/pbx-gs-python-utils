@@ -10,11 +10,12 @@ class API_JIRA_Sheets_Sync:
     def __init__(self, file_id,gsuite_secret_id=None):
         self._gsheets           = None
         self._jira              = None
+        self._jira_rest         = None
         self._elastic           = None
-        self.file_id            = file_id
         self._sheet_name        = None
         self._sheet_id          = None
         self._sheet_id_backup   = None
+        self.file_id            = file_id
         self.sheet_title        = 'Jira Data'
         self.backup_sheet_title = 'original_jira_data'
         self.headers            = []
@@ -33,6 +34,12 @@ class API_JIRA_Sheets_Sync:
         if self._jira is None:
             self._jira = API_Jira()
         return self._jira
+
+    def jira_rest(self):
+        if self._jira_rest is None:
+            self._jira_rest = API_Jira_Rest()
+        return self._jira_rest
+
 
     def gsheets(self):
         if self._gsheets is None:
@@ -62,7 +69,6 @@ class API_JIRA_Sheets_Sync:
         if self._sheet_id is None:
             sheets = self.gsheets().sheets_properties_by_title(self.file_id)
             if self.sheet_title in list(set(sheets)):
-                Dev.pprint(sheets.get(self.sheet_title))
                 self._sheet_id = sheets.get(self.sheet_title).get('sheetId')
         return self._sheet_id
 
@@ -175,15 +181,15 @@ class API_JIRA_Sheets_Sync:
                         item[column_id] = value
 
     def get_jira_issues_in_sheet_data(self, sheet_data):
-        #return Json.load_json('/tmp/tmp_issues.json')
         keys = [row.get('Key') for row in sheet_data if row.get('Key') != '']
-        issues = self.jira().issues(keys)
-        #Json.save_json('/tmp/tmp_issues.json', issues)
+        #issues = self.jira().issues(keys)
+        issues = self.jira_rest().issues(keys)
         return issues
 
     #@use_local_cache_if_available
     def get_issue_data(self,issue_id):
-        return self.jira().issue(issue_id)
+        return self.jira_rest().issue(issue_id)
+        #return self.jira().issue(issue_id)
 
     def update_file_with_raw_data(self,raw_data,sheet_name):
         self.gsheets().set_values(self.file_id, sheet_name, raw_data)
@@ -210,7 +216,7 @@ class API_JIRA_Sheets_Sync:
             return "Error in sync_sheet: {0}".format(error)
 
     def sync_data_between_jira_and_sheet(self,diff_cells):
-        jira_rest = API_Jira_Rest()
+
         #fields_to_update = {}
         for item in diff_cells:
             status = item.get('status')
@@ -222,7 +228,7 @@ class API_JIRA_Sheets_Sync:
                 message ='[Jira update] for jira issue `{0}` updating field `{1}` with value `{2}` '.format(key, field, value)
                 print(message)
 
-                result = jira_rest.issue_update_field(key, field, value)
+                result = self.jira_rest().issue_update_field(key, field, value)
                 if result:
                     item['status'] = 'jira-save-ok'
                 else:

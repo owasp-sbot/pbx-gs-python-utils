@@ -1,6 +1,7 @@
 import requests
 
 from utils.Dev import Dev
+#from utils.Local_Cache import use_local_cache_if_available
 from utils.Misc import Misc
 from utils.aws.secrets import Secrets
 
@@ -39,6 +40,7 @@ class API_Jira_Rest:
     def fields(self):
         return Misc.json_load(self.request_get('field'))
 
+    #@use_local_cache_if_available
     def fields_by_id(self):
         fields = {}
         for field in Misc.json_load(self.request_get('field')):
@@ -51,10 +53,56 @@ class API_Jira_Rest:
             fields[field.get('name')] = field
         return fields
 
-    def issue(self,issue_id):
+    #@use_local_cache_if_available
+    def issue_raw(self,issue_id):
         path = 'issue/{0}'.format(issue_id)
         data = self.request_get(path)
         return Misc.json_load(data)
+
+    def issue(self,issue_id):
+        issue_raw = self.issue_raw(issue_id)
+        skip_fields    = ['resolution', 'votes','worklog','watches','comment',
+                          'iconUrl','fixVersions', 'customfield_14238',
+                          'issuelinks'] # '% complete'
+        skip_types     = ['any','progress']
+        use_name_value = ['user', 'issuetype','status','project','priority', 'securitylevel']
+        use_value      = ['string', 'number','datetime']
+        if issue_raw:
+            issue  = {'Key' : issue_id}
+            fields = self.fields_by_id()
+            for field_id,value in issue_raw.get('fields').items():
+                if value and field_id not in skip_fields:
+                    field = fields.get(field_id)
+                    issue_type = field.get('schema').get('type')
+                    if issue_type not in skip_types:
+                        issue_name = field.get('name')
+                        #Dev.pprint(fields.get(field_id))
+
+                        if issue_type in use_name_value : value = value.get('name')
+                        elif issue_type in use_value    : value = value
+                        elif issue_type == 'option'     : value = value.get('value')
+                        elif issue_type == 'array'      :
+                            items = []
+                            for item in value:
+                                if type(item) is str: items.append(item)
+                                else                : items.append(item.get('value'))
+                            value = items
+                        else:
+                            print('>> ', field_id,issue_type)
+                            Dev.pprint(value)
+                            continue
+                        issue[issue_name] = value
+
+
+            return issue
+
+    def issues(self,issues_ids):
+        issues = {}
+        for issue_id in issues_ids:
+            issue = self.issue(issue_id)
+            if issue:
+                issues[issue_id] = issue
+        return issues
 
     def issue_update_field(self, issue_id, field,value):
         #path = 'issue/{0}'.format(issue_id)
