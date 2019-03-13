@@ -89,4 +89,4 @@ class Test_API_GS_Bot(unittest.TestCase):
         Dev.pprint(result)
 
     def test__update_lambda(self):
-        Lambdas('gsbot.lambda_gs_bot').update()
+        Lambdas('gsbot.lambda_gs_bot').update_with_src()

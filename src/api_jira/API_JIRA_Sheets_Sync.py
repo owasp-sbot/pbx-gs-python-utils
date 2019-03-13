@@ -14,6 +14,7 @@ class API_JIRA_Sheets_Sync:
         self._jira_rest         = None
         self._elastic           = None
         self._sheet_name        = None
+        self._sheet_name_backup = None
         self._sheet_id          = None
         self._sheet_id_backup   = None
         self.file_id            = file_id
@@ -56,15 +57,12 @@ class API_JIRA_Sheets_Sync:
         return self._sheet_name
 
     def sheet_name_backup(self):
-        if self._sheet_id_backup is None:
+        if self._sheet_name_backup is None:
             sheets = self.gsheets().sheets_properties_by_title(self.file_id)
             if self.backup_sheet_title not in list(set(sheets)):
                 self.gsheets().sheets_add_sheet(self.file_id, self.backup_sheet_title)
-            #     sheets.get(self.backup_sheet_title).get('sheetId')
-            # else:
-
-            self._sheet_id_backup = self.backup_sheet_title
-        return self._sheet_id_backup
+            self._sheet_name_backup = self.backup_sheet_title
+        return self._sheet_name_backup
 
     def sheet_id(self):
         if self._sheet_id is None:
@@ -72,6 +70,13 @@ class API_JIRA_Sheets_Sync:
             if self.sheet_title in list(set(sheets)):
                 self._sheet_id = sheets.get(self.sheet_title).get('sheetId')
         return self._sheet_id
+
+    def sheet_id_backup(self):
+        if self._sheet_id_backup is None:
+            sheets = self.gsheets().sheets_properties_by_title(self.file_id)
+            if self.backup_sheet_title in list(set(sheets)):
+                self._sheet_id_backup = sheets.get(self.backup_sheet_title).get('sheetId')
+        return self._sheet_id_backup
 
 
     # main methods
@@ -232,8 +237,8 @@ class API_JIRA_Sheets_Sync:
                 #fields_to_update[key][field] = value
                 message ='[Jira update] for jira issue `{0}` updating field `{1}` with value `{2}` '.format(key, field, value)
                 print(message)
-
                 result = self.jira_rest().issue_update_field(key, field, value)
+                self.update_backup_data_with_new_jira_value(item)
                 if result:
                     item['status'] = 'jira-save-ok'
                 else:
@@ -244,6 +249,13 @@ class API_JIRA_Sheets_Sync:
                 value = item.get('sheet_value')
                 Dev.pprint('need to update sheet, for jira issue `{0}` field `{1}` value `{2}` '.format(key, field, value))
         self.color_code_cells_based_on_diff_status(diff_cells)
+
+
+    def update_backup_data_with_new_jira_value(self,item):
+        sheet_id = self.sheet_id_backup()
+        requests = [self.gsheets().request_cell_set_value(sheet_id,item.get('col_index'), item.get('row_index'),item.get('sheet_value'))]
+
+        return self.gsheets().execute_requests(self.file_id,requests)
 
     #@use_local_cache_if_available
     #@save_result_to_local_cache

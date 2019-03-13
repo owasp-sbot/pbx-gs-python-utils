@@ -109,10 +109,10 @@ class GS_Bot_Commands:                                      # move to separate c
     def version(slack_event, params=[]):
         return 'The current version of GSBot is v0.5',None
 
-    @staticmethod
-    def reload_jira_lambda(self):
-        Lambdas('gs.elastic_jira').update_with_src()
-        return "::white_check_mark: gs.elastic_jira lambda has been reloaded"
+    # @staticmethod
+    # def reload_jira_lambda(slack_event=None, params=None):
+    #     Lambdas('gs.elastic_jira').update_with_src()
+    #     return "::white_check_mark: gs.elastic_jira lambda has been reloaded"
 
 
 

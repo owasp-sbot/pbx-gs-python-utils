@@ -88,6 +88,17 @@ class Test_API_JIRA_Sheets_Sync(TestCase):
         self.api_sync.file_id = 'aaaa'
         Dev.pprint(self.api_sync.load_data_from_jira())
 
+    def test_update_backup_data_with_new_jira_value(self):
+        item = { 'backup_value': 'Test updated....xyz . DEMO TO GS',
+                  'col_index': 1,
+                  'field': 'Summary',
+                  'jira_value': 'Test updated....xyz . DEMO TO GS',
+                  'key': 'RISK-12',
+                  'row_index': 1,
+                  'sheet_value': 'Test updated....CHANGED',
+                  'status': 'sheet_change'}
+        result = self.api_sync.update_backup_data_with_new_jira_value(item)
+        Dev.pprint(result)
 
     def test_get_graph_nodes(self):
         graph_name = 'graph_Y3Y'

@@ -72,6 +72,11 @@ class GSheets:
                                  'rows': [{'values': [ {'userEnteredFormat' : {'backgroundColor': {'red': red, 'blue': blue, 'green': green}}}] } ],
                                  'fields': 'userEnteredFormat.backgroundColor'}}
 
+    def request_cell_set_value(self, sheet_id, col, row, value):
+        return {'updateCells': { 'start': {'sheetId': sheet_id, 'rowIndex': row, 'columnIndex': col },
+                                 'rows': [{'values': [ {'userEnteredValue': {'stringValue': value}}] } ],
+                                 'fields': 'userEnteredValue'}}
+
     def clear_values(self, file_id, sheet_name):
         sheet_range = "{0}!A1:Z".format(sheet_name)
         return self.execute(self.spreadsheets.values().clear(spreadsheetId=file_id, range=sheet_range))
