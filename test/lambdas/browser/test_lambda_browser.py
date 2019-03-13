@@ -31,7 +31,7 @@ class Test_Lambda_lambda_browser(unittest.TestCase):
         #payload = {"params": ['markdown'] }
         payload = {"params": ['markdown', '# Created from Lambda\n', "normal text"]}
         png_data = self.lambda_browser.update_with_src().invoke(payload)
-        #Dev.pprint(png_data)
+        Dev.pprint(png_data)
         self._save_png_file(png_data)
 
     def test_screenshot(self):
@@ -40,6 +40,7 @@ class Test_Lambda_lambda_browser(unittest.TestCase):
         url = 'https://www.google.co.uk/aaa'
         #url = 'https://news.bbc.co.uk/aaa'
         #url = 'http://visjs.org/'
+
 
         payload = {"params": ['screenshot', url,], 'data': {'channel':channel, 'team_id': team_id}}
         self.lambda_browser.update_with_src()

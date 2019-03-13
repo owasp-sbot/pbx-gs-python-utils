@@ -252,5 +252,9 @@ class API_Browser:
     @sync
     async def sync__await_for_element(self, selector, timeout=10000):
         page = await self.page()
-        await page.waitForSelector(selector, {'timeout': timeout })
-        return self
+        try:
+            await page.waitForSelector(selector, {'timeout': timeout })
+            return True
+        except Exception as error:
+            Dev.print("[Errpr][sync__await_for_element] {0}".format(error))
+            return False
