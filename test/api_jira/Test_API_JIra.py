@@ -155,3 +155,8 @@ class Test_API_Jira(unittest.TestCase):
 
         result = elastic.add(issue, "Key")                                                  # send data to ELK
         #Dev.pprint(result)
+
+    def test_bug_no_epic_links(self):
+        key = 'GSOS-181'
+        issue = self.api.issue(key)
+        Dev.pprint(issue)
