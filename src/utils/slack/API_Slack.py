@@ -5,11 +5,17 @@ from utils.aws.Lambdas import Lambdas
 
 
 class API_Slack:
-    def __init__(self,  channel = 'GDL2EC3EE', bot_token = None):      # 'gs-bot-tests'
-        if not bot_token:
-            bot_token = Secrets('slack-gs-bot').value()                # default to GS CST Slack org
+    def __init__(self,  channel = 'GDL2EC3EE', team_id=None):
+        bot_token      = self.resolve_bot_token(team_id)
         self.channel   = channel
         self.slack     = SlackClient(bot_token)
+
+    # need to find a better solution to handle this
+    def resolve_bot_token(self, team_id):  # to refactor
+        if team_id == 'T7F3AUXGV':    return Secrets('slack-gs-bot').value()
+        if team_id == 'T0SDK1RA8':    return Secrets('slack-gsbot-for-pbx').value()
+
+        return Secrets('slack-gs-bot').value()          # default to GS CST Slack org
 
     def add_reaction(self, ts, reaction):
         return self.slack.api_call( "reactions.add", channel =self.channel, name = reaction , timestamp=ts )
@@ -47,6 +53,11 @@ class API_Slack:
 
     def get_channel(self, channel):
         return self.slack.api_call("channels.info", channel=channel)
+
+    def get_messages(self,channel,limit=10):
+        messages = self.slack.api_call("conversations.history", channel=channel, limit=limit).get('messages')
+        Dev.pprint(messages)
+        return [message.get('text') for message in messages]
 
     def send_message(self, text, attachments = [], channel = None):
         if channel is None:

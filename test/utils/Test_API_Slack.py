@@ -1,5 +1,6 @@
 import unittest
 
+from utils.Misc import Misc
 from utils.aws.secrets import Secrets
 from utils.slack.API_Slack import API_Slack
 from utils.Dev import Dev
@@ -37,6 +38,9 @@ class Test_API_Slack(unittest.TestCase):
         response = self.api.get_channel('DDKUZTK6X')
         Dev.pprint(response)
 
+    def test_get_messages(self):
+        assert len(self.api.get_messages('DDKUZTK6X')) == 10
+
     def test_send_message(self):
         text    = 'testing api_slack 123'
         result = self.api.send_message(text)
@@ -64,6 +68,12 @@ class Test_API_Slack(unittest.TestCase):
 
         #Dev.pprint(users)
 
+
+    def test_send_and_receive_messages(self):
+        result = self.api.send_message('<@UDK5W7W3T> hello', channel='DDKUZTK6X')
+        Misc.wait(1)
+        messages = self.api.get_messages(channel='DDKUZTK6X',limit=2)
+        Dev.pprint(messages)
 
 
     ## Buttons and interaction
@@ -197,3 +207,5 @@ class Test_API_Slack(unittest.TestCase):
         #self.api.channel = 'UDK5W7W3T'  # gs bot
         response = self.api.send_message("<@/jira>")
         Dev.pprint(response)
+
+

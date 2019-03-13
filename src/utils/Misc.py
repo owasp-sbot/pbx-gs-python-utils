@@ -1,9 +1,11 @@
 import hashlib
+import json
 import pprint
 import random
 import string
 import textwrap
 import re
+from time import sleep
 
 from utils.Dev import Dev
 
@@ -20,6 +22,24 @@ class Misc:
         if target:
             return type(target).__name__
         return None
+
+    @staticmethod
+    def json_dumps(target, message=None):
+        if target:
+            return json.dumps(target, indent=4)
+        return message
+
+    @staticmethod
+    def json_format(target, message=None):
+        if target:
+            return json.dumps(target, indent=4)
+        return message
+
+    @staticmethod
+    def json_load(target, message=None):
+        if target:
+            return json.loads(target)
+        return message
 
     @staticmethod
     def object_data(target):
@@ -44,6 +64,10 @@ class Misc:
         if target:
             return hashlib.md5('{0}'.format(target).encode()).hexdigest()
         return None
+
+    @staticmethod
+    def wait(seconds):
+        sleep(seconds)
 
     @staticmethod
     def word_wrap(text,length = 40):
