@@ -217,12 +217,22 @@ class Browser_Commands:
         if team_id is None:
             return text
 
-        # load_dependencies(['syncer', 'requests']) ; from view_helpers.Vis_Js import Vis_Js
-        #
-        # graph_name = params.pop(0)
-        # vis_js = Vis_Js()
-        # vis_js.show_jira_graph(graph_name)
-        # return vis_js.send_screenshot_to_slack(team_id, channel)
+    @staticmethod
+    def viva_graph(team_id=None, channel=None, params=None):
+        if len(params) < 2:
+            text = ':red_circle: Hi, for the `viva_graph` command, you need to provide 2 parameters: '
+            attachment_text = '*graph name* - the nodes and edges you want to view\n' \
+                              '*view name* - the view to render'
+            return text, [{'text': attachment_text}]
+
+        from view_helpers.VivaGraph_Js_Views import VivaGraph_Js_Views
+
+        params[0], params[1] = params[1], params[0]
+
+        (text, attachments) = Slack_Commands_Helper(VivaGraph_Js_Views).show_duration(True).invoke(team_id, channel, params)
+
+        if team_id is None:
+            return text
 
     @staticmethod
     def elk(team_id=None, channel=None, params=None):
