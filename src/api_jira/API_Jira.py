@@ -141,7 +141,7 @@ class API_Jira:
         return comments
 
     def issue_create(self, project, summary, description, issue_type):
-        return self._jira.create_issue(project = project, summary=summary, description=description, issuetype={'name': issue_type})
+        return self.jira().create_issue(project = project, summary=summary, description=description, issuetype={'name': issue_type})
 
     def issue_delete(self, key):
         issue = self.jira().issue(key, fields=[], expand= False)  # need to double check the performance impact of: fields=[], expand= False

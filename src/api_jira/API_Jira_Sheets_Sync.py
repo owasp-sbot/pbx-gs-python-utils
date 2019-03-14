@@ -7,7 +7,7 @@ from utils.Elastic_Search import Elastic_Search
 #from utils.Local_Cache import use_local_cache_if_available, save_result_to_local_cache
 
 
-class API_JIRA_Sheets_Sync:
+class API_Jira_Sheets_Sync:
     def __init__(self, file_id,gsuite_secret_id=None):
         self._gsheets           = None
         self._jira              = None

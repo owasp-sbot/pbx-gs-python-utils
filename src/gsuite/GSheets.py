@@ -10,7 +10,7 @@ class GSheets:
         self.spreadsheets = GSuite(gsuite_secret_id).sheets_v4().spreadsheets()
 
     def batch_update(self, file_id, requests):
-        body = {'requests': requests  }
+        body = {'requests': requests}
         return self.execute(self.spreadsheets.batchUpdate(spreadsheetId=file_id, body=body))
 
     def execute(self,command):

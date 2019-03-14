@@ -13,6 +13,13 @@ from utils.Dev import Dev
 class Misc:
 
     @staticmethod
+    def array_find(array, item):
+        try:
+            return array.index(item)
+        except:
+            return None
+
+    @staticmethod
     def chunks(items, split):
         for i in range(0, len(items), split):
             yield items[i:i + split]
@@ -40,6 +47,13 @@ class Misc:
         if target:
             return json.loads(target)
         return message
+
+    @staticmethod
+    def none_or_empty(target,field):
+        if target:
+            value = target.get(field)
+            return (value is None) or value == ''
+        return True
 
     @staticmethod
     def object_data(target):

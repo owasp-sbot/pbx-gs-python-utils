@@ -13,7 +13,7 @@ class GSlides:
     # misc utils
 
     def batch_update(self, file_id, requests):
-        body = {'requests': requests  }
+        body = {'requests': requests}
         return self.execute(self.presentations.batchUpdate(presentationId=file_id, body=body))
 
     def execute(self,command):
