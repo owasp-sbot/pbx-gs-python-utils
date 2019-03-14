@@ -9,8 +9,11 @@ from utils.Misc import Misc
 
 class Render_Page:
 
-    def __init__(self, api_browser=None, headless = True, auto_close = True, web_root=None):
-        self.web_server = Web_Server(web_root)
+    def __init__(self, api_browser=None, headless = True, auto_close = True, web_root=None, web_server=None):
+        if web_server:
+            self.web_server = web_server
+        else:
+            self.web_server = Web_Server(web_root)
         if api_browser:
             self.api_browser = api_browser
         else:

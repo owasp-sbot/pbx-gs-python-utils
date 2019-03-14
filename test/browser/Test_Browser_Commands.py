@@ -37,6 +37,11 @@ class Test_Browser_Commands(TestCase):
         png_data = self.browser_commands.screenshot(None, None, params = [url])
         self._save_png_data(png_data)
 
+    def test_screenshot__web_gl(self):
+        url = 'http://localhost:12345'
+        png_data = self.browser_commands.screenshot(None, None, params = [url])
+        self._save_png_data(png_data)
+
     def test_render(self):
         params = ['/examples/bootstrap-cdn.html']
         params   = ['examples/wardley_map/cup-of-tea.html']
@@ -97,11 +102,24 @@ class Test_Browser_Commands(TestCase):
         Dev.pprint(result)
         self._save_png_data(result)
 
+    def test_viva_graph(self):
+        graph_name = 'graph_XKW'
+        graph_name = 'graph_7AN' # 74 nodes
+        #graph_name = 'graph_HDS' # very large graph
+        #graph_name = 'graph_37V' # with `1617` nodes and `2907` edges,
+        #graph_name = 'graph_VQW'
+        params = [graph_name,'default']
+        result = self.browser_commands.viva_graph(params=params)
+        Dev.pprint(result)
+        #self._save_png_data(result)
+
 
     def test_table(self):
-        result = self.browser_commands.table()
+        params =['issue','GSOS-181']
+        result = self.browser_commands.table(params=params)
         Dev.pprint(result)
-        self._save_png_data(result)
+
+        #self._save_png_data(result)
 
     def test_update_lambda(self):
         Lambdas('browser.lambda_browser').update_with_src()
