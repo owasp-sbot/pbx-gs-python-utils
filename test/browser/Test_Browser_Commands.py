@@ -104,10 +104,13 @@ class Test_Browser_Commands(TestCase):
 
     def test_viva_graph(self):
         graph_name = 'graph_XKW'
+        graph_name = 'graph_HDS' # very large graph
+        graph_name = 'graph_37V' # with `1617` nodes and `2907` edges,
+        graph_name = 'graph_VQW'
         params = [graph_name,'default']
         result = self.browser_commands.viva_graph(params=params)
-        Dev.pprint(result)
-        self._save_png_data(result)
+        #Dev.pprint(result)
+        #self._save_png_data(result)
 
 
     def test_table(self):

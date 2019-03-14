@@ -54,7 +54,7 @@ class Browser_Commands:
         url          = params.pop(0).replace('<', '').replace('>', '')  # fix extra chars added by Slack
         slack_message(":point_right: taking screenshot of url: {0}".format(url),[], channel,team_id)
         browser_helper = Browser_Lamdba_Helper().setup()
-        png_data       = browser_helper.get_screenshot_png(url)
+        png_data       = browser_helper.get_screenshot_png(url,full_page=True)
         return browser_helper.send_png_data_to_slack(team_id,channel,url, png_data)
 
     @staticmethod
