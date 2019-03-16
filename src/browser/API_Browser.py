@@ -1,6 +1,8 @@
 import base64
 import json
 import os
+from time import sleep
+
 from syncer import sync
 
 from utils.Dev import Dev
@@ -133,12 +135,15 @@ class API_Browser:
         page = await self.page()
         return await page.content()
 
-    async def screenshot(self, url= None, full_page = True, file_screenshot = None, clip=None, viewport=None, js_code=None):
+    async def screenshot(self, url= None, full_page = True, file_screenshot = None, clip=None, viewport=None, js_code=None, delay=None):
         if url:
             await self.open(url)
 
         await self.js_execute(js_code)
-    
+
+        if delay:
+            sleep(delay)
+
         if file_screenshot is None:
             file_screenshot = self.file_tmp_screenshot
 
@@ -243,8 +248,8 @@ class API_Browser:
         return await self.screenshot(url,file_screenshot = file_screenshot,clip=clip)
 
     @sync
-    async def sync__screenshot_base64(self, url=None,full_page=True,close_browser=False, clip=None):
-        screenshot_file = await self.screenshot(url=url,full_page=full_page, clip=clip)
+    async def sync__screenshot_base64(self, url=None,full_page=True,close_browser=False, clip=None,delay=None):
+        screenshot_file = await self.screenshot(url=url,full_page=full_page, clip=clip, delay=delay)
         if close_browser:
             await self.browser_close()
         return base64.b64encode(open(screenshot_file, 'rb').read()).decode()

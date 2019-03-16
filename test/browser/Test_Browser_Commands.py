@@ -42,6 +42,12 @@ class Test_Browser_Commands(TestCase):
         png_data = self.browser_commands.screenshot(None, None, params = [url])
         self._save_png_data(png_data)
 
+    def test_screenshot__with_delay(self):
+        url   = "https://www.google.com"
+        delay = 2
+        png_data = self.browser_commands.screenshot(None, None, params=[url,delay])
+        self._save_png_data(png_data)
+
     def test_render(self):
         params = ['/examples/bootstrap-cdn.html']
         params   = ['examples/wardley_map/cup-of-tea.html']
@@ -56,6 +62,11 @@ class Test_Browser_Commands(TestCase):
         #Dev.print(png_data)
         self._save_png_data(png_data)
 
+    def test_render_with_delay(self):
+        params   = ['go-js/simple.html','2']
+        png_data = self.browser_commands.render(None,None,params)
+        #Dev.print(png_data)
+        self._save_png_data(png_data)
 
     def test_markdown___no_params(self):
         result = self.browser_commands.markdown(None,None,None)
@@ -112,6 +123,13 @@ class Test_Browser_Commands(TestCase):
         result = self.browser_commands.viva_graph(params=params)
         Dev.pprint(result)
         #self._save_png_data(result)
+
+    def test_go_js(self):
+        graph_name = 'graph_XKW'
+        params = [graph_name,'default']
+        result = self.browser_commands.go_js(params=params)
+        Dev.pprint(result)
+        self._save_png_data(result)
 
 
     def test_table(self):

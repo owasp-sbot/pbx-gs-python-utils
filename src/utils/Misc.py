@@ -20,6 +20,14 @@ class Misc:
             return None
 
     @staticmethod
+    def array_pop(array, position=None):
+        if array and len(array) >0:
+            if position and len(array) > position:
+                return array.pop(position)
+            else:
+                return array.pop()
+
+    @staticmethod
     def chunks(items, split):
         for i in range(0, len(items), split):
             yield items[i:i + split]
@@ -79,6 +87,12 @@ class Misc:
             return hashlib.md5('{0}'.format(target).encode()).hexdigest()
         return None
 
+    @staticmethod
+    def to_int(value):
+        try:
+            return int(value)
+        except:
+            return None
     @staticmethod
     def wait(seconds):
         sleep(seconds)

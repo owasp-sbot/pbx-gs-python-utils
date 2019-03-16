@@ -63,12 +63,12 @@ class Render_Page:
         #return await self.api_browser.html()            # return Html (localy via PyQuery)
 
     @sync
-    async def get_screenshot_via_browser(self, url = None, png_file=None,full_page=True, clip=None,viewport=None, js_code=None):
+    async def get_screenshot_via_browser(self, url = None, png_file=None,full_page=True, clip=None,viewport=None, js_code=None,delay=None):
         if clip        is not None: full_page = False
         if png_file    is None    : png_file  = Files.temp_file('.png')
         if url         is None    : url       = self.web_server.url()
         await self.api_browser.browser()
-        return await self.api_browser.screenshot(url,full_page=full_page,file_screenshot=png_file, clip=clip, viewport=viewport,js_code=js_code)
+        return await self.api_browser.screenshot(url,full_page=full_page,file_screenshot=png_file, clip=clip, viewport=viewport,js_code=js_code, delay=delay)
 
     def open_file_in_browser(self, path, js_code=None):
         with self.web_server as web_server:
