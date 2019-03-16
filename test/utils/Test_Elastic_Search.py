@@ -26,6 +26,13 @@ class Test_Elastic_Search(unittest.TestCase):
         assert term in result.pop(0)['Summary'].lower()
         assert len(result) > 20
 
+    def test_get_data_between_dates(self):
+        results = self.elastic.get_data_between_dates("Created", "now-1d", "now")
+        Dev.pprint(len(results))
+        for issue in results:
+            print(issue.get('Summary'))
+
+
     def test_index_list(self):
         assert 'jira' in self.elastic.index_list()
 
