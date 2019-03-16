@@ -12,6 +12,12 @@ from utils.Dev import Dev
 
 class Misc:
 
+
+    @staticmethod
+    def array_add(array, value):
+        array.append(value)
+        return value
+
     @staticmethod
     def array_find(array, item):
         try:
