@@ -113,6 +113,13 @@ class Test_Browser_Commands(TestCase):
         Dev.pprint(result)
         self._save_png_data(result)
 
+    def test_am_charts(self):
+        graph_name = 'graph_XKW'
+        params = [graph_name,'default']
+        result = self.browser_commands.am_charts(params=params)
+        Dev.pprint(result)
+        self._save_png_data(result)
+
     def test_viva_graph(self):
         graph_name = 'graph_XKW'
         graph_name = 'graph_7AN' # 74 nodes

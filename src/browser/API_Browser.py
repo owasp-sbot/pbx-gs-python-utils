@@ -92,6 +92,19 @@ class API_Browser:
             js_script = "{0}()".format(name)
         return await self.js_eval(js_script)
 
+    async def js_assign_variable(self, variable, data=None):
+        if data:
+            if type(data).__name__ != 'str':
+                params = json.dumps(data)
+                encoded_text = base64.b64encode(params.encode()).decode()
+                js_script = "{0} = JSON.parse(atob('{1}'))".format(variable, encoded_text )
+            else:
+                encoded_text = base64.b64encode(data.encode()).decode()
+                js_script = "{0} = atob('{1}')".format(variable, encoded_text)
+        else:
+            js_script = "{0} = undefined".format(variable)
+        return await self.js_eval(js_script)
+
 
     # async def js_invoke(self, method, *args):
     #     page = await self.page()
@@ -231,6 +244,10 @@ class API_Browser:
     @sync
     async def sync_js_invoke_function(self,name, params=None):
         return await self.js_invoke_function(name, params)
+
+    @sync
+    async def sync_js_assign_variable(self, variable, data=None):
+        return await self.js_assign_variable(variable,data)
 
     @sync
     async def sync__html_raw(self):

@@ -1,11 +1,9 @@
-import json
-
 from browser.Browser_Lamdba_Helper      import Browser_Lamdba_Helper
 from utils.Files                        import Files
 from utils.Lambdas_Helpers              import slack_message
 from utils.Misc import Misc
 from utils.Process                      import Process
-from utils.aws.Lambdas                  import load_dependency, load_dependencies
+from utils.aws.Lambdas                  import load_dependency
 from utils.slack.Slack_Commands_Helper  import Slack_Commands_Helper
 
 
@@ -203,6 +201,22 @@ class Browser_Commands:
     #
     #     #return browser.render_file(team_id, channel,path, js_code=js_code)
 
+
+    @staticmethod
+    def am_charts(team_id=None, channel=None, params=None):
+        if len(params) < 2:
+            text = ':red_circle: Hi, for the `am_charts` command, you need to provide 2 parameters: '
+            attachment_text = '*graph name* - the nodes and edges you want to view\n' \
+                              '*view name* - the view to render'
+            return text, [{'text': attachment_text}]
+
+        from view_helpers.Am_Charts_Views import Am_Charts_Views
+        params[0], params[1] = params[1], params[0]
+
+        (text, attachments) = Slack_Commands_Helper(Am_Charts_Views).show_duration(True).invoke(team_id, channel, params)
+
+        if team_id is None:
+            return text
     @staticmethod
     def go_js(team_id=None, channel=None, params=None):
         if len(params) < 2:
@@ -211,7 +225,7 @@ class Browser_Commands:
                               '*view name* - the view to render'
             return text, [{'text': attachment_text}]
 
-        from Go_Js_Views import Go_Js_Views
+        from view_helpers.Go_Js_Views import Go_Js_Views
         params[0], params[1] = params[1], params[0]
 
         (text, attachments) = Slack_Commands_Helper(Go_Js_Views).show_duration(True).invoke(team_id, channel, params)
