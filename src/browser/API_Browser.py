@@ -21,7 +21,7 @@ class API_Browser:
         self.file_tmp_screenshot          = Files.temp_file('.png')
         self._browser                     = None
         self.headless                     = headless
-        self.auto_close                   = auto_close
+        self.auto_close                   = auto_close      # happens after taking a screenshot
         self.url_chrome                   = url_chrome
         self.log_js_errors_to_console     = True
 
@@ -153,6 +153,8 @@ class API_Browser:
         if clip:
             full_page = False
         await page.screenshot({'path': file_screenshot,'fullPage': full_page, 'clip' : clip})
+        if self.auto_close:
+            await self.browser_close()
         return file_screenshot
 
 
@@ -250,8 +252,6 @@ class API_Browser:
     @sync
     async def sync__screenshot_base64(self, url=None,full_page=True,close_browser=False, clip=None,delay=None):
         screenshot_file = await self.screenshot(url=url,full_page=full_page, clip=clip, delay=delay)
-        if close_browser:
-            await self.browser_close()
         return base64.b64encode(open(screenshot_file, 'rb').read()).decode()
 
     @sync
