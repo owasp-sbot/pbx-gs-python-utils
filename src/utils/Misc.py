@@ -28,7 +28,7 @@ class Misc:
     @staticmethod
     def array_pop(array, position=None):
         if array and len(array) >0:
-            if position and len(array) > position:
+            if (position is not None) and len(array) > position:
                 return array.pop(position)
             else:
                 return array.pop()
