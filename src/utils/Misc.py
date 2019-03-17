@@ -45,6 +45,12 @@ class Misc:
         return None
 
     @staticmethod
+    def get_random_color(max=5):
+        if max > 5: max = 5                                                             # add support for more than 5 colors
+        colors = ['skyblue', 'darkseagreen', 'palevioletred', 'coral', 'darkgray']
+        return colors[Misc.random_number(0, max-1)]
+
+    @staticmethod
     def json_dumps(target, message=None):
         if target:
             return json.dumps(target, indent=4)
