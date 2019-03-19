@@ -26,12 +26,19 @@ class Misc:
             return None
 
     @staticmethod
+    def array_get(array, position=None):
+        if array and len(array) > 0:
+            if (position is not None) and len(array) > position:
+                return array[position]
+
+    @staticmethod
     def array_pop(array, position=None):
         if array and len(array) >0:
             if (position is not None) and len(array) > position:
                 return array.pop(position)
             else:
                 return array.pop()
+
 
     @staticmethod
     def chunks(items, split):

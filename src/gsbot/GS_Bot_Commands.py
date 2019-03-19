@@ -1,16 +1,17 @@
 from datetime import datetime
 
+from utils.Lambdas_Helpers import slack_message
 from utils.aws.Lambdas import Lambdas
 
 
 class GS_Bot_Commands:                                      # move to separate class
     @staticmethod
-    def hello(slack_event, params=[]):
+    def hello(slack_event, params=None):
         user = slack_event.get('user')
         return 'Hello <@{0}>, how can I help you?'.format(user), []
 
     @staticmethod
-    def help(slack_event, params=[]):
+    def help(slack_event, params=None):
         commands        = [func for func in dir(GS_Bot_Commands) if callable(getattr(GS_Bot_Commands, func)) and not func.startswith("__")]
         title           = "*Here are the commands available*"
         attachment_text = ""
@@ -21,14 +22,14 @@ class GS_Bot_Commands:                                      # move to separate c
 
 
     @staticmethod
-    def bad_cmd(slack_event, params=[]):
+    def bad_cmd(slack_event, params=None):
         (text, attachments) = GS_Bot_Commands.help(slack_event['text'])
         text = ':exclamation: Sorry, could not match provided command to a method: `{0}`\n'.format(slack_event['text']) + text
         return (text, attachments)
 
     # refactor into separate class
     @staticmethod
-    def dot_render(slack_event, params=[]):
+    def dot_render(slack_event, params=None):
 
         text       = slack_event["text"]
         channel_id = slack_event["channel"]
@@ -49,7 +50,7 @@ class GS_Bot_Commands:                                      # move to separate c
 
     # refactor into separate class
     @staticmethod
-    def plantuml(slack_event, params=[]):
+    def plantuml(slack_event, params=None):
         text    = slack_event["text"]
         channel = slack_event["channel"]
         code    = text.split("```")
@@ -67,16 +68,30 @@ class GS_Bot_Commands:                                      # move to separate c
 
     #move to new routing mode
     @staticmethod
-    def browser(slack_event, params=[]):
+    def browser(slack_event, params=None):
         Lambdas('browser.lambda_browser').invoke_async({'params': params, 'data': slack_event})
         return None, None
 
     # move to new routing mode
     @staticmethod
-    def gdocs(slack_event, params=[]):
+    def gdocs(slack_event, params=None):
         Lambdas('gs.lambda_gdocs'       ).invoke_async({'params': params, 'data': slack_event})
         return None, None
 
+    @staticmethod
+    def mindmap(slack_event, params=None):
+        channel = slack_event.get('channel')
+        team_id = slack_event.get('team_id')
+        if len(params) < 1:
+            text = ':red_circle: Hi, for the `mindmap` command, you need to provide an `graph_name`'
+            slack_message(text, [], channel, team_id)
+            return None, None
+        graph_name = params.pop(0)
+        graph_params = ['go_js', graph_name, 'mindmap']
+        graph_params.extend(params)
+        Lambdas('browser.lambda_browser').invoke_async({"params": graph_params, 'data': {'team_id': team_id, 'channel': channel}})
+        return None, None
+    
     # @staticmethod
     # def graph(slack_event, params=[]):
     #     return Lambdas('gs.lambda_graph'       ).invoke({'params': params, 'data': slack_event}) , []
@@ -84,7 +99,7 @@ class GS_Bot_Commands:                                      # move to separate c
 
     # move to new routing mode
     @staticmethod
-    def slides(slack_event, params=[]):
+    def slides(slack_event, params=None):
         Lambdas('gs.lambda_slides'      ).invoke_async({'params': params, 'data': slack_event})
         return (None, None)
 

@@ -64,7 +64,7 @@ class Test_API_Jira_Sheets_Sync(TestCase):
         Dev.pprint(result)
 
     def test_get_sheet_raw_data(self):
-        result = self.api_sync.get_sheet_raw_data()
+        result = self.api_sync.get_sheet_raw_data(self.api_sync.sheet_name())
         Dev.pprint(result)
 
     def test_update_sheet_data_with_jira_data(self):

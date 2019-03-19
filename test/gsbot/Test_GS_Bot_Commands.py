@@ -27,6 +27,10 @@ class Test_GS_Bot_Commands(unittest.TestCase):
         result = GS_Bot_Commands.dot_render(slack_event, [])
         Dev.pprint(result)
 
+    def test_dot_mindmap(self):
+        slack_event = {}
+        result = GS_Bot_Commands.mindmap(slack_event, [ "aaa"])
+        Dev.pprint(result)
 
 
     # def test_public_slack_channels(self):
