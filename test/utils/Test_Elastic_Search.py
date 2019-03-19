@@ -26,6 +26,13 @@ class Test_Elastic_Search(unittest.TestCase):
         assert term in result.pop(0)['Summary'].lower()
         assert len(result) > 20
 
+
+    def test_test_search_using_query___large_query(self):
+        query = {"_source": ["Key", "Issue Links"], }
+
+        result = list(self.elastic.set_index('sec_project').search_using_query(query))
+        Dev.pprint(len(result))
+
     def test_get_data_between_dates(self):
         results = self.elastic.get_data_between_dates("Created", "now-1d", "now")
         Dev.pprint(len(results))

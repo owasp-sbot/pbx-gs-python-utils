@@ -51,7 +51,17 @@ class Misc:
             return type(target).__name__
         return None
 
+    def get_value(self,target, key,default=None):
+        if target is not None:
+            try:
+                value = target.get(key)
+                if value is not None:
+                    return value
+            except:
+                pass
+        return default
     @staticmethod
+
     def get_random_color(max=5):
         if max > 5: max = 5                                                             # add support for more than 5 colors
         colors = ['skyblue', 'darkseagreen', 'palevioletred', 'coral', 'darkgray']

@@ -12,6 +12,7 @@ class Test_API_Jira_Sheets_Sync(TestCase):
         self.file_id  = '1yDxu5YxL9FxY5wQ1EEQlAYGt3flIsm2VTyWwPny5RLA'
         #self.file_id ='1gc3jQelTJ8250kCZqOhqBOOZUywGOy3AiNC6cghgHak'
         #self.file_id  = '1_Bwz6z34wALFGb1ILUXG8CtF1-Km6F9_sGXnAu4gewY'
+        self.file_id = '1RoW6vNbcAQZWFVklbpRNGq2zuoQvsATHJJohx5xukI4'
         self.api_sync = API_Jira_Sheets_Sync(self.file_id)
 
 
