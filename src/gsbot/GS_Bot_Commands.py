@@ -1,7 +1,9 @@
 from datetime import datetime
 
-from utils.Lambdas_Helpers import slack_message
-from utils.aws.Lambdas import Lambdas
+from gsbot.GS_Bot_Jira_Commands  import GS_Bot_Jira_Commands
+from utils.Lambdas_Helpers       import slack_message
+from utils.Slack_Commands_Helper import Slack_Commands_Helper
+from utils.aws.Lambdas           import Lambdas
 
 
 class GS_Bot_Commands:                                      # move to separate class
@@ -76,6 +78,7 @@ class GS_Bot_Commands:                                      # move to separate c
     @staticmethod
     def gdocs(slack_event, params=None):
         Lambdas('gs.lambda_gdocs'       ).invoke_async({'params': params, 'data': slack_event})
+
         return None, None
 
     @staticmethod

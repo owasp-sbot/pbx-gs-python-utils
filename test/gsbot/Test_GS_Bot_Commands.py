@@ -2,6 +2,7 @@ import unittest
 
 from gsbot.GS_Bot_Commands import GS_Bot_Commands
 from utils.Dev import Dev
+from utils.aws.Lambdas import Lambdas
 
 
 class Test_GS_Bot_Commands(unittest.TestCase):
@@ -53,3 +54,6 @@ class Test_GS_Bot_Commands(unittest.TestCase):
         (text, attachment) = GS_Bot_Commands.ec2_instances_details({})
 
         Dev.print(text)
+
+    def test_update_lambda(self):
+        Lambdas('gsbot.lambda_gs_bot').update_with_src()

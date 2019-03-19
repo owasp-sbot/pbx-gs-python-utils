@@ -3,7 +3,7 @@ from gsbot.Jira_Commands import Jira_Commands
 from utils.Dev import Dev
 
 
-class Test_GS_Bot_Jira_Sync(TestCase):
+class Test_Jira_Commands(TestCase):
 
     def setUp(self):
         self.jira_sync = Jira_Commands()
