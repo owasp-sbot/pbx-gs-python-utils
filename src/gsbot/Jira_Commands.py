@@ -38,6 +38,6 @@ class Jira_Commands:
 
         return API_Jira().issue(issue_id)
 
-
-
-
+    @staticmethod
+    def version(team_id=None, channel=None, params=None):
+        return "0.11.1"
