@@ -1,5 +1,5 @@
 from unittest import TestCase
-from gsbot.Jira_Commands import Jira_Commands
+from gs_jira.Jira_Commands import Jira_Commands
 from utils.Dev import Dev
 
 

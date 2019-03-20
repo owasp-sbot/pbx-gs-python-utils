@@ -1,7 +1,6 @@
 from unittest import TestCase
 
 from gsbot.GS_Bot_Jira_Commands import GS_Bot_Jira_Commands
-from gsbot.Jira_Commands import Jira_Commands
 from utils.Dev import Dev
 from utils.aws.Lambdas import Lambdas
 
