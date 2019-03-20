@@ -185,9 +185,7 @@ class API_Jira:
 
     def issue_update(self, issue_data):
         fields_by_name = self.fields_by_name()
-        #Dev.pprint(fields_by_name)
         key = issue_data.get('Key')
-        #print('KEY', key)
         fields_data = {}
         for name, value in issue_data.items():
             field = fields_by_name.get(name)
@@ -195,12 +193,8 @@ class API_Jira:
                 field_id = field.get('id')
                 if field_id not in ['issuekey']:
                     fields_data[field_id] = value
-        #sDev.pprint(fields_data)
-
-        #'rest/api/3/issuetype/'
         # this is VERY slow
         issue = self.jira().issue(key, fields=['Key'], expand= [])
-        #return issue
         return issue.update(fields=fields_data)
 
     #def issue_update(self, key, summary = None, description = None):
