@@ -291,6 +291,7 @@ class API_Jira:
 
     def jira(self):
         if self._jira is None:
+
             try:
                 data = Secrets(self.secrets_id).value_from_json_string()
                 server    = data.get('server')   #''https://jira.photobox.com'

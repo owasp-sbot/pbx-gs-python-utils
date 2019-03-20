@@ -43,6 +43,13 @@ def port_is_open(port, host='0.0.0.0'):
     return result == 0
 
 
+def current_host_online():
+    try:
+        Http_Request('http://www.google.com', method='HEAD')
+        return True
+    except:
+        return False
+
 
 # code below is not reliable enough (was trying to get the time from an ntp server, but it hanged a couple times during tests)
 # note: this could had been caused by VPN issues (I was having at the time with the Cisco VPN client)
