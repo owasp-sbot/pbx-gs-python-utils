@@ -39,6 +39,11 @@ class Misc:
             else:
                 return array.pop()
 
+    @staticmethod
+    def array_pop_and_trim(array, position=None):
+        value = Misc.array_pop(array,position)
+        return Misc.trim(value)
+
 
     @staticmethod
     def chunks(items, split):
@@ -118,6 +123,12 @@ class Misc:
         if target:
             return hashlib.md5('{0}'.format(target).encode()).hexdigest()
         return None
+
+    @staticmethod
+    def trim(target):
+        if target:
+            return target.strip()
+        return target
 
     @staticmethod
     def to_int(value):
