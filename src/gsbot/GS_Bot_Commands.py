@@ -1,8 +1,6 @@
 from datetime import datetime
 
-from gsbot.GS_Bot_Jira_Commands  import GS_Bot_Jira_Commands
 from utils.Lambdas_Helpers       import slack_message
-from utils.Slack_Commands_Helper import Slack_Commands_Helper
 from utils.aws.Lambdas           import Lambdas
 
 
