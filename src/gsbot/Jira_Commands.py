@@ -40,4 +40,4 @@ class Jira_Commands:
 
     @staticmethod
     def version(team_id=None, channel=None, params=None):
-        return "0.11.1"
+        return "0.11.2"
