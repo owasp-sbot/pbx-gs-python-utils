@@ -134,47 +134,57 @@ class API_Jira_Sheets_Sync:
     def diff_cells(self):
         sheet_data = self.get_sheet_data(self.sheet_name())
         backup_data = self.get_sheet_data(self.sheet_name_backup())
+        if backup_data is None:
+            Dev.pprint("Error: Backup data is not setup, please load the data again")
+            return None
         jira_issues = self.get_jira_issues_in_sheet_data(sheet_data)
         return self.diff_sheet_data_with_jira_data(sheet_data, backup_data, jira_issues)
 
     def diff_sheet(self):
         diff_cells = self.diff_cells()
-        self.color_code_cells_based_on_diff_status(diff_cells)
-        return "diff completed..."
+        if diff_cells:
+            self.color_code_cells_based_on_diff_status(diff_cells)
+            return "diff completed..."
+        return "Error, could not calculate diff_cells (try reloading the data)"
 
     def diff_sheet_data_with_jira_data(self,sheet_data, backup_data, jira_data):
+        if backup_data is None or jira_data is None:
+            return None
         diff_cells = []
         print()
         for row_index, row in enumerate(sheet_data):
-            for header_index, header in enumerate(self.headers):
-                key = row['Key']
-                jira_issue    = jira_data.get(key)
-                backup_issue  = backup_data[row_index]
-                if jira_issue and backup_issue:
-                    if header in ['Jira Link']: continue
-                    sheet_value  = row.get(header)
-                    backup_value = backup_issue.get(header, '')
-                    jira_value   = jira_issue.get(header,'')
+            try:
+                for header_index, header in enumerate(self.headers):
+                    key = row['Key']
+                    jira_issue    = jira_data.get(key)
+                    backup_issue  = backup_data[row_index]
+                    if jira_issue and backup_issue:
+                        if header in ['Jira Link']: continue
+                        sheet_value  = row.get(header)
+                        backup_value = backup_issue.get(header, '')
+                        jira_value   = jira_issue.get(header,'')
 
-                    if sheet_value:
-                        diff_cell = {
-                                        'key'         : key          ,
-                                        'field'       : header       ,
-                                        'row_index'   : row_index + 1,
-                                        'col_index'   : header_index ,
-                                        'sheet_value' : sheet_value  ,
-                                        'backup_value': backup_value ,
-                                        'jira_value'  : jira_value   ,
+                        if sheet_value:
+                            diff_cell = {
+                                            'key'         : key          ,
+                                            'field'       : header       ,
+                                            'row_index'   : row_index + 1,
+                                            'col_index'   : header_index ,
+                                            'sheet_value' : sheet_value  ,
+                                            'backup_value': backup_value ,
+                                            'jira_value'  : jira_value   ,
 
-                                    }
-                        if   sheet_value == jira_value and sheet_value == backup_value: diff_cell['status'] = 'same'
-                        elif sheet_value != jira_value and sheet_value == backup_value: diff_cell['status'] = 'jira_change'
-                        elif sheet_value != jira_value and jira_value  == ''          : diff_cell['status'] = 'sheet_change'
-                        elif sheet_value != jira_value and jira_value  is None        : diff_cell['status'] = 'sheet_change'
-                        elif sheet_value != jira_value and jira_value  == backup_value: diff_cell['status'] = 'sheet_change'
-                        else: diff_cell['status'] = 'other'
-                        #print("{0:10} {1:20} {2:20} {3:20}".format(key, header, sheet_value, jira_value))
-                        diff_cells.append(diff_cell)
+                                        }
+                            if   sheet_value == jira_value and sheet_value == backup_value: diff_cell['status'] = 'same'
+                            elif sheet_value != jira_value and sheet_value == backup_value: diff_cell['status'] = 'jira_change'
+                            elif sheet_value != jira_value and jira_value  == ''          : diff_cell['status'] = 'sheet_change'
+                            elif sheet_value != jira_value and jira_value  is None        : diff_cell['status'] = 'sheet_change'
+                            elif sheet_value != jira_value and jira_value  == backup_value: diff_cell['status'] = 'sheet_change'
+                            else: diff_cell['status'] = 'other'
+                            #print("{0:10} {1:20} {2:20} {3:20}".format(key, header, sheet_value, jira_value))
+                            diff_cells.append(diff_cell)
+            except Exception as error:
+                Dev.pprint("Error in row {0}: {1}".format(row_index,row))
         return diff_cells
 
     def update_sheet_data_with_jira_data(self,sheet_data):
@@ -220,8 +230,10 @@ class API_Jira_Sheets_Sync:
     def sync_sheet(self):
         try:
             diff_cells = self.diff_cells()
-            self.sync_data_between_jira_and_sheet(diff_cells)
-            return "sync data with Jira completed...."
+            if diff_cells:
+                self.sync_data_between_jira_and_sheet(diff_cells)
+                return "sync data with Jira completed...."
+            return "Error, could not calculate diff_cells (try reloading the data)"
         except Exception as error:
             return "Error in sync_sheet: {0}".format(error)
 
