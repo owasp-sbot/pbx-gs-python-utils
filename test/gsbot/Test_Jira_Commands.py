@@ -6,8 +6,12 @@ from utils.Dev import Dev
 class Test_Jira_Commands(TestCase):
 
     def setUp(self):
-        self.jira_sync = Jira_Commands()
+        self.api = Jira_Commands()
 
     def test_projects(self):
-        result = self.jira_sync.projects()
+        result = self.api.projects()
         Dev.pprint(result)
+
+    def test_issue(self):
+        Dev.pprint(self.api.issue(params=['AAA-12' ]))
+        Dev.pprint(self.api.issue(params=['RISK-12']))
