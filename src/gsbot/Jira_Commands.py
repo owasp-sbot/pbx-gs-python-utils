@@ -8,4 +8,4 @@ class Jira_Commands:
     def projects(team_id=None, channel=None, params=None):
         jira = API_Jira()
         projects = jira.projects()
-        return "there are {0} projects".format(len(projects))
+        return "there are {0} projects in jira ...".format(len(projects))
