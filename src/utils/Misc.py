@@ -80,10 +80,13 @@ class Misc:
         return message
 
     @staticmethod
-    def json_load(target, message=None):
+    def json_load(target):
         if target:
-            return json.loads(target)
-        return message
+            try:
+                return json.loads(target)
+            except:
+                pass
+        return None
 
     @staticmethod
     def none_or_empty(target,field):
