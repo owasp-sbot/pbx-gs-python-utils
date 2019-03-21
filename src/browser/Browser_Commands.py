@@ -217,6 +217,14 @@ class Browser_Commands:
 
         if team_id is None:
             return text
+
+    @staticmethod
+    def calendar(team_id=None, channel=None, params=None):
+        from view_helpers.Full_Calendar_Views import Full_Calendar_Views
+        #params[0], params[1] = params[1], params[0]
+        Slack_Commands_Helper(Full_Calendar_Views).show_duration(True).invoke(team_id, channel,params)
+
+
     @staticmethod
     def go_js(team_id=None, channel=None, params=None):
         if len(params) < 2:
