@@ -56,7 +56,8 @@ class Misc:
             return type(target).__name__
         return None
 
-    def get_value(self,target, key,default=None):
+    @staticmethod
+    def get_value(target, key, default=None):
         if target is not None:
             try:
                 value = target.get(key)

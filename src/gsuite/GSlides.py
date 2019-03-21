@@ -179,7 +179,7 @@ class GSlides:
 
         return self.element_set_text_style_requests(shape_id, style, fields)
 
-    def element_set_shape_properties(self, shape_id,properties , fields=None):
+    def element_set_shape_properties(self, file_id, shape_id,properties , fields=None):
         if fields is None:
             fields = ",".join(list(set(properties)))
         requests = [{'updateShapeProperties': { 'objectId'         : shape_id     ,

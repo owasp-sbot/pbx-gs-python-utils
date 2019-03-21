@@ -59,6 +59,9 @@ class GSuite:
     def admin_reports_v1(self):
         return self.create_service('admin', 'reports_v1','admin.reports.audit.readonly')
 
+    def calendar_v3(self):
+        return self.create_service('calendar','v3','calendar')
+
     def drive_v3(self):
         return self.create_service('drive', 'v3', 'drive')
         #return self.create_service('drive', 'v3', 'drive.metadata.readonly')
