@@ -13,3 +13,8 @@ class Test_GCalendar(TestCase):
         events = self.calendar.gs_team()
         for event in events:
             Dev.pprint("{0} {1} - {2}".format(event.get('start'),event.get('end'),event.get('summary')))
+
+    def test_gs_cs_team(self):
+        events = self.calendar.gs_cs_team()
+        for event in events:
+            Dev.pprint("{0} {1} - {2}".format(event.get('start'),event.get('end'),event.get('summary')))

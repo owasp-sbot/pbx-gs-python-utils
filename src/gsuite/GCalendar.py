@@ -10,19 +10,23 @@ class GCalendar:
     def __init__(self, gsuite_secret_id=None):
         self.events = GSuite(gsuite_secret_id).calendar_v3().events()
 
+    def _get_this_weeks_calendar_data(self, calendar_id):
 
-    def gs_team(self):
-        self.calendar_id = 'photobox.com_kkecukq11iksaamp12p5mqdku0@group.calendar.google.com'
-        now = datetime.datetime.utcnow().isoformat() + 'Z'
-        #Dev.pprint(now
+        #now = datetime.datetime.utcnow().isoformat() + 'Z'
         time_min = '2019-03-17T00:00:00Z'
         time_max = '2019-03-23T00:00:00Z'
-        #time_min = "2019-03-17T05:00:00-06:00Z",
-        #time_max = "2017-03-23T20:00:01-06:00Z",
-        events_result = self.events.list(calendarId = self.calendar_id,
+
+        events_result = self.events.list(calendarId = calendar_id,
                                          timeMin    = time_min,
                                          timeMax    = time_max,
-                                         #maxResults=100,
                                          singleEvents=True,
                                          orderBy='startTime').execute()
         return events_result.get('items', [])
+
+    def gs_team(self):
+        calendar_id = 'photobox.com_kkecukq11iksaamp12p5mqdku0@group.calendar.google.com'
+        return self._get_this_weeks_calendar_data(calendar_id)
+
+    def gs_cs_team(self):
+        calendar_id = 'photobox.com_b45nntbjhc2255c7dvf1l6ragc@group.calendar.google.com'
+        return self._get_this_weeks_calendar_data(calendar_id)
