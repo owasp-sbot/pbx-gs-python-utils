@@ -9,12 +9,20 @@ class GCalendar:
 
     def __init__(self, gsuite_secret_id=None):
         self.events = GSuite(gsuite_secret_id).calendar_v3().events()
-        self.calendar_id = 'photobox.com_kkecukq11iksaamp12p5mqdku0@group.calendar.google.com'
 
-    def next_10(self):
+
+    def gs_team(self):
+        self.calendar_id = 'photobox.com_kkecukq11iksaamp12p5mqdku0@group.calendar.google.com'
         now = datetime.datetime.utcnow().isoformat() + 'Z'
-        print('Getting the upcoming 10 events')
-        events_result = self.events.list(calendarId=self.calendar_id, timeMin=now,
-                                              maxResults=10, singleEvents=True,
-                                              orderBy='startTime').execute()
+        #Dev.pprint(now
+        time_min = '2019-03-17T00:00:00Z'
+        time_max = '2019-03-23T00:00:00Z'
+        #time_min = "2019-03-17T05:00:00-06:00Z",
+        #time_max = "2017-03-23T20:00:01-06:00Z",
+        events_result = self.events.list(calendarId = self.calendar_id,
+                                         timeMin    = time_min,
+                                         timeMax    = time_max,
+                                         #maxResults=100,
+                                         singleEvents=True,
+                                         orderBy='startTime').execute()
         return events_result.get('items', [])
