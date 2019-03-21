@@ -147,7 +147,8 @@ class Misc:
 
     @staticmethod
     def word_wrap_escaped(text,length = 40):
-        return '\\n'.join(textwrap.wrap(text, length))
+        if text:
+            return '\\n'.join(textwrap.wrap(text, length))
 
     @staticmethod
     def convert_to_number(value):
