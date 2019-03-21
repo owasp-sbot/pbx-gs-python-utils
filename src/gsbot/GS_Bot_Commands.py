@@ -100,10 +100,10 @@ class GS_Bot_Commands:                                      # move to separate c
 
     # move to new routing mode
 
-    @staticmethod
-    def calendar(slack_event, params=None):
-        Lambdas('gs.lambda_calendar').invoke_async({'params': params, 'data': slack_event})
-        return (None, None)
+    # @staticmethod     # add when there are more commands in there
+    # def calendar(slack_event, params=None):
+    #     Lambdas('gs.lambda_calendar').invoke_async({'params': params, 'data': slack_event})
+    #     return (None, None)
 
     @staticmethod
     def slides(slack_event, params=None):
