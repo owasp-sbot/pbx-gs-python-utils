@@ -71,10 +71,13 @@ class API_Slack:
         self.channel = channel
         return self
 
-    def user(self,used_id):
-        return self.slack.api_call("chat.postMessage",
-                                   channel=self.channel,
-                                   used_  =used_id)
+    # def postMessage(self,used_id):
+    #     return self.slack.api_call("chat.postMessage",
+    #                                channel=self.channel,
+    #
+    #                       used_  =used_id)
+    def user(self,user_id):
+        return self.slack.api_call("users.info", user=user_id)
 
     def users(self):
         users = {}

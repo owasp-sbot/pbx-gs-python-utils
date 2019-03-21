@@ -62,6 +62,7 @@ class Test_API_Slack(unittest.TestCase):
 
     def test_users(self):
         users = self.api.users()
+        Dev.pprint(len(set(users)))
         assert len(set(users)) > 120
         assert users['dinis.cruz']['id'] == 'U7ESE1XS7'
         assert users['gsbot'     ]['id'] == 'UDK5W7W3T'
