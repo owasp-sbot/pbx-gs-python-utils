@@ -51,7 +51,7 @@ class API_Jira_Sheets_Create(API_Jira_Sheets_Sync):
     def update_sheet_with_status(self,jira_actions):
         requests      = []
         sheet_id      = self.sheet_id()
-        status_col    = Misc.array_find(self.headers, 'Status')
+        status_col    = Misc.array_find(self.headers, 'Sync Status')
         key_col       = Misc.array_find(self.headers, 'Key'   )
         jira_link_col = Misc.array_find(self.headers, 'Jira Link')
         if status_col:
