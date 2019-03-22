@@ -65,6 +65,7 @@ class API_Jira:
                     "Email"             : custom_field_value('customfield_14549'                ) ,
                     'Epic Link'         : custom_field_value('customfield_11200'                ) ,
                     "GDPR Article"      : split(custom_field_value('customfield_14156'),'\r\n'  ) ,
+                    "Image Url"         : custom_field_value('customfield_14551'                ) ,
                     "Issue Type"        : custom_field_value('issuetype'         , 'name'       ) ,
                     "Issue Links"       : {}                                                      ,
                     "ISO27001 Standard" : split(custom_field_value('customfield_14157'),','     ) ,
