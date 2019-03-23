@@ -19,13 +19,14 @@ class Test_API_JIRA_Sheets_Create(TestCase):
         jira_actions = self.sheets_create.calculate_jira_actions(sheet_data)
         Dev.pprint(jira_actions)
 
-    def test_execute_jira_actions(self):
-        sheet_data = self.sheets_create.sheet_data()
-        jira_actions = self.sheets_create.calculate_jira_actions(sheet_data)
-        self.sheets_create.execute_jira_actions(jira_actions)
-        self.sheets_create.update_sheet_with_status(jira_actions)
 
     def test_update_sheet_with_status(self):
         sheet_data   = self.sheets_create.sheet_data()
         jira_actions = self.sheets_create.calculate_jira_actions(sheet_data)
+        self.sheets_create.update_sheet_with_status(jira_actions)
+
+    def test_execute_jira_actions(self):
+        sheet_data = self.sheets_create.sheet_data()
+        jira_actions = self.sheets_create.calculate_jira_actions(sheet_data)
+        self.sheets_create.execute_jira_actions(jira_actions)
         self.sheets_create.update_sheet_with_status(jira_actions)
