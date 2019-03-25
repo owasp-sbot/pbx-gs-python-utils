@@ -123,4 +123,9 @@ class Test_API_Jira_Sheets_Sync(TestCase):
 
 
 
+    def test_bug__error_loading_sheet(self):
+        #self.file_id = '1eQbkiTexDq_LKGqYRdzs1i4sfYq_2lef8SbtKvFqbtQ'
+        self.api_sync.file_id = '1xIeV2eQb59EsiJoOUB1yOK3FY2LCvzMmTgvhAVXlEEI' # "error\": \"'NoneType' object is not iterable
+        Dev.pprint(self.api_sync.load_data_from_jira())
+
 

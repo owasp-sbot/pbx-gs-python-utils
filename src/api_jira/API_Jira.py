@@ -172,7 +172,7 @@ class API_Jira:
 
     def issue_next_transitions(self,key):
         transitions = {}
-        items = self._jira.transitions(key)
+        items = self.jira().transitions(key)
         for item in items:
             transitions[item['name']] = item['id']
         return transitions

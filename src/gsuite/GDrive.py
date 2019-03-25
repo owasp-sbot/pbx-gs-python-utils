@@ -75,7 +75,8 @@ class GDrive:
 
     def find_by_mime_type(self, mime_type):
         results = self.execute(self.files.list(q="mimeType = '{0}'".format(mime_type), fields="files(id,name)"))
-        return results.get('files', [])
+        if results:
+            return results.get('files', [])
 
     def set_file_title(self, file_id, new_title):
         return self.file_metadata_update(file_id, {"name" : new_title })

@@ -23,6 +23,7 @@ class GSuite:
     # this function will prompt the user if there isn't a local tmp file with a token for the requested scope
     # the main credentials are stored using AWS Secrets (in the id defined at self.gsuite_secret_id)
     def get_oauth_token(self, desired_scope):
+
         secret_data      = json.loads(Secrets(self.gsuite_secret_id).value())                           # load secret from AWS Secrets store
         token_file    = '/tmp/gmail_credential_{0}.json'.format(desired_scope)                          # this is the tmp file with the token value for the desired scope
 

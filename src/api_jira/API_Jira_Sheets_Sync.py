@@ -51,9 +51,10 @@ class API_Jira_Sheets_Sync:
     def sheet_name(self):
         if self._sheet_name is None:
             sheets = self.gsheets().sheets_properties_by_title(self.file_id)
-            if self.sheet_title not in list(set(sheets)):
-                self.gsheets().sheets_add_sheet(self.file_id, self.sheet_title)
-            self._sheet_name = self.sheet_title
+            if sheets:
+                if self.sheet_title not in list(set(sheets)):
+                    self.gsheets().sheets_add_sheet(self.file_id, self.sheet_title)
+                self._sheet_name = self.sheet_title
         return self._sheet_name
 
     def sheet_name_backup(self):
@@ -125,7 +126,6 @@ class API_Jira_Sheets_Sync:
             if status == 'sheet_change'  : requests.append(self.gsheets().request_cell_set_background_color(sheet_id, col ,row, 1.0 ,0.5 ,0.5))
             if status == 'jira_change'   : requests.append(self.gsheets().request_cell_set_background_color(sheet_id, col ,row, 0.5 ,0.5 ,1.0))
             if status == 'other'         : requests.append(self.gsheets().request_cell_set_background_color(sheet_id, col ,row, 0.5 ,0.5 ,0.5))
-
             if status == 'jira-save-ok'  : requests.append(self.gsheets().request_cell_set_background_color(sheet_id, col ,row, 0.0 ,0.5 ,0.5))
             if status == 'jira-save-fail': requests.append(self.gsheets().request_cell_set_background_color(sheet_id, col ,row, 1.0 ,0.0 ,0.0))
 
@@ -215,7 +215,10 @@ class API_Jira_Sheets_Sync:
         self.gsheets().set_values(self.file_id, sheet_name, raw_data)
 
     def load_data_from_jira(self):
-        sheet_data = self.get_sheet_data(self.sheet_name())
+        sheet_name = self.sheet_name()
+        if not sheet_name:
+            return "Error: in `load_data_from_jira` the `sheet_name` value could not be calculated from the current file Id: {0}".format(self.file_id)
+        sheet_data = self.get_sheet_data(sheet_name)
         if sheet_data:
             try:
                 self.update_sheet_data_with_jira_data(sheet_data)
