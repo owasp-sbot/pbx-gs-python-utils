@@ -109,8 +109,9 @@ class Test_API_Jira_Sheets_Sync(TestCase):
 
     def test_create_sheet_from_graph(self):
         graph_name = 'graph_Y3Y'
-        self.api_sync.file_id =  '13YcCCtqCPLeXQ4xb7rDtc4zJvySJ8EANpbY8I2tYQzw'
-        result = self.api_sync.create_sheet_from_graph(graph_name)
+        folder = '1o-kpQ9sLzo0_wE13XcmnUuH7GNsHpdbp'
+        domain = 'photobox.com'
+        result = self.api_sync.create_sheet_from_graph(graph_name, domain, folder)
         Dev.pprint(result)
 
     def test_load_data_from_jira(self): Dev.pprint(self.api_sync.load_data_from_jira())

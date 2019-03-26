@@ -8,7 +8,7 @@ from utils.Elastic_Search import Elastic_Search
 
 
 class API_Jira_Sheets_Sync:
-    def __init__(self, file_id,gsuite_secret_id=None):
+    def __init__(self, file_id=None,gsuite_secret_id=None):
         self._gsheets           = None
         self._jira              = None
         self._jira_rest         = None
@@ -281,9 +281,14 @@ class API_Jira_Sheets_Sync:
             return sorted(graph.nodes)
         return []
 
-    def create_sheet_from_graph(self, graph_name):
+    def create_sheet_from_graph(self, graph_name,domain, folder):
+        title = "Data for graph - {0}".format(graph_name)
+        self.file_id = self.gsheets().create_and_share_with_domain(title, domain,folder)
         headers = ['Key', 'Jira Link', 'Summary', 'Status', 'Risk Rating', 'Issue Type']
-        return self.create_sheet_from_graph_with_headers(graph_name, headers)
+
+        self.create_sheet_from_graph_with_headers(graph_name, headers)
+        self.gsheets().sheets_delete_sheet(self.file_id, 0)
+        return self.gsheets().gdrive.file_weblink(self.file_id)
 
     def create_sheet_from_graph_with_headers(self,graph_name, headers=None):
         issues_ids = self.get_graph_nodes(graph_name)

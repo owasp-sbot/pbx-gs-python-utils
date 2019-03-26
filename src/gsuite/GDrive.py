@@ -8,7 +8,8 @@ from utils.Files import Files
 class GDrive:
 
     def __init__(self,gsuite_secret_id=None):
-        self.files = GSuite(gsuite_secret_id).drive_v3().files()
+        self.gsuite = GSuite(gsuite_secret_id).drive_v3()
+        self.files  = self.gsuite.files()
 
     def execute(self, command):
         try:
@@ -16,6 +17,15 @@ class GDrive:
         except Exception as error:
             Dev.pprint(error)                   # add better error handling log capture
             return None
+
+    def file_create(self, file_type, title, folder=None):
+        file_metadata = {
+            "mimeType": file_type,
+            "parents": [folder],
+            "name": title
+        }
+        file = self.files.create(body=file_metadata, fields='id').execute()
+        return file.get('id')
 
     def file_export(self, file_Id):
         return self.files.export(fileId=file_Id, mimeType='application/pdf').execute()
@@ -35,6 +45,14 @@ class GDrive:
     def file_delete(self, file_id):
         if file_id:
             self.files.delete(fileId= file_id).execute()
+
+    def file_share_with_domain(self,file_id,domain):
+        domain_permission = {
+            'type': 'domain',
+            'role': 'writer',
+            'domain': domain,
+        }
+        return self.gsuite.permissions().create(fileId=file_id, body=domain_permission, fields='id').execute()
 
     def file_update(self, local_file, mime_type, file_id):
         if Files.exists(local_file):
