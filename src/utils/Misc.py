@@ -66,12 +66,21 @@ class Misc:
             except:
                 pass
         return default
-    @staticmethod
 
+    @staticmethod
     def get_random_color(max=5):
         if max > 5: max = 5                                                             # add support for more than 5 colors
         colors = ['skyblue', 'darkseagreen', 'palevioletred', 'coral', 'darkgray']
         return colors[Misc.random_number(0, max-1)]
+
+    @staticmethod
+    def is_number(value):
+        try:
+            int(value)
+            return True
+        except:
+            pass
+        return False
 
     @staticmethod
     def json_dumps(target, message=None):
