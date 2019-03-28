@@ -1,3 +1,5 @@
+from pbx_gs_python_utils.utils.Lambdas_Helpers import slack_message
+
 from api_jira.API_Jira_Rest import API_Jira_Rest
 from api_jira.API_Jira      import API_Jira
 from gs.API_Issues          import API_Issues
@@ -17,6 +19,8 @@ class API_Jira_Sheets_Sync:
         self._sheet_name_backup = None
         self._sheet_id          = None
         self._sheet_id_backup   = None
+        self.slack_team_id      = None
+        self.slack_channel      = None
         self.file_id            = file_id
         self.sheet_title        = 'Jira Data'
         self.backup_sheet_title = 'original_jira_data'
@@ -25,6 +29,7 @@ class API_Jira_Sheets_Sync:
         self.elastic_secret_id  = 'elastic-jira-dev-2'
         if not self.gsuite_secret_id:
             self.gsuite_secret_id = 'gsuite_gsbot_user'
+
 
     # Helper methods
     def elastic(self):
@@ -79,6 +84,18 @@ class API_Jira_Sheets_Sync:
                 self._sheet_id_backup = sheets.get(self.backup_sheet_title).get('sheetId')
         return self._sheet_id_backup
 
+    def set_slack_support(self, team_id, channel):
+        self.slack_team_id = team_id
+        self.slack_channel = channel
+
+    def log_message(self, message):
+        Dev.pprint(message)
+        if self.slack_team_id and self.slack_channel:
+            slack_message(message, self.slack_team_id, self.slack_channel)
+        return message
+
+    def log_error(self, error):
+        return self.log_message(':red_circle: {0}'.format(error))
 
     # main methods
 
@@ -124,7 +141,7 @@ class API_Jira_Sheets_Sync:
             status = diff_cell.get('status')
             #if status == 'same'          : requests.append(self.gsheets().request_cell_set_background_color(sheet_id, col ,row, 0.5 ,1.0 ,0.5))
             if status == 'sheet_change'  : requests.append(self.gsheets().request_cell_set_background_color(sheet_id, col ,row, 1.0 ,0.5 ,0.5))
-            if status == 'jira_change'   : requests.append(self.gsheets().request_cell_set_background_color(sheet_id, col ,row, 0.5 ,0.5 ,1.0))
+            if status == 'jira_change'   : requests.append(self.gsheets().request_cell_set_background_color(sheet_id, col ,row, 1.0 ,0.5 ,0.5))
             if status == 'other'         : requests.append(self.gsheets().request_cell_set_background_color(sheet_id, col ,row, 0.5 ,0.5 ,0.5))
             if status == 'jira-save-ok'  : requests.append(self.gsheets().request_cell_set_background_color(sheet_id, col ,row, 0.0 ,0.5 ,0.5))
             if status == 'jira-save-fail': requests.append(self.gsheets().request_cell_set_background_color(sheet_id, col ,row, 1.0 ,0.0 ,0.0))
@@ -134,11 +151,15 @@ class API_Jira_Sheets_Sync:
     def diff_cells(self):
         sheet_data = self.get_sheet_data(self.sheet_name())
         backup_data = self.get_sheet_data(self.sheet_name_backup())
+        self.log_message("In API_Jira_Sheets_Sync.diff_cells: got sheet_data and backup_data")
         if backup_data is None:
-            Dev.pprint("Error: Backup data is not setup, please load the data again")
+            self.log_error("Error: Backup data is not setup, please load the data again")
             return None
         jira_issues = self.get_jira_issues_in_sheet_data(sheet_data)
-        return self.diff_sheet_data_with_jira_data(sheet_data, backup_data, jira_issues)
+        self.log_message("In API_Jira_Sheets_Sync.diff_cells: got {0} issues from Jira".format(len(jira_issues)))
+        diff_data = self.diff_sheet_data_with_jira_data(sheet_data, backup_data, jira_issues)
+        self.log_message("In API_Jira_Sheets_Sync.diff_cells: got {0} items in diff_data".format(len(diff_data)))
+        return diff_data
 
     def diff_sheet(self):
         diff_cells = self.diff_cells()
@@ -231,17 +252,19 @@ class API_Jira_Sheets_Sync:
         return "Error: no data for file_id: {0}".format(self.file_id)
 
     def sync_sheet(self):
+        self.log_message("In API_Jira_Sheets_Sync.sync_sheet")
         try:
             diff_cells = self.diff_cells()
             if diff_cells:
+                self.log_message("In API_Jira_Sheets_Sync.sync_sheet: about to sync_data_between_jira_and_sheet")
                 self.sync_data_between_jira_and_sheet(diff_cells)
+                self.log_message("In API_Jira_Sheets_Sync.sync_sheet: completed sync_data_between_jira_and_sheet")
                 return "sync data with Jira completed...."
-            return "Error, could not calculate diff_cells (try reloading the data)"
+            return self.log_error("Error, could not calculate diff_cells (try reloading the data)")
         except Exception as error:
-            return "Error in sync_sheet: {0}".format(error)
+            return self.log_error("Error in sync_sheet: {0}".format(error))
 
     def sync_data_between_jira_and_sheet(self,diff_cells):
-
         #fields_to_update = {}
         for item in diff_cells:
             status = item.get('status')
