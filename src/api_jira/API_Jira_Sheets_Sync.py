@@ -1,4 +1,4 @@
-from pbx_gs_python_utils.utils.Lambdas_Helpers import slack_message
+from utils.Lambdas_Helpers import slack_message
 
 from api_jira.API_Jira_Rest import API_Jira_Rest
 from api_jira.API_Jira      import API_Jira
