@@ -47,7 +47,7 @@ class API_Jira_Rest:
             fields[field.get('id')] = field
         return fields
 
-    def fields_by_name(self):
+    def fields_by_name(self):                                       #need to add local temp cache for this (since this is quite an expensive call
         fields = {}
         for field in Misc.json_load(self.request_get('field')):
             fields[field.get('name')] = field
@@ -111,9 +111,6 @@ class API_Jira_Rest:
         return issues
 
     def issue_update_field(self, issue_id, field,value):
-        #path = 'issue/{0}'.format(issue_id)
-        #data = { "update" : { field :  [{"set" : value} ] }}
-        #return self.request_put(path, data)
         return self.issue_update_fields(issue_id, {field:value})
 
     def issue_update_fields(self, issue_id, fields):
@@ -126,7 +123,7 @@ class API_Jira_Rest:
             if field:
                 field_id    = field.get('id')
                 schema_type = field.get('schema').get('type')
-
+                print(field_id, schema_type)
                 if   schema_type == 'option'   : data['update'][field_id] =[{"set": {'value': value }}]
                 elif schema_type == 'string'   : data['update'][field_id] = [{"set": value}]
                 elif schema_type == 'array'    : data['update'][field_id] = [{"set": value.split(',')}]
@@ -139,3 +136,13 @@ class API_Jira_Rest:
             Dev.pprint(data)
         return self.request_put(path, data)
 
+    def issue_status_available(self, issue_id):
+        items = {}
+        if issue_id:
+            path = 'issue/{0}/transitions'.format(issue_id)
+            data = self.request_get(path)
+            if data:
+                for transition in Misc.json_load(data).get('transitions'):
+                    to_data = transition.get('to')
+                    items[to_data.get('name')] = to_data.get('id')
+        return items

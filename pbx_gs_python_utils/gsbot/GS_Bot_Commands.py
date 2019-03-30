@@ -129,7 +129,7 @@ class GS_Bot_Commands:                                      # move to separate c
 
     @staticmethod
     def version(slack_event, params=[]):
-        return 'The current version of GSBot is v0.5',None
+        return 'The current version of GSBot is v0.51',None
 
     # @staticmethod
     # def reload_jira_lambda(slack_event=None, params=None):

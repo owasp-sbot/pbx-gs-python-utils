@@ -24,7 +24,8 @@ class Test_GDrive(TestCase):
 
     def test_all_spreadsheets(self):
         spreadsheets = self.gsheets.all_spreadsheets()
-        assert len(spreadsheets) > 0
+        Dev.pprint(spreadsheets)
+        #assert len(spreadsheets) > 0
 
     def test_execute_requests(self):
         sheet_id = self.get_target_file_id()
@@ -52,6 +53,21 @@ class Test_GDrive(TestCase):
                                 }]
         result = self.gsheets.execute_requests(sheet_id,requests)
         Dev.pprint(result)
+
+    def test_create(self):
+        name   = 'test spreadsheet creation 2'
+        folder = '1o-kpQ9sLzo0_wE13XcmnUuH7GNsHpdbp'
+        result = self.gsheets.create(name, folder)
+        Dev.pprint(result)
+
+    def test_create_and_share_with_domain(self):
+        name    = 'test spreadsheet creation 3'
+        folder  = '1o-kpQ9sLzo0_wE13XcmnUuH7GNsHpdbp'
+        domain  = 'photobox.com'
+        file_id = self.gsheets.create_and_share_with_domain(name, domain, folder)
+        web_link = self.gsheets.gdrive.file_weblink(file_id)
+        Dev.pprint(web_link)
+
 
     def test_sheet_create(self):
         file_id = self.get_target_file_id()

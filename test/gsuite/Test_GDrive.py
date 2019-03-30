@@ -47,7 +47,10 @@ class Test_GDrive(TestCase):
         result = self.gdrive.file_update(file,'image/png',id)
         Dev.pprint(result)
 
-
+    def test_file_share_with_domain(self):
+        file_id = '1BvhH00qomATK6YFB3afQwe2GJeS_VLdikhuPdAE0ev0'
+        result = self.gdrive.file_share_with_domain(file_id, 'owasp.org')
+        Dev.pprint(result)
 
     def test_file_upload(self):
         #file   = '/tmp/puml_graph_W64.png'

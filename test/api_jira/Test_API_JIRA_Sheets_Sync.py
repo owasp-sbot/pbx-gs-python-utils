@@ -14,7 +14,7 @@ class Test_API_Jira_Sheets_Sync(TestCase):
         #self.file_id  = '1_Bwz6z34wALFGb1ILUXG8CtF1-Km6F9_sGXnAu4gewY'
         self.file_id = '1eQbkiTexDq_LKGqYRdzs1i4sfYq_2lef8SbtKvFqbtQ'
         self.api_sync = API_Jira_Sheets_Sync(self.file_id)
-
+        self.api_sync.set_slack_support('T7F3AUXGV', 'DDKUZTK6X')
 
     def test_jira__gsheets(self):
         Dev.pprint(self.api_sync.jira())
@@ -22,6 +22,12 @@ class Test_API_Jira_Sheets_Sync(TestCase):
 
     def test_elastic(self):
         Dev.pprint(self.api_sync.elastic().elastic.index_list())
+
+    def test_message(self):
+        self.api_sync.log_message("test message from unit test")
+
+    def test_error(self):
+        self.api_sync.log_error("test error from unit test")
 
     def test_sheet_name_backup(self):
         Dev.pprint(self.api_sync.sheet_name_backup())
@@ -109,8 +115,9 @@ class Test_API_Jira_Sheets_Sync(TestCase):
 
     def test_create_sheet_from_graph(self):
         graph_name = 'graph_Y3Y'
-        self.api_sync.file_id =  '13YcCCtqCPLeXQ4xb7rDtc4zJvySJ8EANpbY8I2tYQzw'
-        result = self.api_sync.create_sheet_from_graph(graph_name)
+        folder = '1o-kpQ9sLzo0_wE13XcmnUuH7GNsHpdbp'
+        domain = 'photobox.com'
+        result = self.api_sync.create_sheet_from_graph(graph_name, domain, folder)
         Dev.pprint(result)
 
     def test_load_data_from_jira(self): Dev.pprint(self.api_sync.load_data_from_jira())
@@ -123,4 +130,14 @@ class Test_API_Jira_Sheets_Sync(TestCase):
 
 
 
+    def test_bug__error_loading_sheet(self):
+        #self.file_id = '1eQbkiTexDq_LKGqYRdzs1i4sfYq_2lef8SbtKvFqbtQ'
+        self.api_sync.file_id = '1xIeV2eQb59EsiJoOUB1yOK3FY2LCvzMmTgvhAVXlEEI' # 'NoneType' object is not iterable
 
+        Dev.pprint(self.api_sync.load_data_from_jira())
+
+
+
+    def test_bug__error__sync_sheet(self):
+        self.api_sync.file_id = '1MHU2Av4tI0FaktjWjbIpFH_zwb-804CAn-MQLuqaq1A'  # Error processing command `sync_sheet`: _JSONDecodeError('Expecting value: line 1 column 1 (char 0)',)_
+        Dev.pprint(self.api_sync.sync_sheet())

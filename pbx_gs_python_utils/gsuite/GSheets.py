@@ -13,6 +13,18 @@ class GSheets:
         body = {'requests': requests}
         return self.execute(self.spreadsheets.batchUpdate(spreadsheetId=file_id, body=body))
 
+    def create(self, title, folder=None):
+        return self.gdrive.file_create("application/vnd.google-apps.spreadsheet", title, folder)
+
+    def create_and_share_with_domain(self, title, domain, folder=None):
+        file_id = self.gdrive.file_create("application/vnd.google-apps.spreadsheet", title, folder)
+        self.gdrive.file_share_with_domain(file_id, domain)
+        return file_id
+
+
+        #return self.execute(self.spreadsheets.create( body=body))
+
+
     def execute(self,command):
         return self.gdrive.execute(command)
 
