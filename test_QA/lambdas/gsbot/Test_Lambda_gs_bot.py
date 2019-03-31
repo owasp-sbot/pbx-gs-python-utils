@@ -1,8 +1,8 @@
 import unittest
 
-from pbx_gs_python_utils.lambdas.gsbot.lambda_gs_bot import run
-from   pbx_gs_python_utils.utils.Dev        import *
-from   pbx_gs_python_utils.utils.aws.Lambdas import Lambdas
+from    pbx_gs_python_utils.lambdas.gsbot.lambda_gs_bot import run
+#from   pbx_gs_python_utils.utils.Dev        import *
+from    pbx_gs_python_utils.utils.aws.Lambdas import Lambdas
 
 
 class test_lambda_gs_bot(unittest.TestCase):

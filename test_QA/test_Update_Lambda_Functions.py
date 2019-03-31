@@ -11,9 +11,11 @@ class test_Update_Lambda_Functions(TestCase):
         self.update = Update_Lambda_Functions()
 
     def test_update_lambda_functions(self):
+        print('\n\n')
         slack_message(':zero: in test_update_lambda_functions',[],'GDL2EC3EE')
         result      = self.update.update_lambda_functions()
         text        = ":building_construction: pbx_gs_python_utils.update_lambda_functions:"
         attachments = [ { 'text': json.dumps(result,indent=4) , 'color':'good'}]
         slack_message(text,attachments,'GDL2EC3EE')  #gs-bot-tests
         slack_message(':one: finished test_update_lambda_functions',[],'GDL2EC3EE')
+        print('\n\n')
