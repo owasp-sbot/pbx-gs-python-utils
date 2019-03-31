@@ -11,18 +11,9 @@ class test_Update_Lambda_Functions(TestCase):
         self.update = Update_Lambda_Functions()
 
     def test_update_lambda_functions(self):
-        Dev.pprint(':zero: in test_update_lambda_functions')
-        result = self.update.update_lambda_functions()
-
-        Dev.pprint(result)
-        text = ":building_construction: pbx_gs_python_utils.update_lambda_functions:"
+        slack_message(':zero: in test_update_lambda_functions',[],'GDL2EC3EE')
+        result      = self.update.update_lambda_functions()
+        text        = ":building_construction: pbx_gs_python_utils.update_lambda_functions:"
         attachments = [ { 'text': json.dumps(result,indent=4) , 'color':'good'}]
         slack_message(text,attachments,'GDL2EC3EE')  #gs-bot-tests
-
-        Dev.pprint(':one: finished test_update_lambda_functions')
-        #Dev.pprint(result)
-
-    #
-    # def test_healthcheck_gs_elastic_jira(self):
-    #     Dev.pprint(self.update.healthcheck_gs_elastic_jira())
-
+        slack_message(':one: finished test_update_lambda_functions',[],'GDL2EC3EE')
