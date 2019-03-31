@@ -1,10 +1,8 @@
 
-
-# this Lambda function is triggered by this API GW method https://545ojrb6r0.execute-api.eu-west-2.amazonaws.com/dev/event-handler
-from gsbot.API_GS_Bot import API_GS_Bot, log_debug
-
-
 def run(data, context):
+    # this Lambda function is triggered by this API GW method https://545ojrb6r0.execute-api.eu-west-2.amazonaws.com/dev/event-handler
+    from pbx_gs_python_utils.gsbot.API_GS_Bot import API_GS_Bot, log_debug
+
     #log_debug("Message received from /dev/event-handler API GW: {0}".format(data) , category='gs_bot')
     try:
         if "challenge" in data:              # required for Slack event check

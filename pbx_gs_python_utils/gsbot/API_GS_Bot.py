@@ -1,7 +1,9 @@
-from    gsbot.GS_Bot_Commands import GS_Bot_Commands
-from    utils.aws.secrets     import Secrets
-from    utils.aws.Lambdas     import Lambdas
-from    utils.Dev             import *
+import json
+
+from    pbx_gs_python_utils.gsbot.GS_Bot_Commands import GS_Bot_Commands
+from    pbx_gs_python_utils.utils.aws.secrets     import Secrets
+from    pbx_gs_python_utils.utils.aws.Lambdas     import Lambdas
+from    pbx_gs_python_utils.utils.Dev             import Dev
 import  ssl
 import  urllib
 

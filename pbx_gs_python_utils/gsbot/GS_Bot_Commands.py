@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from utils.Lambdas_Helpers       import slack_message
-from utils.aws.Lambdas           import Lambdas
+from pbx_gs_python_utils.utils.Lambdas_Helpers       import slack_message
+from pbx_gs_python_utils.utils.aws.Lambdas           import Lambdas
 
 
 class GS_Bot_Commands:                                      # move to separate class
