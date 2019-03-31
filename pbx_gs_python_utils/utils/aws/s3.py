@@ -7,7 +7,7 @@ from   gzip import GzipFile
 from   botocore.errorfactory import ClientError
 from   urllib.parse          import urlparse
 
-from utils.Files import Files
+from    pbx_gs_python_utils.utils.Files import Files
 
 
 class S3:

@@ -1,12 +1,12 @@
 import shutil
 import sys
 
-from utils.Files import Files
-from    utils.aws.Aws_Cli   import Aws_Cli
+from    pbx_gs_python_utils.utils.Files         import Files
+from    pbx_gs_python_utils.utils.aws.Aws_Cli   import Aws_Cli
 from    distutils.dir_util  import copy_tree
 from    os.path             import join,abspath
 
-from utils.aws.s3 import S3
+from    pbx_gs_python_utils.utils.aws.s3 import S3
 
 
 class Lambdas:

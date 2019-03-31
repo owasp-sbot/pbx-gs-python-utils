@@ -1,6 +1,6 @@
 import sys
 sys.path.append('.')
-from utils.aws.Lambdas import Lambdas
+from pbx_gs_python_utils.utils.aws.Lambdas import Lambdas
 
 
 def log_to_elk(message, data = None, index = "gs_bot_logs", level = "debug", category = "API_GS_Bot"):
