@@ -1,14 +1,17 @@
 import sys
+import unittest
+
 sys.path.append('..')
 
-import unittest
-from pbx_gs_python_utils.utils.Misc import Misc
-from pbx_gs_python_utils.utils.slack.API_Slack import API_Slack
-from pbx_gs_python_utils.utils.Dev import Dev
+from pbx_gs_python_utils.utils.aws.Lambdas      import load_dependency
+from pbx_gs_python_utils.utils.Misc             import Misc
+from pbx_gs_python_utils.utils.slack.API_Slack  import API_Slack
+from pbx_gs_python_utils.utils.Dev              import Dev
 
 class test_API_Slack(unittest.TestCase):
 
     def setUp(self):
+        load_dependency('slack')
         self.channel = 'GDL2EC3EE' #''gs-bot-tests'
         self.api     = API_Slack(self.channel)
 
