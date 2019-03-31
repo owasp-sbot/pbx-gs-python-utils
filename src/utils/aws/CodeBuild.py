@@ -43,6 +43,7 @@ class CodeBuild:
             sleep(sleep_for)
         return None
 
+
     def policies_create(self):
         policies = {
             "CodeBuildBasePolicy" : {
@@ -176,8 +177,8 @@ class CodeBuild:
         return self.project_name in self.projects()
 
 
-    def project_info(self, project_name):
-        projects = Misc.get_value(self.codebuild.batch_get_projects(names=[project_name]),'projects',[])
+    def project_info(self):
+        projects = Misc.get_value(self.codebuild.batch_get_projects(names=[self.project_name]),'projects',[])
         return Misc.array_pop(projects,0)
 
     def project_builds_ids(self, project_name, use_paginator=False):

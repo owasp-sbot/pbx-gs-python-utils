@@ -84,7 +84,7 @@ class Test_CodeBuild(TestCase):
         assert len(list(self.code_build.project_builds_ids('pbx-group-security-site', True)))  > 1200
 
     def test_project_info(self):
-        project = self.code_build.project_info(project_name)
+        project = self.code_build.project_info()
         (
             Assert(project).field_is_equal('arn'        , project_arn )
                            .field_is_equal('name'       , project_name)
