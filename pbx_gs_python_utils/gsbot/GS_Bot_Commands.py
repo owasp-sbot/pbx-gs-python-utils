@@ -3,6 +3,7 @@ from datetime import datetime
 from pbx_gs_python_utils.utils.Lambdas_Helpers       import slack_message
 from pbx_gs_python_utils.utils.aws.Lambdas           import Lambdas
 
+gsbot_version = 'v0.52'
 
 class GS_Bot_Commands:                                      # move to separate class
     @staticmethod
@@ -129,7 +130,8 @@ class GS_Bot_Commands:                                      # move to separate c
 
     @staticmethod
     def version(slack_event, params=[]):
-        return 'The current version of GSBot is v0.51',None
+        return 'The current version of GSBot is {0}'.format(gsbot_version),None
+
 
     # @staticmethod
     # def reload_jira_lambda(slack_event=None, params=None):
