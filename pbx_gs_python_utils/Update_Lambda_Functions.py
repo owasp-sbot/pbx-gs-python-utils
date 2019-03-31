@@ -13,6 +13,7 @@ class Update_Lambda_Functions:
     def update_lambda_functions(self):
 
         targets = [
+                    'pbx_gs_python_utils.lambdas.gsbot.lambda_gs_bot'     # lambda_gs_bot API_GS_Bot GS_Bot_Commands
                     'pbx_gs_python_utils.lambdas.utils.slack_message'     # slack_message API_Slack
                    ]
         result = []
