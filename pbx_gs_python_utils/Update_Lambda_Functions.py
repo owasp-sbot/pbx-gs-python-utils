@@ -5,7 +5,7 @@ class Update_Lambda_Functions:
 
     def update_lambda_function(self, name):
         try:
-            Lambdas(name).update_with_src()
+            Lambdas(name).update_with_lib()
             return { 'status':'ok' , 'name': name}
         except Exception as error:
             return { 'status':'error' , 'name': name, 'details': '{0}'.format(error)}
@@ -14,7 +14,7 @@ class Update_Lambda_Functions:
 
         targets = [
                     'pbx_gs_python_utils.lambdas.utils.slack_message'     # slack_message API_Slack
-                  ]
+                   ]
         result = []
         for target in targets:
             result.append(self.update_lambda_function(target))
