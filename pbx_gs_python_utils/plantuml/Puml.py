@@ -1,5 +1,6 @@
 from plantuml.API_Plant_UML import API_Plant_UML
 from utils.Files import Files
+from utils.Misc import Misc
 
 
 class Puml:
@@ -12,20 +13,25 @@ class Puml:
                                      "node"    , "package"  , "queue"     , "stack"   , "rectangle" , "storage" , "usecase"   ]
         self.available_directions = ['up', 'down','left','right']
         self.on_add_node           = None
-        self.on_add_edge          = None
+        self.on_add_edge           = None
+        self.max_title             = 40
 
     def add_card     (self, title, id = None) : return self.add_node("card", title, id)
+    def add_cloud    (self, title, id = None) : return self.add_node("cloud", title, id)
     def add_actor    (self, title, id = None) : return self.add_node("actor", title, id)
     def add_interface(self, title, id = None) : return self.add_node("interface", title, id)
 
     def add_node(self, element, title, id = None):
-        id = self.fix_id(id)
+
+        title = Misc.word_wrap_escaped(title, self.max_title)
 
         if self.on_add_node:                                                      # if self.on_add_element is set, then use it for the node render bit
-            self.puml += "\t{0} \n".format(self.on_add_node(element,title,id))
+            puml_to_add = self.on_add_node(element,title,self.fix_id(id),id)
+            if puml_to_add:
+                self.puml += "\t{0} \n".format(puml_to_add)
         else:
             if id:
-                self.puml += '\t{0} "{1}" as {2} \n'.format(element, title, id)
+                self.puml += '\t{0} "{1}" as {2} \n'.format(element, title, self.fix_id(id))
             else:
                 self.puml += '\t{0} "{1}"\n'        .format(element, title)
         return self
@@ -49,7 +55,7 @@ class Puml:
 
     def fix_id(self, id):
         if id:
-            return id.replace(' ','_').replace('-','_')
+            return id.replace(' ','_').replace('-','_').replace(':','_').replace('/','_').replace('(','_').replace(')','_')
 
     def png(self, path = None):
         if path:
@@ -80,7 +86,7 @@ class Puml:
     # other util method to be used during developemt
 
     def _dev_send_to_slack(self):
-        from utils.slack.API_Slack import API_Slack
+        from pbx_gs_python_utils.utils.slack.API_Slack import API_Slack
         API_Slack().puml_to_slack(self.puml)
 
 

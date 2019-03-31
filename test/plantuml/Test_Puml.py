@@ -1,9 +1,7 @@
 import random
 import unittest
 
-from plantuml.Puml import Puml
-from utils.Dev                   import Dev
-from utils.Files import Files
+from pbx_gs_python_utils.plantuml.Puml import Puml
 
 
 class Test_Puml(unittest.TestCase):

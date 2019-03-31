@@ -1,4 +1,4 @@
-from plantuml.Puml import Puml
+from pbx_gs_python_utils.plantuml.Puml import Puml
 
 
 class Puml_Table(Puml):
