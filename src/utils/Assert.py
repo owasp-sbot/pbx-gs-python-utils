@@ -14,6 +14,11 @@ class Assert:
     def contains(self, text):
         assert text in self.target
 
+    def field_is_equal(self, field_name, expected_value=None):
+        field_value = self.target.get(field_name)
+        assert  field_value == expected_value , "{0} != {1}".format(field_value, expected_value)
+        return self
+
     def is_bigger_than(self, value):
         if type(self.target) is list:
             list_len = len(self.target)
