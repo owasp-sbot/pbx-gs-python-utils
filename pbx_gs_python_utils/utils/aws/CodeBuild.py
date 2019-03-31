@@ -161,7 +161,18 @@ class CodeBuild:
                                                         "Resource": "arn:aws:lambda:*:*:function:*"
                                                     }
                                                 ]
-                                            }
+                                            },
+                "Pass_Role": {
+                                "Version": "2012-10-17",
+                                "Statement": [{
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "iam:GetRole",
+                                        "iam:PassRole"
+                                    ],
+                                    "Resource": "arn:aws:iam::244560807427:role/lambda_with_s3_access"
+                                }]
+                            }
             }
 
         for base_name, policy in policies.items():
