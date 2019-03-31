@@ -43,8 +43,10 @@ class Aws_Cli:
         slack_message(':zero: checking if lambda exists: {0}'.format(name),[],'GDL2EC3EE')
         try:
             self.aws_lambda.get_function(FunctionName=name)
+            slack_message(':one: it exists' , [], 'GDL2EC3EE')
             return True
         except Exception:
+            slack_message(':one: it DOESNT exists', [], 'GDL2EC3EE')
             return False
 
         #
