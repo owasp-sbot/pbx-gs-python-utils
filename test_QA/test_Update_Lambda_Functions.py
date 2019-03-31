@@ -1,9 +1,8 @@
 import json
 import sys
-
 sys.path.append('..')
 from unittest import TestCase
-
+from pbx_gs_python_utils.utils.Dev import Dev
 from pbx_gs_python_utils.utils.Lambdas_Helpers   import slack_message
 from pbx_gs_python_utils.Update_Lambda_Functions import Update_Lambda_Functions
 
@@ -12,7 +11,7 @@ class test_Update_Lambda_Functions(TestCase):
         self.update = Update_Lambda_Functions()
 
     def test_update_lambda_functions(self):
-
+        Dev.pprint('in test_update_lambda_functions')
         result = self.update.update_lambda_functions()
 
         Dev.pprint(result)
