@@ -1,6 +1,6 @@
-from utils.aws.secrets import Secrets
-from slackclient       import SlackClient
-from utils.aws.Lambdas import Lambdas
+from slackclient                           import SlackClient
+from pbx_gs_python_utils.utils.aws.secrets import Secrets
+from pbx_gs_python_utils.utils.aws.Lambdas import Lambdas
 
 
 class API_Slack:
@@ -54,7 +54,6 @@ class API_Slack:
 
     def get_messages(self,channel,limit=10):
         messages = self.slack.api_call("conversations.history", channel=channel, limit=limit).get('messages')
-        Dev.pprint(messages)
         return [message.get('text') for message in messages]
 
     def send_message(self, text, attachments = [], channel = None):

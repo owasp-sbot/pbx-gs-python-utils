@@ -1,11 +1,12 @@
+import sys
+sys.path.append('..')
+
 import unittest
+from pbx_gs_python_utils.utils.Misc import Misc
+from pbx_gs_python_utils.utils.slack.API_Slack import API_Slack
+from pbx_gs_python_utils.utils.Dev import Dev
 
-from utils.Misc import Misc
-from utils.aws.secrets import Secrets
-from utils.slack.API_Slack import API_Slack
-from utils.Dev import Dev
-
-class Test_API_Slack(unittest.TestCase):
+class test_API_Slack(unittest.TestCase):
 
     def setUp(self):
         self.channel = 'GDL2EC3EE' #''gs-bot-tests'
@@ -24,19 +25,18 @@ class Test_API_Slack(unittest.TestCase):
 
     def test_channels_private(self):
         channels = self.api.channels_private()
-        assert set(channels) == {'from-aws-lambda', 'gs-bot-tests', 'gs-cst-aws-coding', 'lan-turtle'}
-        assert channels['gs-bot-tests']['id'] == 'GDL2EC3EE'
+        assert 'gs-bot-tests' in list(set(channels))
 
     def test_delete_message(self):
         reply_send   = self.api.send_message('to delete 123')      # send message
         ts           = reply_send['message']['ts']                 # get timestamp of message posted
-        reply_delete = self.api.delete_message(ts, self.channel)   # delete message
+        reply_delete = self.api.delete_message(ts)                 # delete message
         assert reply_delete['ok'] is True
         assert reply_delete['ts'] == ts
 
     def test_get_channel(self):
         response = self.api.get_channel('DDKUZTK6X')
-        Dev.pprint(response)
+        assert response.get('error') == 'method_not_supported_for_channel_type'
 
     def test_get_messages(self):
         assert len(self.api.get_messages('DDKUZTK6X')) == 10
@@ -46,14 +46,11 @@ class Test_API_Slack(unittest.TestCase):
         result = self.api.send_message(text)
         del result['message']['ts']
         assert result['ok'] is True
-
-        Dev.pprint(result['message'])
-        assert result['message'] == {   'attachments': []                 ,
-                                        'bot_id'     : 'BDKLUMX4K'        ,
-                                        'subtype'    : 'bot_message'      ,
-                                        'text'       : text               ,
-                                        'type'       : 'message'          ,
-                                        'username'   : 'gs-bot'           }
+        assert result['message'] == {   'bot_id'  : 'BDKLUMX4K'            ,
+                                        'subtype' : 'bot_message'          ,
+                                        'text'    : 'testing api_slack 123',
+                                        'type'    : 'message'              ,
+                                        'username': 'gs-bot'               }
 
     def test_user(self):
         user_id = 'UDK5W7W3T'
@@ -62,19 +59,18 @@ class Test_API_Slack(unittest.TestCase):
 
     def test_users(self):
         users = self.api.users()
-        Dev.pprint(len(set(users)))
         assert len(set(users)) > 120
         assert users['dinis.cruz']['id'] == 'U7ESE1XS7'
         assert users['gsbot'     ]['id'] == 'UDK5W7W3T'
 
-        #Dev.pprint(users)
 
-
+    @unittest.skip('sends message do gsbot user and not a dedicated channel')
     def test_send_and_receive_messages(self):
-        result = self.api.send_message('<@UDK5W7W3T> hello', channel='DDKUZTK6X')
-        Misc.wait(1)
+        message_ts = self.api.send_message('<@UDK5W7W3T> hello', channel='DDKUZTK6X').get('message').get('ts')
+        #Misc.wait(0.1)
         messages = self.api.get_messages(channel='DDKUZTK6X',limit=2)
-        Dev.pprint(messages)
+        assert messages == ['<@UDK5W7W3T> hello', '<@UDK5W7W3T> hello']
+        self.api.delete_message(message_ts)                                 # doesn't seem to be working
 
 
     ## Buttons and interaction
@@ -204,9 +200,9 @@ class Test_API_Slack(unittest.TestCase):
 
     ## test using the API
 
-    def test___send_message_to_gsbot(self):
-        #self.api.channel = 'UDK5W7W3T'  # gs bot
-        response = self.api.send_message("<@/jira>")
-        Dev.pprint(response)
+    #def test___send_message_to_gsbot(self):
+    #    #self.api.channel = 'UDK5W7W3T'  # gs bot
+    #    response = self.api.send_message("<@/jira>")
+    #    Dev.pprint(response)
 
 
