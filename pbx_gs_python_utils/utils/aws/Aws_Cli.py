@@ -39,17 +39,10 @@ class Aws_Cli:
         #
 
     def lambda_function_exists      (self, name                                                                 ):
-        from pbx_gs_python_utils.utils.Lambdas_Helpers import slack_message
-        slack_message(':zero: checking if lambda exists...: {0}'.format(name),[],'GDL2EC3EE')
-
-        self.aws_lambda.get_function(FunctionName=name)
-
         try:
             self.aws_lambda.get_function(FunctionName=name)
-            slack_message(':one: it exists' , [], 'GDL2EC3EE')
             return True
         except Exception:
-            slack_message(':one: it DOESNT exists', [], 'GDL2EC3EE')
             return False
 
         #

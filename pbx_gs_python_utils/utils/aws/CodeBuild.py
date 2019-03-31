@@ -151,24 +151,13 @@ class CodeBuild:
                                                     }
                                                 ]
                                             },
-                "Create_Lambda_Functions": {
+                "Create_Update_Lambda_Functions": {
                                                 "Version": "2012-10-17",
                                                 "Statement": [
                                                     {
                                                         "Sid": "VisualEditor0",
                                                         "Effect": "Allow",
-                                                        "Action": "lambda:CreateFunction",
-                                                        "Resource": "arn:aws:lambda:*:*:function:*"
-                                                    }
-                                                ]
-                                            },
-                "List_Lambda_Functions": {
-                                                "Version": "2012-10-17",
-                                                "Statement": [
-                                                    {
-                                                        "Sid": "VisualEditor0",
-                                                        "Effect": "Allow",
-                                                        "Action": "lambda:ListFunctions",
+                                                        "Action": ["lambda:ListFunctions","lambda:GetFunction","lambda:CreateFunction","lambda:UpdateFunctionCode"],
                                                         "Resource": "arn:aws:lambda:*:*:function:*"
                                                     }
                                                 ]
@@ -185,9 +174,11 @@ class CodeBuild:
                                 }]
                             }
             }
-
+        role_policies = list(self.iam.role_policies().keys())
         for base_name, policy in policies.items():
             policy_name = "{0}-{1}".format(base_name, self.project_name)
+            if policy_name in role_policies:
+                continue
             if self.iam.policy_info(policy_name) is None:
                 self.iam.policy_create(policy_name, policy)
             policy_arn = self.iam.policy_info(policy_name).get('Arn')
