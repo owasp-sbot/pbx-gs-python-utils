@@ -1,10 +1,10 @@
-from unittest                   import TestCase
+from unittest import TestCase
 
-from utils.slack.API_Slack_Attachment import API_Slack_Attachment
-from utils.Lambdas_Helpers      import slack_message
-from utils.aws.Lambdas          import Lambdas
+from pbx_gs_python_utils.utils.slack.API_Slack_Attachment import API_Slack_Attachment
+from pbx_gs_python_utils.utils.Lambdas_Helpers            import slack_message
+from pbx_gs_python_utils.utils.aws.Lambdas                import Lambdas
 
-class Test_API_Slack_Attachment(TestCase):
+class test_API_Slack_Attachment(TestCase):
 
     def setUp(self):
         self.api = API_Slack_Attachment()

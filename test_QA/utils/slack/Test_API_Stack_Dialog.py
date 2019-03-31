@@ -1,12 +1,13 @@
 from unittest                   import TestCase
 
-from utils.slack.API_Slack_Attachment import API_Slack_Attachment
-from utils.slack.API_Slack_Dialog import API_Slack_Dialog
-from utils.Lambdas_Helpers      import slack_message
-from utils.aws.Lambdas import Lambdas
+from pbx_gs_python_utils.utils.Dev import Dev
+from pbx_gs_python_utils.utils.slack.API_Slack_Attachment   import API_Slack_Attachment
+from pbx_gs_python_utils.utils.slack.API_Slack_Dialog       import API_Slack_Dialog
+from pbx_gs_python_utils.utils.Lambdas_Helpers              import slack_message
+from pbx_gs_python_utils.utils.aws.Lambdas                  import Lambdas
 
 
-class Test_API_Slack_Dialog(TestCase):
+class test_API_Slack_Dialog(TestCase):
 
     def setUp(self):
         self.api_attach = API_Slack_Attachment()
@@ -14,19 +15,17 @@ class Test_API_Slack_Dialog(TestCase):
 
 
     def test__update_lambda(self):
-        Lambdas('gs.jira_dialog').update()
+        Lambdas('gs.jira_dialog').update_with_src()
 
     def test____update_Lambda_Slack_Integration(self):
-        from utils.aws.Lambdas import Lambdas
-        path_libs = '../_lambda_dependencies/elastic-slack'
-        self.jira_issues = Lambdas('gs.slack_interaction', path_libs=path_libs).update()
+        self.jira_issues = Lambdas('gs.slack_interaction').update_with_src()
 
     def test_test_render(self):
         dialog = self.api_dialog.test_render()
-        #Dev.pprint(dialog)
+        dialog.get('title') == 'This is a test'
 
     def test__create_button_to_test_dialog(self):
-        Lambdas('gs.jira_dialog').update()
+        #Lambdas('gs.jira_dialog').update_with_src()
 
         self.api_attach.set_text       ('Click on button below to test dialog'    ) \
                        .set_callback_id("button-dialog-test"                      ) \
