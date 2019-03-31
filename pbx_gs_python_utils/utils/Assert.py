@@ -1,6 +1,6 @@
 import re
 
-from utils.Misc import Misc
+from pbx_gs_python_utils.utils.Misc import Misc
 
 
 class Assert:

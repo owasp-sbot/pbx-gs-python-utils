@@ -1,8 +1,8 @@
 import  boto3
-from    time            import sleep
-from    utils.Dev       import Dev
-from    utils.Misc      import Misc
-from pbx_gs_python_utils.utils.aws.IAM import IAM
+from    time                                import sleep
+from    pbx_gs_python_utils.utils.Dev       import Dev
+from    pbx_gs_python_utils.utils.Misc      import Misc
+from    pbx_gs_python_utils.utils.aws.IAM   import IAM
 
 
 class CodeBuild:
@@ -137,6 +137,17 @@ class CodeBuild:
                                                             "secretsmanager:ListSecretVersionIds"
                                                         ],
                                                         "Resource": "arn:aws:secretsmanager:*:*:secret:*"
+                                                    }
+                                                ]
+                                            },
+                "Invoke_Lambda_Functions": {
+                                                "Version": "2012-10-17",
+                                                "Statement": [
+                                                    {
+                                                        "Sid": "VisualEditor0",
+                                                        "Effect": "Allow",
+                                                        "Action": "lambda:InvokeFunction",
+                                                        "Resource": "arn:aws:lambda:*:*:function:*"
                                                     }
                                                 ]
                                             }
