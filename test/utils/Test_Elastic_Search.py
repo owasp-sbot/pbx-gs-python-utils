@@ -1,7 +1,7 @@
 import unittest
 
 from utils.Dev import Dev
-from utils.Elastic_Search import *
+from pbx_gs_python_utils.utils.Elastic_Search import *
 
 
 class Test_Elastic_Search(unittest.TestCase):

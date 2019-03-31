@@ -7,6 +7,11 @@ from    requests.auth import HTTPBasicAuth
 
 from utils.aws.secrets import Secrets
 
+#note the max query value in the search has been increased from 10000 to 100000 (which will need to be done on any new ES Install)
+# PUT _all/_settings
+# {
+# "index.max_result_window" : "100000"
+# }
 
 class Elastic_Search:
     def __init__(self, index = 'iis-logs-', aws_secret_id = None):
@@ -19,7 +24,6 @@ class Elastic_Search:
         if index and aws_secret_id:
             self._setup_Elastic_on_cloud_via_AWS_Secret(index, aws_secret_id)
 
-
     def _setup_Elastic_on_localhost(self):
         self.host   = 'localhost'
         self.port   = 9200
@@ -28,12 +32,12 @@ class Elastic_Search:
 
     def _setup_Elastic_on_cloud_via_AWS_Secret(self,index, secret_id):
         credentials = json.loads(Secrets(secret_id).value())
-        self.host        = credentials['host']
-        self.username    = credentials['username']
-        self.password    = credentials['password']
-        self.port        = credentials['port']
+        host        = credentials['host']
+        username    = credentials['username']
+        password    = credentials['password']
+        port        = credentials['port']
         self.index  = index
-        self._setup_Elastic_on_cloud(self.host, self.port, self.username, self.password)
+        self._setup_Elastic_on_cloud(host, port, username, password)
         return self
 
     def _setup_Elastic_on_cloud(self, host, port, username, password):
@@ -57,7 +61,7 @@ class Elastic_Search:
             else:
                 return self.es.index(index=self.index, doc_type='item', body=data)
         except Exception as error:
-            print("elk-error", error)
+            print(error)
             return {"elk-error": "{0}".format(error)}
 
     def add_bulk(self, data, id_key = None, pipeline = None):
@@ -167,14 +171,19 @@ class Elastic_Search:
     def get_index_settings(self):
         url = 'https://{3}:{4}@{0}:{1}/{2}/_settings'.format(self.host, self.port, self.index, self.username, self.password)
         return json.loads(requests.get(url).text)
+    
+    def get_data_between_dates(self,field, from_date,to_date):
+        query = {"query": { "range": { field: { "gte": from_date,
+                                                "lt" : to_date     } }}}
+        return list(self.search_using_query(query))
 
-    def search_using_lucene(self, query, size=10000, sort = None):              # for syntax and examples of lucene queries see https://www.elastic.co/guide/en/elasticsearch/reference/6.4/query-dsl-query-string-query.html#query-string-syntax
+    def search_using_lucene(self, query, size=100000, sort = None):              # for syntax and examples of lucene queries see https://www.elastic.co/guide/en/elasticsearch/reference/6.4/query-dsl-query-string-query.html#query-string-syntax
         query = query.replace('“', '"').replace('”','"')                        # fix the quotes we receive from Slack
         results = self.es.search(index=self.index, q=query, size=size,sort = sort)
         for result in results['hits']['hits']:
             yield result['_source']
 
-    def search_using_lucene_index_by_id(self, query, size=10000, sort = None):  # for syntax and examples of lucene queries see https://www.elastic.co/guide/en/elasticsearch/reference/6.4/query-dsl-query-string-query.html#query-string-syntax
+    def search_using_lucene_index_by_id(self, query, size=100000, sort = None):  # for syntax and examples of lucene queries see https://www.elastic.co/guide/en/elasticsearch/reference/6.4/query-dsl-query-string-query.html#query-string-syntax
         query = query.replace('“', '"').replace('”','"')                        # fix the quotes we receive from Slack
         elk_results = self.es.search(index=self.index, q=query, size=size, sort= sort)
         results = {}
@@ -184,7 +193,7 @@ class Elastic_Search:
             results[id] = value
         return results
 
-    def search_using_lucene_sort_by_date(self, query, size=10000):              # for syntax and examples of lucene queries see https://www.elastic.co/guide/en/elasticsearch/reference/6.4/query-dsl-query-string-query.html#query-string-syntax
+    def search_using_lucene_sort_by_date(self, query, size=100000):              # for syntax and examples of lucene queries see https://www.elastic.co/guide/en/elasticsearch/reference/6.4/query-dsl-query-string-query.html#query-string-syntax
         query = query.replace('“', '"').replace('”','"')                        # fix the quotes we receive from Slack
         elk_results = self.es.search(index=self.index, q=query, size=size, sort= "date:desc")
         results = []
@@ -195,11 +204,10 @@ class Elastic_Search:
             results.append(item)
         return results
 
-    def search_using_query(self, query, size = 10000):
+    def search_using_query(self, query, size = 100000):
         results = self.es.search(index=self.index, body= query, size=size)
         for result in results['hits']['hits']:
             yield result['_source']
-
 
     def search_on_field_for_value(self, field, value, size=10000):
         query = {"query": {"match": { field : {"query": value}}}}
@@ -250,6 +258,8 @@ class Elastic_Search:
     def exists(self):
         return self.es.indices.exists(self.index)
 
+    def get_index(self):
+        return self.index
 
     def set_index(self, index):
         self.index = index

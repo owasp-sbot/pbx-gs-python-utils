@@ -1,6 +1,6 @@
 from plantuml.API_Plant_UML import API_Plant_UML
-from utils.Files import Files
-from utils.Misc import Misc
+from pbx_gs_python_utils.utils.Files import Files
+from pbx_gs_python_utils.utils.Misc import Misc
 
 
 class Puml:

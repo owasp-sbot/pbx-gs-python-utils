@@ -1,6 +1,6 @@
 import unittest
 
-from plantuml.Puml_Table import Puml_Table
+from pbx_gs_python_utils.plantuml.Puml_Table import Puml_Table
 
 class Test_Puml_Table(unittest.TestCase):
 

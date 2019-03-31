@@ -1,7 +1,6 @@
 import  datetime
 
-from utils.Dev import Dev
-from    utils.Elastic_Search import Elastic_Search
+from pbx_gs_python_utils.utils.Elastic_Search import Elastic_Search
 
 
 class Save_To_ELK():
