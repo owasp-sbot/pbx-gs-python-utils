@@ -1,4 +1,4 @@
-from plantuml.API_Plant_UML import API_Plant_UML
+from pbx_gs_python_utils.plantuml.API_Plant_UML import API_Plant_UML
 from pbx_gs_python_utils.utils.Files import Files
 from pbx_gs_python_utils.utils.Misc import Misc
 

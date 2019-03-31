@@ -125,7 +125,7 @@ class Test_API_Jira_Sheets_Sync(TestCase):
     def test_sync_sheet         (self): Dev.pprint(self.api_sync.sync_sheet         ())
 
     def test__lambda_update(self):
-        Lambdas('gs.elastic_jira').update_with_src()
+        Lambdas('pbx_gs_python_utils.lambdas.gs.elastic_jira').update_with_src()
 
 
 

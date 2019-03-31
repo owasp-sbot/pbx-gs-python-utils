@@ -1,17 +1,19 @@
 import  json
 import  datetime
 import  requests
-from    utils.Http import *
+
 from    elasticsearch import Elasticsearch, helpers, NotFoundError
 from    requests.auth import HTTPBasicAuth
-
-from utils.aws.secrets import Secrets
+from    pbx_gs_python_utils.utils.Http import *
+from    pbx_gs_python_utils.utils.aws.secrets import Secrets
 
 #note the max query value in the search has been increased from 10000 to 100000 (which will need to be done on any new ES Install)
 # PUT _all/_settings
 # {
 # "index.max_result_window" : "100000"
 # }
+from pbx_gs_python_utils.utils.Http import PUT, DELETE
+
 
 class Elastic_Search:
     def __init__(self, index = 'iis-logs-', aws_secret_id = None):
@@ -171,7 +173,7 @@ class Elastic_Search:
     def get_index_settings(self):
         url = 'https://{3}:{4}@{0}:{1}/{2}/_settings'.format(self.host, self.port, self.index, self.username, self.password)
         return json.loads(requests.get(url).text)
-    
+
     def get_data_between_dates(self,field, from_date,to_date):
         query = {"query": { "range": { field: { "gte": from_date,
                                                 "lt" : to_date     } }}}

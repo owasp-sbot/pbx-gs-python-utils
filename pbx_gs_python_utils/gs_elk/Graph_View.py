@@ -2,7 +2,7 @@ import json
 
 from pbx_gs_python_utils.gs_elk.GS_Graph import GS_Graph
 from pbx_gs_python_utils.gs_elk.Lambda_Graph import Lambda_Graph
-from utils.Lambdas_Helpers import slack_message
+from pbx_gs_python_utils.utils.Lambdas_Helpers import slack_message
 
 
 class Graph_View:

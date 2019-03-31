@@ -1,8 +1,8 @@
 import  datetime
 import pprint
 
-from    utils.aws.secrets import Secrets
-from pbx_gs_python_utils.utils.Elastic_Search import Elastic_Search
+from pbx_gs_python_utils.utils.aws.secrets      import Secrets
+from pbx_gs_python_utils.utils.Elastic_Search   import Elastic_Search
 
 class Log_To_Elk():
     _elastic_cache = None

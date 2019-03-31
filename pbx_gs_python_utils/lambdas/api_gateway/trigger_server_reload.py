@@ -11,7 +11,7 @@ def run(event, context):
     text = ":robot_face: In trigger_server_reload lambda function \n"
 
     payload = {"params": ["server", "reload"], "channel": channel, 'team_id': team_id}
-    result  = Lambdas('gs.elastic_jira').invoke(payload)
+    result  = Lambdas('pbx_gs_python_utils.lambdas.gs.elastic_jira').invoke(payload)
 
     attachments = [{'text': result, 'color': 'good'}]
 

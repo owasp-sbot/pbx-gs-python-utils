@@ -17,7 +17,7 @@ def run(event, context):
             payload = {"params": ["sync_sheet", file_id], "channel": "DDKUZTK6X", 'team_id': 'T7F3AUXGV'}
         else:
             payload  = {"params": [ "load_sheet",file_id], "channel": "DDKUZTK6X", 'team_id': 'T7F3AUXGV'}
-        Lambdas('gs.elastic_jira').invoke(payload)
+        Lambdas('pbx_gs_python_utils.lambdas.gs.elastic_jira').invoke(payload)
         text = ":point_right: [trigger_sync_jira_sheets] completed workflow for file_id: {0} , see channel {1} for more details".format(file_id,channel)
         status_code = 201
     else:

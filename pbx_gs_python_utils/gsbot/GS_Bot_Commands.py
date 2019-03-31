@@ -120,7 +120,7 @@ class GS_Bot_Commands:                                      # move to separate c
     # move to new routing mode
     @staticmethod
     def jira(slack_event, params=[]):
-        Lambdas('gs.elastic_jira').invoke_async({"params": params , "user": slack_event.get('user') , "channel": slack_event.get('channel'), 'team_id': slack_event.get('team_id') },)
+        Lambdas('pbx_gs_python_utils.lambdas.gs.elastic_jira').invoke_async({"params": params , "user": slack_event.get('user') , "channel": slack_event.get('channel'), 'team_id': slack_event.get('team_id') },)
         return None, None
 
     @staticmethod
@@ -135,7 +135,7 @@ class GS_Bot_Commands:                                      # move to separate c
 
     # @staticmethod
     # def reload_jira_lambda(slack_event=None, params=None):
-    #     Lambdas('gs.elastic_jira').update_with_src()
+    #     Lambdas('pbx_gs_python_utils.lambdas.gs.elastic_jira').update_with_src()
     #     return "::white_check_mark: gs.elastic_jira lambda has been reloaded"
 
 

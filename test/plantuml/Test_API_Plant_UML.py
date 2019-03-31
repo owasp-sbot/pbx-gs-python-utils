@@ -1,9 +1,7 @@
-import tempfile
 from    unittest        import TestCase
 
-from plantuml.API_Plant_UML import API_Plant_UML
+from pbx_gs_python_utils.plantuml.API_Plant_UML import API_Plant_UML
 from    utils.Dev       import Dev
-from    utils.Files     import Files
 from utils.Show_Img import Show_Img
 
 
