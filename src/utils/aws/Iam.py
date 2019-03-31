@@ -71,8 +71,24 @@ class IAM:
 
     def role_delete(self):
         if self.role_exists() is False: return False
+        self.role_policies_detach(list(self.role_policies().values()))
         self.iam.delete_role(RoleName=self.role_name)
         return self.role_exists() is False
+
+
+    def role_policies_detach(self, policies_arn):
+        if type(policies_arn) is list:
+            for policy_arn in policies_arn:
+                self.iam.detach_role_policy(RoleName=self.role_name, PolicyArn=policy_arn)
+        else:
+            self.iam.detach_role_policy(RoleName=self.role_name, PolicyArn=policies_arn)
+
+    def role_policies_attach(self, policies_arn):
+        if type(policies_arn) is list:
+            for policy_arn in policies_arn:
+                self.iam.attach_role_policy(RoleName=self.role_name, PolicyArn=policy_arn)
+        else:
+            self.iam.attach_role_policy(RoleName=self.role_name, PolicyArn=policies_arn)
 
     def role_policies(self):
         policies = {}
