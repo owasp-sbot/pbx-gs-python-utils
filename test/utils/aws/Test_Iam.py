@@ -3,7 +3,7 @@ from unittest import TestCase
 
 from utils.Assert import Assert
 from utils.Dev import Dev
-from utils.aws.IAM import IAM
+from pbx_gs_python_utils.utils.aws.IAM import IAM
 
 delete_created   = True
 test_user        = 'test_user'

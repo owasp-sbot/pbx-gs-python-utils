@@ -1,5 +1,5 @@
 from utils.Misc import Misc
-from utils.aws.CodeBuild import CodeBuild
+from pbx_gs_python_utils.utils.aws.CodeBuild import CodeBuild
 
 
 def run(event, context):

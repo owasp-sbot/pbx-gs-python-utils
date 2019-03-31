@@ -25,12 +25,12 @@ class API_Slack_Attachment():
         self.actions.append(select)
         return self
 
-    def add_select_users        (self, name, text): return self.add_select_user_data_source(name, text, "users"        )
-    def add_select_channels     (self, name, text): return self.add_select_user_data_source(name, text, "channels"     )
-    def add_select_conversations(self, name, text): return self.add_select_user_data_source(name, text, "conversations")
-    def add_select_external     (self, name, text): return self.add_select_user_data_source(name, text, "external"     )
+    def add_select_users        (self, name, text): return self.add_select_data_source(name, text, "users"        )
+    def add_select_channels     (self, name, text): return self.add_select_data_source(name, text, "channels"     )
+    def add_select_conversations(self, name, text): return self.add_select_data_source(name, text, "conversations")
+    def add_select_external     (self, name, text): return self.add_select_data_source(name, text, "external"     )
 
-    def add_select_user_data_source(self, name, text, data_source):
+    def add_select_data_source(self, name, text, data_source):
         select = {  "name"       : name    ,
                     "text"       : text    ,
                     "type"       : "select",

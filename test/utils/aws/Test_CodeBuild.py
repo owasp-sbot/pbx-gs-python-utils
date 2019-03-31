@@ -2,8 +2,8 @@ from time import sleep
 from unittest               import TestCase
 from utils.Assert           import Assert
 from utils.Dev              import Dev
-from utils.aws.CodeBuild    import CodeBuild
-from utils.aws.IAM import IAM
+from pbx_gs_python_utils.utils.aws.CodeBuild import CodeBuild
+from pbx_gs_python_utils.utils.aws.IAM import IAM
 
 delete_on_setup    = False
 delete_on_teardown = False
