@@ -57,13 +57,8 @@ class Test_CodeBuild(TestCase):
         Assert(ids).is_bigger_than(1000)
 
     def test_build_start(self):
-        # policies = [ 'arn:aws:iam::244560807427:policy/service-role/CodeBuildBasePolicy-GSBot_code_build-eu-west-2',
-        #              'arn:aws:iam::244560807427:policy/service-role/CodeBuildCloudWatchLogsPolicy-GSBot_code_build-eu-west-2',
-        #              'arn:aws:iam::aws:policy/CloudWatchFullAccess']
-        # self.iam.role_policies_attach(policies)
-        # #Dev.pprint(self.iam.role_policies())
         self.code_build.policies_create()
-        #return
+
         build_id     = self.code_build.build_start()
         build_info   = self.code_build.build_wait_for_completion(build_id,1, 60)
         build_phases = build_info.get('phases')

@@ -1,23 +1,18 @@
-import base64
-import os
-import tempfile
-
-import  pydot
 import  unittest
-from    utils.Dev              import Dev
-from    utils.Show_Img import Show_Img
-from    utils.aws.Lambdas      import Lambdas
+
+from    pbx_gs_python_utils.utils.Dev              import Dev
+from    pbx_gs_python_utils.utils.aws.Lambdas      import Lambdas
 
 
 class Test_Lambda_slack_message(unittest.TestCase):
     def setUp(self):
-        self.slack_message = Lambdas('utils.slack_message', path_libs = '../_lambda_dependencies/slack')
+        self.slack_message = Lambdas('pbx_gs_python_utils.lambdas.utils.slack_message')
 
     def test_update_invoke(self):
         channel     = "gs-bot-tests"
         text        = ":point_right: an message from lambda"
         attachments = [ {"text" : "an attachment (good)" , "color": "good"}, {"text" : "an attachment (danger)" , "color": "danger"}]
-        result      = self.slack_message.upload_and_invoke({"channel" : channel ,"text" :text, "attachments": attachments })
+        result      = self.slack_message.update_with_lib().invoke({"channel" : channel ,"text" :text, "attachments": attachments })
         del result['message']['ts']
         assert result['ok'] is True
         assert result['message'] == { 'attachments' : [ {   'color'     : '2eb886'                   ,

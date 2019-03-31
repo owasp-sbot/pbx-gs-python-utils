@@ -21,4 +21,4 @@ def slack_message(text, attachments = [], channel = 'GBMGMK88Z', team_id='T7F3AU
                 'channel'     : channel     ,
                 'team_id'     : team_id
               }
-    Lambdas('utils_slack_message').invoke_async(payload)
+    Lambdas('pbx_gs_python_utils.lambdas.utils.slack_message').invoke_async(payload)

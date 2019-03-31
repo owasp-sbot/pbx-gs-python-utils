@@ -1,12 +1,10 @@
 import shutil
 import sys
-
-from    pbx_gs_python_utils.utils.Files         import Files
-from    pbx_gs_python_utils.utils.aws.Aws_Cli   import Aws_Cli
 from    distutils.dir_util  import copy_tree
 from    os.path             import join,abspath
-
-from    pbx_gs_python_utils.utils.aws.s3 import S3
+from    pbx_gs_python_utils.utils.Files         import Files
+from    pbx_gs_python_utils.utils.aws.Aws_Cli   import Aws_Cli
+from    pbx_gs_python_utils.utils.aws.s3        import S3
 
 
 class Lambdas:
@@ -31,7 +29,7 @@ class Lambdas:
         if handler is not None:
             self.handler = handler
         else:
-            self.handler = 'lambdas.{0}.run'.format(name)
+            self.handler = '{0}.run'.format(name)
 
         self.s3_key     = 'dinis/lambdas/{0}.zip'.format(self.name)
 
@@ -79,13 +77,13 @@ class Lambdas:
         return self.aws.lambda_invoke_function_async(self.name, payload)
 
     def upload(self):
-        if self.path_libs is None:
-            self.aws.s3_upload_folder(self.source, self.s3_bucket, self.s3_key)
-        else:
-            copy_tree(self.source, self.path_libs)  # for now copy all files into dependencies folders (need to improve this by using temp folders)
-            self.aws.s3_upload_folder(self.path_libs, self.s3_bucket, self.s3_key)
+        #if self.path_libs is None:
+        #    self.aws.s3_upload_folder(self.source, self.s3_bucket, self.s3_key)
+        #else:
+            #copy_tree(self.source, self.path_libs)  # for now copy all files into dependencies folders (need to improve this by using temp folders)
 
-            print(self.s3_bucket, self.s3_key)
+        self.aws.s3_upload_folder(self.source, self.s3_bucket, self.s3_key)
+        print(self.s3_bucket, self.s3_key)
         return self
 
     def upload_and_invoke(self, payload = {}):
@@ -98,11 +96,21 @@ class Lambdas:
         self.upload().aws.lambda_update_function(self.name, self.s3_bucket, self.s3_key)
         return self
 
+    def update_with_lib(self):
+        src_tmp     = '/tmp/src_{0}'.format(self.name)
+        Files.folder_delete_all(src_tmp)
+        src_tmp_lib = '{0}/pbx_gs_python_utils'.format(src_tmp)
+        copy_tree(self.source, src_tmp_lib)
+        self.source = src_tmp
+        return self.update()
+
     def update_with_src(self, path_to_src = None):             # use this when wanting to add a local folder to the lambda source code
+        src_tmp     = '/tmp/src_{0}'.format(self.name)
+        Files.folder_delete_all(src_tmp)
+        src_tmp_lib = '{0}/pbx_gs_python_utils'.format(src_tmp)
+        copy_tree(self.source, src_tmp_lib)
 
         if path_to_src is None: path_to_src = Files.path_combine(__file__, '../../../../../../src')
-        src_tmp = '/tmp/src_{0}'.format(self.name)
-        copy_tree(self.source, src_tmp)
         copy_tree(path_to_src, src_tmp)
         self.source = src_tmp
         return self.update()

@@ -150,6 +150,17 @@ class CodeBuild:
                                                         "Resource": "arn:aws:lambda:*:*:function:*"
                                                     }
                                                 ]
+                                            },
+                "Create_Lambda_Functions": {
+                                                "Version": "2012-10-17",
+                                                "Statement": [
+                                                    {
+                                                        "Sid": "VisualEditor0",
+                                                        "Effect": "Allow",
+                                                        "Action": "lambda:CreateFunction",
+                                                        "Resource": "arn:aws:lambda:*:*:function:*"
+                                                    }
+                                                ]
                                             }
             }
 

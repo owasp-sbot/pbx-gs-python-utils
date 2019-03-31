@@ -77,8 +77,10 @@ class Files:
 
     @staticmethod
     def folder_delete_all(path):                # this will remove recursively
-        shutil.rmtree(path)
-        return Files.exists(path) is False
+        if Files.folder_exists(path):
+            shutil.rmtree(path)
+            return Files.exists(path) is False
+        return True
 
     @staticmethod
     def folder_name(path):
