@@ -5,7 +5,7 @@ from   pbx_gs_python_utils.utils.Dev        import *
 from   pbx_gs_python_utils.utils.aws.Lambdas import Lambdas
 
 
-class Test_Lambda_gs_bot(unittest.TestCase):
+class test_lambda_gs_bot(unittest.TestCase):
 
     def setUp(self):
         self.step_lambda   = Lambdas('pbx_gs_python_utils.lambdas.gsbot.lambda_gs_bot', memory = 3008)

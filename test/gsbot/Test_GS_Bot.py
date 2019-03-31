@@ -1,10 +1,11 @@
 import base64
 import os
-from gsbot.API_GS_Bot    import API_GS_Bot
-from   utils.Dev         import *
+from    pbx_gs_python_utils.gsbot.API_GS_Bot    import API_GS_Bot
+from   pbx_gs_python_utils.utils.Dev            import Dev
+
 import unittest
 
-from utils.aws.Lambdas import Lambdas
+from    pbx_gs_python_utils.utils.aws.Lambdas import Lambdas
 
 
 class Test_API_GS_Bot(unittest.TestCase):
@@ -89,4 +90,4 @@ class Test_API_GS_Bot(unittest.TestCase):
         Dev.pprint(result)
 
     def test__update_lambda(self):
-        Lambdas('gsbot.lambda_gs_bot').update_with_src()
+        Lambdas('pbx_gs_python_utils.lambdas.gsbot.lambda_gs_bot').update_with_src()

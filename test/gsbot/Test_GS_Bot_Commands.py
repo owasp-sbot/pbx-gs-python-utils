@@ -56,4 +56,4 @@ class Test_GS_Bot_Commands(unittest.TestCase):
         Dev.print(text)
 
     def test_update_lambda(self):
-        Lambdas('gsbot.lambda_gs_bot').update_with_src()
+        Lambdas('pbx_gs_python_utils.lambdas.gsbot.lambda_gs_bot').update_with_src()

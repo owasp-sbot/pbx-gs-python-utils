@@ -1,15 +1,13 @@
 import json
 
-from utils.Misc import Misc
+from pbx_gs_python_utils.utils.Misc import Misc
 
 
 def slack(team_id):
-    from utils.slack.API_Slack import API_Slack
+    from pbx_gs_python_utils.utils.slack.API_Slack import API_Slack
     return API_Slack(team_id=team_id)
 
 class Slack_Commands:
-
-
 
     @staticmethod
     def username_to_id(team_id=None, channel=None, params=[]):

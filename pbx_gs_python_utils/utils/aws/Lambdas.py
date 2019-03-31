@@ -97,7 +97,7 @@ class Lambdas:
         return self
 
     def update_with_lib(self):
-        src_tmp     = '/tmp/src_{0}'.format(self.name)
+        src_tmp     = '/tmp/src_{0}'.format(self.name.split('_').pop())  # there were a couple issues with long folder names
         Files.folder_delete_all(src_tmp)
         src_tmp_lib = '{0}/pbx_gs_python_utils'.format(src_tmp)
         copy_tree(self.source, src_tmp_lib)

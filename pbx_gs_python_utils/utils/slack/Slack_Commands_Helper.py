@@ -1,8 +1,8 @@
 import pprint
 from time import time
 
-from utils.slack.API_Slack_Attachment import API_Slack_Attachment
-from utils.Lambdas_Helpers import slack_message, log_to_elk
+from pbx_gs_python_utils.utils.slack.API_Slack_Attachment import API_Slack_Attachment
+from pbx_gs_python_utils.utils.Lambdas_Helpers import slack_message, log_to_elk
 
 
 class Slack_Commands_Helper:
