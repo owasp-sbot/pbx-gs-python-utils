@@ -211,7 +211,7 @@ class GS_Bot_Jira:
             params.pop(0)                           # remove 1st command since it is 'server'
             graph_name = params.pop()
             text = ':point_right: Showing table with data created from graph `{0}`'.format(graph_name)
-            Lambdas('browser.lambda_browser').invoke_async({"params": [ "table", graph_name , 'graph_simple'], "data":{"channel" : channel, "team_id": team_id}})
+            Lambdas('lambdas.browser.lambda_browser').invoke_async({"params": [ "table", graph_name , 'graph_simple'], "data":{"channel" : channel, "team_id": team_id}})
         return {"text": text, "attachments": attachments}
 
     def cmd_server(self, params, team_id=None, channel=None):
@@ -328,7 +328,7 @@ class GS_Bot_Jira:
             text = ':point_right: Created graph for `{0}` in the direction `{1}`, with depth `{2}`, with name `{3}`, with `{4}` nodes and `{5}` edges' \
                             .format(target, direction, depth, graph_name, len(graph.nodes), len(graph.edges))
             slack_message(text, [], channel, team_id)
-            Lambdas('browser.lambda_browser').invoke_async({"data": {"team_id": team_id, "channel": channel}, "params": ['viva_graph', graph_name, 'default']})
+            Lambdas('lambdas.browser.lambda_browser').invoke_async({"data": {"team_id": team_id, "channel": channel}, "params": ['viva_graph', graph_name, 'default']})
 
 
     # main method

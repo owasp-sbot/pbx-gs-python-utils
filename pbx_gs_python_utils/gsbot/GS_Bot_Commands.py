@@ -70,7 +70,7 @@ class GS_Bot_Commands:                                      # move to separate c
     #move to new routing mode
     @staticmethod
     def browser(slack_event, params=None):
-        Lambdas('browser.lambda_browser').invoke_async({'params': params, 'data': slack_event})
+        Lambdas('lambdas.browser.lambda_browser').invoke_async({'params': params, 'data': slack_event})
         return None, None
 
     # move to new routing mode
@@ -91,7 +91,7 @@ class GS_Bot_Commands:                                      # move to separate c
         graph_name = params.pop(0)
         graph_params = ['go_js', graph_name, 'mindmap']
         graph_params.extend(params)
-        Lambdas('browser.lambda_browser').invoke_async({"params": graph_params, 'data': {'team_id': team_id, 'channel': channel}})
+        Lambdas('lambdas.browser.lambda_browser').invoke_async({"params": graph_params, 'data': {'team_id': team_id, 'channel': channel}})
         return None, None
     
     @staticmethod
