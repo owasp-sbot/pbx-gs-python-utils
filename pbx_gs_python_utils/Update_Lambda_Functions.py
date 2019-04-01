@@ -37,9 +37,9 @@ class Update_Lambda_Functions:
         for target in targets:
             result.append(self.update_lambda_function(target))
 
-        text = ":building_construction: src.update_lambda_functions:"
+        text = ":building_construction: *updated lambda functions* for `pbx_gs_python_utils`:"
         attachments = [{'text': json.dumps(result, indent=4), 'color': 'good'}]
-        slack_message(text, attachments)  # gs-bot-tests
+        slack_message(text, attachments,'DDKUZTK6X','T7F3AUXGV')  # gs-bot-tests
         Dev.pprint(result)
 
         return result
