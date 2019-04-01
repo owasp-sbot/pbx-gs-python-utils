@@ -4,7 +4,7 @@ sys.path.append('..')
 import unittest
 
 from pbx_gs_python_utils.utils.aws.Lambdas      import load_dependency
-load_dependency('requests')
+load_dependency('elastic')
 
 
 from pbx_gs_python_utils.gs.GS_Bot_Jira         import GS_Bot_Jira
