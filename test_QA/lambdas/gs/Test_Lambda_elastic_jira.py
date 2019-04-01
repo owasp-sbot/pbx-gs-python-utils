@@ -15,8 +15,10 @@ class test_lambda_elastic_jira(unittest.TestCase):
 
     def test_invoke_directly(self):
         response = run({},{})
-        Dev.pprint(response)
-        #assert response == '200 OK'
+        assert response == { 'attachments': [],
+                             'text': ':point_right: no command received, see `jira help` for a list of '
+                                      'available commands`'}
+
 
     def test_update(self):
         result = self.jira_issues.update_with_lib().invoke()
