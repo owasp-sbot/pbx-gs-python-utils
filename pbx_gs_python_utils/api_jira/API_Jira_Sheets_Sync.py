@@ -1,9 +1,9 @@
 from pbx_gs_python_utils.utils.Lambdas_Helpers import slack_message
 
-from api_jira.API_Jira_Rest import API_Jira_Rest
-from api_jira.API_Jira      import API_Jira
-from pbx_gs_python_utils.gs.API_Issues import API_Issues
-from gsuite.GSheets         import GSheets
+from pbx_gs_python_utils.api_jira.API_Jira_Rest import API_Jira_Rest
+from pbx_gs_python_utils.api_jira.API_Jira      import API_Jira
+from pbx_gs_python_utils.gs.API_Issues          import API_Issues
+from pbx_gs_python_utils.gsuite.GSheets         import GSheets
 from pbx_gs_python_utils.utils.Dev              import Dev
 
 
