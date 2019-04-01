@@ -7,7 +7,7 @@ from pbx_gs_python_utils.utils.Dev import Dev
 from pbx_gs_python_utils.utils.Misc import Misc
 
 @unittest.skip('review and move long running into separate class')
-class Test_Slides_For_Projects(TestCase):
+class test_Slides_For_Projects(TestCase):
 
     def setUp(self):
         self.slides_for_projects = Slides_for_Projects()

@@ -7,7 +7,7 @@ from pbx_gs_python_utils.utils.Files import Files
 from pbx_gs_python_utils.utils.aws.Lambdas import Lambdas
 
 
-class Test_GSBot_Helpers(TestCase):
+class test_GSBot_Helpers(TestCase):
 
     def setUp(self):
         self.gsbot_helper = GSBot_Helper()
