@@ -1,0 +1,11 @@
+version: 0.1
+phases:
+  #base-directory: src
+  install:
+    commands:
+      - pip3 install boto3
+
+  post_build:
+    commands:
+      - build/deploy_lambda_functions.sh
+
