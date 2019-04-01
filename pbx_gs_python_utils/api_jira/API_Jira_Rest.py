@@ -1,9 +1,9 @@
 import requests
 
-from utils.Dev import Dev
-#from utils.Local_Cache import use_local_cache_if_available
-from utils.Misc import Misc
-from utils.aws.secrets import Secrets
+from pbx_gs_python_utils.utils.Dev import Dev
+#from pbx_gs_python_utils.utils.Local_Cache import use_local_cache_if_available
+from pbx_gs_python_utils.utils.Misc import Misc
+from pbx_gs_python_utils.utils.aws.secrets import Secrets
 
 
 class API_Jira_Rest:

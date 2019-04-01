@@ -1,9 +1,9 @@
 from unittest import TestCase
 
 from api_jira.API_Jira_Sheets_Sync import API_Jira_Sheets_Sync
-from utils.Dev import Dev
-from utils.Json import Json
-from utils.aws.Lambdas import Lambdas
+from pbx_gs_python_utils.utils.Dev import Dev
+from pbx_gs_python_utils.utils.Json import Json
+from pbx_gs_python_utils.utils.aws.Lambdas import Lambdas
 
 
 class Test_API_Jira_Sheets_Sync(TestCase):

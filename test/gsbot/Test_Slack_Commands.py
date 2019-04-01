@@ -1,8 +1,8 @@
 from unittest import TestCase
 
 from gsbot.Slack_Commands import Slack_Commands
-from utils.Dev import Dev
-from utils.aws.Lambdas import Lambdas
+from pbx_gs_python_utils.utils.Dev import Dev
+from pbx_gs_python_utils.utils.aws.Lambdas import Lambdas
 
 
 class Test_Slack_Commands(TestCase):

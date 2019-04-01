@@ -1,5 +1,5 @@
-from utils.Json import *
-from utils.Files import *
+from pbx_gs_python_utils.utils.Json import *
+from pbx_gs_python_utils.utils.Files import *
 
 def clear_local_cache_files(function):
     def wrapper(*args):

@@ -1,7 +1,7 @@
 import unittest
 
-from utils.Dev import Dev
-from utils.aws.Lambdas import Lambdas
+from pbx_gs_python_utils.utils.Dev import Dev
+from pbx_gs_python_utils.utils.aws.Lambdas import Lambdas
 
 
 class Test_lambda_api_gateway_simple_test(unittest.TestCase):

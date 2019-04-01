@@ -2,9 +2,9 @@ import base64
 import json
 import unittest
 
-from utils.Dev import Dev
-from utils.Process import Process
-from utils.aws.Lambdas import Lambdas
+from pbx_gs_python_utils.utils.Dev import Dev
+from pbx_gs_python_utils.utils.Process import Process
+from pbx_gs_python_utils.utils.aws.Lambdas import Lambdas
 
 
 class Test_Lambda_lambda_browser(unittest.TestCase):

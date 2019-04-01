@@ -1,11 +1,11 @@
 import json
 from unittest import TestCase
 
-from utils.Dev import Dev
-from utils.Files import Files
-from utils.Misc import Misc
-from utils.Unzip_File import Unzip_File
-from utils.Zip_Folder import Zip_Folder
+from pbx_gs_python_utils.utils.Dev import Dev
+from pbx_gs_python_utils.utils.Files import Files
+from pbx_gs_python_utils.utils.Misc import Misc
+from pbx_gs_python_utils.utils.Unzip_File import Unzip_File
+from pbx_gs_python_utils.utils.Zip_Folder import Zip_Folder
 
 
 class Test_Unzip_File(TestCase):
