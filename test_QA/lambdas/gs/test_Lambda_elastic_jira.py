@@ -20,21 +20,21 @@ class test_lambda_elastic_jira(unittest.TestCase):
                                       'available commands`'}
 
 
-    def test_update(self):
-        result = self.jira_issues.update_with_lib().invoke()
-        Dev.pprint(result)
+    # def test_update(self):
+    #     result = self.jira_issues.update_with_lib().invoke()
+    #     Dev.pprint(result)
 
 
 
     def test_update_invoke(self):
         key = 'RISK-424'
         issue = self.jira_issues.invoke({"params": ['issue', key], "channel": 'GDL2EC3EE'})
-        Dev.pprint(issue)
+        #Dev.pprint(issue)
 
     def test_update_invoke__link_links(self):
         id = 'RISK-1'
         result = self.jira_issues.invoke({"params": ["issue-links", id], "channel": 'GDL2EC3EE'})
-        Dev.pprint(result)
+        #Dev.pprint(result)
 
     def test_update_invoke__link_share(self):
         id = 'RISK-2'
@@ -42,11 +42,11 @@ class test_lambda_elastic_jira(unittest.TestCase):
         #issue = self.jira_issues.update_with_src().invoke({"params": ["issue-links", id], "channel": 'GDL2EC3EE'})
         result = self.jira_issues.invoke({"params": [ 'link_shared', '[{"url":"https://jira.photobox.com/browse/SEC-1234"}]'], "channel": 'GDL2EC3EE'})
 
-        Dev.pprint(result)
+        #Dev.pprint(result)
 
     def test_update_invoke__test_cmd(self):
         result = self.jira_issues.invoke({"params": [ 'test'], "channel": 'GDL2EC3EE'})
-        Dev.pprint(result)
+        #Dev.pprint(result)
 
 
 
@@ -58,7 +58,7 @@ class test_lambda_elastic_jira(unittest.TestCase):
 
 
     # BUG issue doesn't return data
-    def test_invoke__no_data_for_issue(self):
-        issue_id = 'GSCS-24'
-        result = self.jira_issues.invoke({"params": ['issue',issue_id], 'team_id':'T7F3AUXGV', 'channel':'GDL2EC3EE' })
-        Dev.pprint(result)
+    # def test_invoke__no_data_for_issue(self):
+    #     issue_id = 'GSCS-24'
+    #     result = self.jira_issues.invoke({"params": ['issue',issue_id], 'team_id':'T7F3AUXGV', 'channel':'GDL2EC3EE' })
+    #     Dev.pprint(result)
