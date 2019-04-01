@@ -60,5 +60,5 @@ class test_lambda_elastic_jira(unittest.TestCase):
     # BUG issue doesn't return data
     def test_invoke__no_data_for_issue(self):
         issue_id = 'GSCS-24'
-        result = self.jira_issues.invoke({"params": ['issue',issue_id], 'team_id':'T7F3AUXGV', 'channel':'DDKUZTK6X' })
+        result = self.jira_issues.invoke({"params": ['issue',issue_id], 'team_id':'T7F3AUXGV', 'channel':'GDL2EC3EE' })
         Dev.pprint(result)

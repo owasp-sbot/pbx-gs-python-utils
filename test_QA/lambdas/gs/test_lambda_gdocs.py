@@ -32,7 +32,7 @@ class Test_Lambda_lambda_gdocs(TestCase):
 
     def test_pdf(self):
         result = self.lambda_gdocs.invoke({ 'data':{}, 'params':['pdf','1xIeV2eQb59EsiJoOUB1yOK3FY2LCvzMmTgvhAVXlEEI']})
-        assert result == (None,None)
+        assert result == [None,None]
 
     def test_version(self):
         result = self.lambda_gdocs.invoke({'data': {}, 'params': ['version']})
