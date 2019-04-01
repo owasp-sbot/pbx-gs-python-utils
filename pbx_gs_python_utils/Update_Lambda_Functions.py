@@ -31,7 +31,7 @@ class Update_Lambda_Functions:
                     'pbx_gs_python_utils.lambdas.utils.slack_message',      # slack_message     API_Slack
 
                     'pbx_gs_python_utils.lambdas.gs.lambda_gdocs'    ,      # lambda_gdocs      Lambda_GDocs            GDocs_Commands
-                    'pbx_gs_python_utils.lambdas.gs.lambda_slides'   ,
+                    'pbx_gs_python_utils.lambdas.gs.lambda_slides'   ,      # lambda_slides     Lambda_Slides           Slides_Commandss
 
                    ]
         result = []

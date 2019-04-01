@@ -71,8 +71,8 @@ class Test_Project_Slides(TestCase):
 
     # helper methods
 
-    def test_update_lambda(self):
-        Lambdas('gs.lambda_slides').update_with_src()
+    # def test_update_lambda(self):
+    #     Lambdas('gs.lambda_slides').update_with_src()
 
 
     def test_change_table_format(self):
