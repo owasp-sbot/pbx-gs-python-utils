@@ -2,3 +2,5 @@
 *__pycache__*
 pbx_gs_python_utils.egg-info
 dist
+test_QA/htmlcov
+.coverage
