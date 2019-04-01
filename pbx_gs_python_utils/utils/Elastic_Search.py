@@ -2,17 +2,16 @@ import  json
 import  datetime
 import  requests
 
-from    elasticsearch import Elasticsearch, helpers, NotFoundError
-from    requests.auth import HTTPBasicAuth
-from    pbx_gs_python_utils.utils.Http import *
-from    pbx_gs_python_utils.utils.aws.secrets import Secrets
-
+from    elasticsearch                           import Elasticsearch, helpers, NotFoundError
+from    requests.auth                           import HTTPBasicAuth
+from    pbx_gs_python_utils.utils.aws.secrets   import Secrets
+from    pbx_gs_python_utils.utils.Http          import PUT, DELETE
 #note the max query value in the search has been increased from 10000 to 100000 (which will need to be done on any new ES Install)
 # PUT _all/_settings
 # {
 # "index.max_result_window" : "100000"
 # }
-from pbx_gs_python_utils.utils.Http import PUT, DELETE
+
 
 
 class Elastic_Search:

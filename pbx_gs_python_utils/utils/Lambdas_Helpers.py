@@ -12,7 +12,7 @@ def log_to_elk(message, data = None, index = "gs_bot_logs", level = "debug", cat
                 "data"     : data
               }
 
-    Lambdas('utils_log_to_elk').invoke_async(payload)
+    Lambdas('pbx_gs_python_utils.lambdas.utils.log_to_elk').invoke_async(payload)
 
 def slack_message(text, attachments = [], channel = 'GDL2EC3EE', team_id='T7F3AUXGV'):  # GBMGMK88Z is the 'from-aws-lambda' channel in the GS-CST Slack workspace
     payload = {

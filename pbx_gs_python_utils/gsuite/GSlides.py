@@ -1,6 +1,5 @@
-from gsuite.GDrive import GDrive
-from gsuite.GSuite import GSuite
-from pbx_gs_python_utils.utils.Dev import Dev
+from pbx_gs_python_utils.gsuite.GDrive import GDrive
+from pbx_gs_python_utils.gsuite.GSuite import GSuite
 from pbx_gs_python_utils.utils.Misc import Misc
 
 

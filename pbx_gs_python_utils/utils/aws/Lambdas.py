@@ -25,7 +25,8 @@ class Lambdas:
 
 
         # values expected to be provided
-        self.name       = name.replace('.','_')
+        self.original_name  = name
+        self.name           = name.replace('.','_')
         if handler is not None:
             self.handler = handler
         else:
@@ -97,15 +98,15 @@ class Lambdas:
         return self
 
     def update_with_lib(self):
-        src_tmp     = '/tmp/src_lambda_{0}'.format(self.name.split('_').pop())  # there were a couple issues with long folder names
+        src_tmp     = '/tmp/src_{0}'.format(self.original_name.split('.').pop())  # there were a couple issues with long folder names
         Files.folder_delete_all(src_tmp)
         src_tmp_lib = '{0}/pbx_gs_python_utils'.format(src_tmp)
         copy_tree(self.source, src_tmp_lib)
         self.source = src_tmp
         return self.update()
 
-    def update_with_src(self, path_to_src = None):             # use this when wanting to add a local folder to the lambda source code
-        src_tmp = '/tmp/src_lambda_{0}'.format(self.name.split('_').pop())  # there were a couple issues with long folder names
+    def update_with_src(self, path_to_src = None):                                   # use this when wanting to add a local folder to the lambda source code
+        src_tmp = '/tmp/src_{0}'.format(self.original_name.split('.').pop())  # there were a couple issues with long folder names
         Files.folder_delete_all(src_tmp)
         src_tmp_lib = '{0}/pbx_gs_python_utils'.format(src_tmp)
         copy_tree(self.source, src_tmp_lib)

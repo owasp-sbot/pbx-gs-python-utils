@@ -1,11 +1,15 @@
 import json
 import sys
+import unittest
+
 sys.path.append('..')
+
 from unittest import TestCase
-from pbx_gs_python_utils.utils.Dev import Dev
+#from pbx_gs_python_utils.utils.Dev import Dev
 from pbx_gs_python_utils.utils.Lambdas_Helpers   import slack_message
 from pbx_gs_python_utils.Update_Lambda_Functions import Update_Lambda_Functions
 
+@unittest.skip("only use this for debugging")
 class test_Update_Lambda_Functions(TestCase):
     def setUp(self):
         self.update = Update_Lambda_Functions()

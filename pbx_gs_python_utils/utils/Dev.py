@@ -18,10 +18,13 @@ class Dev:
         return pprint.pformat(data, indent=2)  # use a pprint to format
 
     @staticmethod
-    def pprint(data):
+    def pprint(*args):
         print()                                 # add a line before
-        pprint.pprint(data, indent=2)           # use a pprint to format
-        return data
+        for arg in args:
+            pprint.pprint(arg, indent=2)  # use a pprint to format
+        if len(args) == 1:
+            return args[0]
+        return args
 
     @staticmethod
     def print(data):

@@ -16,7 +16,7 @@ def log_debug(message, data = None, category = "API_GS_Bot"):
                 "category" : category,
                 "data"     : data
               }
-    Lambdas('utils_log_to_elk').invoke_async(payload)
+    Lambdas('pbx_gs_python_utils.lambdas.utils.log_to_elk').invoke_async(payload)
 
 def log_error(message, data = None, category = "API_GS_Bot"):
     payload = {
@@ -27,7 +27,7 @@ def log_error(message, data = None, category = "API_GS_Bot"):
                 "data"     : data
               }
 
-    Lambdas('utils_log_to_elk').invoke_async(payload)
+    Lambdas('pbx_gs_python_utils.lambdas.utils.log_to_elk').invoke_async(payload)
 
 
 class API_GS_Bot:
