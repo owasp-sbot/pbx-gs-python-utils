@@ -4,8 +4,11 @@ phases:
   install:
     commands:
       - pip3 install boto3 pytest
+      - pip3 install python-coveralls pytest-cov
 
   post_build:
     commands:
       - echo "\n\n****** RUNNING pbx-gs-python-utils/test_QA ********\n\n"
-      - cd test_QA && ./run_tests.sh
+      #- cd test_QA && ./run_tests.sh
+      - cd test_QA && pytest --cov=pbx_gs_python_utils
+      - ls -la test_QA
