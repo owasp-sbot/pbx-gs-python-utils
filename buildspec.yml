@@ -1,0 +1,11 @@
+version: 0.1
+phases:
+  #base-directory: src
+  install:
+    commands:
+      - pip3 install boto3 pytest
+
+  post_build:
+    commands:
+      - echo "\n\n****** RUNNING pbx-gs-python-utils/test_QA ********\n\n"
+      - cd test_QA && ./run_tests.sh
