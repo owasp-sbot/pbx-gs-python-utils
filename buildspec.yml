@@ -3,7 +3,7 @@ phases:
   #base-directory: src
   install:
     commands:
-      - pip3 install python-coveralls pytest-cov
+      - pip3 install python-coveralls pytest-cov==2.5.0
       - pip3 install boto3 pytest
 
 
