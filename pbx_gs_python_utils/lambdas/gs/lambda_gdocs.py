@@ -9,8 +9,8 @@ def run(event, context):
         load_dependency("elastic-slack")                              # load dependency (download and unzip if first run)
 
         from pbx_gs_python_utils.gsuite.handlers.Lambda_GDocs import Lambda_GDocs
-        
-        Lambda_GDocs().handle_lambda_event(event)                      # invoke lambda handler from Lambda_Slides class
+
+        return Lambda_GDocs().handle_lambda_event(event)                      # invoke lambda handler from Lambda_Slides class
         return "200 OK"
 
     except Exception as error:

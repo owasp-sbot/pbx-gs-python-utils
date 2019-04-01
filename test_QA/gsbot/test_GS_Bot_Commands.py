@@ -42,6 +42,8 @@ class test_GS_Bot_Commands(TestCase):
         slack_event = {}
         assert GS_Bot_Commands.mindmap(slack_event, [ "aaa"]) == (None, None)
 
+    def test_gdocs(self):
+        assert GS_Bot_Commands.gdocs({}, []) == (None,None)
 
     # def test_public_slack_channels(self):
     #     result = GS_Bot_Commands.public_slack_channels({})

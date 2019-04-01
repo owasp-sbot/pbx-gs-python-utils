@@ -76,8 +76,7 @@ class GS_Bot_Commands:                                      # move to separate c
     # move to new routing mode
     @staticmethod
     def gdocs(slack_event, params=None):
-        Lambdas('gs.lambda_gdocs'       ).invoke_async({'params': params, 'data': slack_event})
-
+        Lambdas('pbx_gs_python_utils.lambdas.gs.lambda_gdocs').invoke_async({'params': params, 'data': slack_event})
         return None, None
 
     @staticmethod

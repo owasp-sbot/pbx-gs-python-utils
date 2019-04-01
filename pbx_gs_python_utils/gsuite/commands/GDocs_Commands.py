@@ -7,6 +7,7 @@ from pbx_gs_python_utils.utils.Lambdas_Helpers import slack_message
 from pbx_gs_python_utils.utils.aws.Lambdas import Lambdas
 from pbx_gs_python_utils.utils.aws.secrets import Secrets
 
+GDocs_Commands_version = 'v0.20'
 
 class GDocs_Commands:
     gsuite_secret_id = 'gsuite_gsbot_user'
@@ -41,18 +42,23 @@ class GDocs_Commands:
         return text, attachments
 
     @staticmethod
-    def pdf(team_id, channel, params):
-        file_id = params.pop()
-        pdf_bytes = GDocs_Commands._gdrive().file_export(file_id)
-        pdf_data = base64.b64encode(pdf_bytes).decode()
-        payload = {
-            'pdf_data'      : pdf_data                                  ,
-            'title'         : 'export_pdf'                              ,
-            'aws_secrets_id': GDocs_Commands._resolve_secret_id(team_id),
-            'channel'       : channel
-        }
+    def pdf(team_id=None, channel=None, params=None):
+        if params and len(params) > 1:
+            file_id = params.pop()
+            pdf_bytes = GDocs_Commands._gdrive().file_export(file_id)
+            pdf_data = base64.b64encode(pdf_bytes).decode()
+            payload = {
+                'pdf_data'      : pdf_data                                  ,
+                'title'         : 'export_pdf'                              ,
+                'aws_secrets_id': GDocs_Commands._resolve_secret_id(team_id),
+                'channel'       : channel
+            }
 
-        slack_message("creating pdf for file: `{0}`".format(file_id),[],channel,team_id)
-        Lambdas('utils.pdf_to_slack').invoke(payload)
+            slack_message("creating pdf for file: `{0}`".format(file_id),[],channel,team_id)
+            Lambdas('utils.pdf_to_slack').invoke(payload)
 
         return None,None
+
+    @staticmethod
+    def version(team_id=None, channel=None, params=None):
+        return GDocs_Commands_version,[]

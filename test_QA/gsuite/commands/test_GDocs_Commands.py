@@ -20,5 +20,8 @@ class test_GDocs_Commands(TestCase):
         params = ["1xIeV2eQb59EsiJoOUB1yOK3FY2LCvzMmTgvhAVXlEEI"]
         team_id = 'T7F3AUXGV'
         channel = 'GDL2EC3EE'
-        result = GDocs_Commands.pdf(team_id, channel,params)
-        Dev.pprint(result)
+        assert GDocs_Commands.pdf(team_id, channel,params) == (None, None)
+
+    def test_pdf___no_value_provided(self):
+        params = []
+        assert GDocs_Commands.pdf(params=params) == (None, None)
