@@ -4,7 +4,7 @@ from pbx_gs_python_utils.gsbot.GS_Bot_Commands import GS_Bot_Commands
 from pbx_gs_python_utils.utils.Dev             import Dev
 
 
-class Test_GS_Bot_Commands(unittest.TestCase):
+class test_GS_Bot_Commands(unittest.TestCase):
 
     def test_hello(self):
         assert GS_Bot_Commands.hello({}              ) == ('Hello <@None>, how can I help you?',[])
