@@ -9,6 +9,6 @@ phases:
     commands:
       - pwd
       - ls
-      - ls build
-      #- build/deploy_lambda_functions.sh
+      - ls deploy
+      - deploy/deploy_lambda_functions.sh
 
