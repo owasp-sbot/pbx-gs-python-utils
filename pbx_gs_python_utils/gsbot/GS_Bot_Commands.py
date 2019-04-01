@@ -94,10 +94,10 @@ class GS_Bot_Commands:                                      # move to separate c
         Lambdas('browser.lambda_browser').invoke_async({"params": graph_params, 'data': {'team_id': team_id, 'channel': channel}})
         return None, None
     
-    # @staticmethod
-    # def graph(slack_event, params=[]):
-    #     return Lambdas('gs.lambda_graph'       ).invoke({'params': params, 'data': slack_event}) , []
-    #     return None, None
+    @staticmethod
+    def graph(slack_event, params=[]):
+        Lambdas('lambdas.gsbot.gsbot_graph').invoke_async({'params': params, 'data': slack_event}) , []
+        return None, None
 
     # move to new routing mode
 

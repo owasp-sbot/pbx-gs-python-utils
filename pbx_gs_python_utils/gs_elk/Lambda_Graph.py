@@ -54,9 +54,10 @@ class Lambda_Graph():
         if params is None or len(params) == 0:
             params = ['help']
 
-        from pbx_gs_python_utils.gs_elk.Lambda_Graph_Commands import Lambda_Graph_Commands  # can only do this here to avoid circular dependencies
+        from gs_elk.Lambda_Graph_Commands import Lambda_Graph_Commands  # can only do this here to avoid circular dependencies
         try:
             method_name  = params.pop(0)
+
             method       = getattr(Lambda_Graph_Commands, method_name)
         except Exception:
             method = Lambda_Graph_Commands.help

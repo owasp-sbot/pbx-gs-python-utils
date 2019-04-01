@@ -55,8 +55,8 @@ class API_GS_Bot:
                                                                                              slack_event.get('user')), category='API_GS_Bot.handle_command')
                 #refactor code below to separate method
                 method_name = command.split(' ')[0].split('\n')[0]
-                if method_name in ['graph','slack','gs_jira']:        # this is the new way to route commands,where a lambda function is invoked
-                    lambda_name = 'gsbot.gsbot_{0}'.format(method_name)
+                if method_name in ['slack','gs_jira']:        # this is the new way to route commands,where a lambda function is invoked
+                    lambda_name = 'pbx_gs_python_utils.lambdas.gsbot.gsbot_{0}'.format(method_name)
                     method_params = command.split(' ')[1:]
                     Lambdas(lambda_name).invoke_async({'params': method_params, 'data': slack_event})
                     return None, None
