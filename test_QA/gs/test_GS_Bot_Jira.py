@@ -3,10 +3,15 @@ sys.path.append('..')
 
 import unittest
 
+from pbx_gs_python_utils.utils.aws.Lambdas      import load_dependency
+load_dependency('requests')
+
+
 from pbx_gs_python_utils.gs.GS_Bot_Jira         import GS_Bot_Jira
 from pbx_gs_python_utils.utils.Dev              import Dev
 from pbx_gs_python_utils.utils.Lambdas_Helpers  import slack_message
 from pbx_gs_python_utils.utils.aws.Lambdas      import Lambdas
+
 
 
 class test_GS_Bot_Jira(unittest.TestCase):
