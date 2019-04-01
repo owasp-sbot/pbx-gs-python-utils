@@ -5,7 +5,7 @@ from pbx_gs_python_utils.plantuml.Puml_Table import Puml_Table
 from pbx_gs_python_utils.utils.Elastic_Search import Elastic_Search
 #from utils.Local_Cache import use_local_cache_if_available, save_result_to_local_cache, clear_local_cache_files
 #from utils.Dev import Dev
-from pbx_gs_python_utils.utils.Log_To_Elk  import log_error
+from pbx_gs_python_utils.utils.Lambdas_Helpers  import log_error
 from pbx_gs_python_utils.utils.aws.secrets import Secrets
 from pbx_gs_python_utils.utils.Http        import current_host_online
 

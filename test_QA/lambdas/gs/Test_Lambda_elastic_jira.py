@@ -18,15 +18,15 @@ class test_lambda_elastic_jira(unittest.TestCase):
         Dev.pprint(response)
         #assert response == '200 OK'
 
-    #def test_update(self):
-    #    result = self.jira_issues.update_with_lib()
-    #    Dev.pprint(result)
+    def test_update(self):
+        result = self.jira_issues.update_with_lib().invoke()
+        Dev.pprint(result)
 
 
 
     def test_update_invoke(self):
         key = 'RISK-424'
-        issue = self.jira_issues.invoke({"params": [key], "channel": 'DDKUZTK6X'})
+        issue = self.jira_issues.invoke({"params": ['issue', key], "channel": 'GDL2EC3EE'})
         Dev.pprint(issue)
 
     def test_update_invoke__link_links(self):

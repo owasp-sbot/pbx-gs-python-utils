@@ -211,4 +211,11 @@ class test_API_Slack(unittest.TestCase):
     #    response = self.api.send_message("<@/jira>")
     #    Dev.pprint(response)
 
+    # BUGS
+    def test_send_message_to_team__GS_CST(self):
+        #team_id = 'T0SDK1RA8'
+        #channel = 'DG30MH0KV'
 
+        team_id = 'T7F3AUXGV'
+        channel = 'GDL2EC3EE'
+        API_Slack(channel=channel, team_id=team_id)
