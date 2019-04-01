@@ -4,8 +4,8 @@ import os
 import glob
 import shutil
 import tempfile
+import zipfile
 from   os.path import abspath, join
-
 
 class Files:
     @staticmethod
@@ -27,6 +27,7 @@ class Files:
     @staticmethod
     def current_folder():
         return Files.path_combine(".","")
+
     @staticmethod
     def delete(path):
         if Files.exists(path):
@@ -86,6 +87,9 @@ class Files:
     def folder_name(path):
         return os.path.dirname(path)
 
+    def find(path_pattern):
+        return glob.glob(path_pattern)
+
     @staticmethod
     def path_combine(path1, path2):
         return abspath(join(path1, path2))
@@ -122,14 +126,13 @@ class Files:
 
     @staticmethod
     def temp_filename(extension='.tmp'):
-        if len(extension) >0 and extension[0] !='.' :           # make sure the extension starts with a dot
+        if len(extension) > 0 and extension[0] != '.':  # make sure the extension starts with a dot
             extension = '.' + extension
         return Files.file_name(Files.temp_file(extension))
 
     @staticmethod
     def temp_folder(prefix=None, suffix=None,parent_folder=None):
         return tempfile.mkdtemp(suffix, prefix, parent_folder)
-
     @staticmethod
     def write(path,contents):
         with open(path, "w") as file:
@@ -144,7 +147,46 @@ class Files:
         shutil.unpack_archive(zip_file, extract_dir=target_folder)
         return target_folder
 
-        # @staticmethod
-    # def save_string(file_Path,data):
-    #     with open(file_Path, "w") as f:
-    #         f.write(data)
+    @staticmethod
+    def zip_files(base_folder, file_pattern, target_file):
+        if file_pattern and target_file and target_file:
+            base_folder  = abspath(base_folder)
+            file_pattern = Files.path_combine(base_folder, file_pattern)
+
+
+            file_list = glob.glob(file_pattern)
+
+            if len(file_list):                                                  # if there were files found
+                with zipfile.ZipFile(target_file,'w') as zip:
+                    for file_name in file_list:
+                        zip_file_path = file_name.replace(base_folder,'')
+                        zip.write(file_name, zip_file_path)
+
+                return target_file
+
+    # Not sure about the method below
+    @staticmethod
+    def zip_files_from_two_folders(base_folder_1, file_pattern_1,base_folder_2, file_pattern_2, target_file):
+        if base_folder_1 and file_pattern_1 and base_folder_2 and file_pattern_2 and target_file:
+            base_folder_1  = abspath(base_folder_1)
+            file_pattern_1 = Files.path_combine(base_folder_1, file_pattern_1)
+            base_folder_2  = abspath(base_folder_2)
+            file_pattern_2 = Files.path_combine(base_folder_2, file_pattern_2)
+
+            file_list_1 =  glob.glob(file_pattern_1)
+            file_list_2 =  glob.glob(file_pattern_2)
+
+            file_list = {}
+            for file in file_list_1:
+                file_list[file] = file.replace(base_folder_1,'')
+            for file in file_list_2:
+                file_list[file] = file.replace(base_folder_2,'')
+            if len(set(file_list)) >0:
+
+                with zipfile.ZipFile(target_file,'w') as zip:
+                    for file_path,zip_file_path in file_list.items():
+                        zip.write(file_path, zip_file_path)
+
+                return target_file
+
+            return len(set(file_list))

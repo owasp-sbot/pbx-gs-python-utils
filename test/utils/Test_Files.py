@@ -2,8 +2,7 @@
 
 from unittest import TestCase
 
-from utils.Dev      import Dev
-from utils.Files  import Files
+from pbx_gs_python_utils.utils.Files import Files
 
 
 class Test_Files(TestCase):

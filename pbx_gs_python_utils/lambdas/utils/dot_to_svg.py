@@ -1,7 +1,6 @@
 import  base64
 import  tempfile
-from    os.path               import abspath,join
-from    utils.Files           import Files
+from pbx_gs_python_utils.utils.Files import Files
 from    utils.Lambdas_Helpers import slack_message, log_to_elk
 from utils.Process import Process
 from    utils.aws.Lambdas     import load_dependency

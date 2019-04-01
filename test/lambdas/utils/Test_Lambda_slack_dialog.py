@@ -1,11 +1,5 @@
-import base64
-import os
-import tempfile
-
-import  pydot
 import  unittest
 from    utils.Dev              import Dev
-from    utils.Show_Img import Show_Img
 from    utils.aws.Lambdas      import Lambdas
 
 

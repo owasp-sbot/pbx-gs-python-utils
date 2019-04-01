@@ -3,7 +3,7 @@ import os
 import subprocess
 import tempfile
 
-from utils.Files import Files
+from pbx_gs_python_utils.utils.Files import Files
 from utils.Process import Process
 from utils.aws.Lambdas import load_dependency
 

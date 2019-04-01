@@ -1,8 +1,6 @@
 import base64
 import tempfile
 
-from utils.Files import Files
-from   utils.Lambdas_Helpers import slack_message
 from   utils.aws.secrets     import Secrets
 from   utils.aws.Lambdas     import    load_dependency
 

@@ -77,8 +77,8 @@ class Puml:
     def set_on_add_node(self, callback): self.on_add_node = callback ; return self
     def set_on_add_edge(self, callback): self.on_add_edge = callback ; return self
 
-    def show(self):
-        self.api_plantuml.show(self.puml)
+    # def show(self):
+    #     self.api_plantuml.show(self.puml)
 
     def __str__(self):
         return self.puml
