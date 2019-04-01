@@ -13,3 +13,7 @@ phases:
       #- cd test_QA && ./run_tests.sh
       - cd test_QA && pytest --cov=pbx_gs_python_utils
       - ls -la test_QA
+      - copy test_QA/.coverage .
+      - ls -la
+      - coveralls
+

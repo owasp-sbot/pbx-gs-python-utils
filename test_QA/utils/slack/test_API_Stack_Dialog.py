@@ -14,11 +14,11 @@ class test_API_Slack_Dialog(TestCase):
         self.api_dialog = API_Slack_Dialog()
 
 
-    def test__update_lambda(self):
-        Lambdas('gs.jira_dialog').update_with_src()
-
-    def test____update_Lambda_Slack_Integration(self):
-        self.jira_issues = Lambdas('gs.slack_interaction').update_with_src()
+    # def test__update_lambda(self):
+    #     Lambdas('gs.jira_dialog').update_with_src()
+    #
+    # def test____update_Lambda_Slack_Integration(self):
+    #     self.jira_issues = Lambdas('gs.slack_interaction').update_with_src()
 
     def test_test_render(self):
         dialog = self.api_dialog.test_render()

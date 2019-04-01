@@ -18,7 +18,7 @@ class ELK_to_Slack:
         return {
             'assign'   : 'Assignee:',
             'summary'  : 'Summary:',
-            'asset'    : "Issue\ Type:\"IT Asset\" AND Summary:",
+            'asset'    : 'Issue\ Type:"IT Asset" AND Summary:',
             'entity'   : 'Issue\ Type:"Business Entity"  AND Summary:',
             'epic'     : 'Issue\ Type:"Epic"  AND Summary:',
             'incident' : 'Issue\ Type:"Incident" AND Summary:',
