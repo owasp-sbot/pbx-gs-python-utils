@@ -43,7 +43,7 @@ class GDocs_Commands:
 
     @staticmethod
     def pdf(team_id=None, channel=None, params=None):
-        if params and len(params) > 1:
+        if params and len(params) > 0:
             file_id = params.pop()
             pdf_bytes = GDocs_Commands._gdrive().file_export(file_id)
             pdf_data = base64.b64encode(pdf_bytes).decode()
