@@ -27,7 +27,7 @@ class Test_Lambdas_Helpers(TestCase):
 
             result = Lambdas('pbx_gs_python_utils.lambdas.utils.slack_message').invoke(payload)
             assert result.get('ok'     ) == True
-            assert result.get('channel') == team_id
+            assert result.get('channel') == channel
 
         send_message('T0SDK1RA8', 'DG30MH0KV')
         send_message('T7F3AUXGV', 'GDL2EC3EE')
