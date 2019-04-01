@@ -1,6 +1,6 @@
 from unittest import TestCase
 from gsuite.GCalendar import GCalendar
-from utils.Dev import Dev
+from pbx_gs_python_utils.utils.Dev import Dev
 
 
 class Test_GCalendar(TestCase):

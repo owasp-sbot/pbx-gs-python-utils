@@ -1,6 +1,6 @@
 from api_jira.API_Jira_Sheets_Sync import API_Jira_Sheets_Sync
-#from utils.Local_Cache import use_local_cache_if_available, save_result_to_local_cache
-from utils.Misc import Misc
+#from pbx_gs_python_utils.utils.Local_Cache import use_local_cache_if_available, save_result_to_local_cache
+from pbx_gs_python_utils.utils.Misc import Misc
 
 
 class API_Jira_Sheets_Create(API_Jira_Sheets_Sync):

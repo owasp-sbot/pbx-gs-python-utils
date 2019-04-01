@@ -1,7 +1,7 @@
 import json
 
-from utils.Lambdas_Helpers import slack_message
-from utils.Misc import Misc
+from pbx_gs_python_utils.utils.Lambdas_Helpers import slack_message
+from pbx_gs_python_utils.utils.Misc import Misc
 
 
 def run(event, context):

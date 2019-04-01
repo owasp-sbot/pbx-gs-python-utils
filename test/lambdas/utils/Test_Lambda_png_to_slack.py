@@ -2,10 +2,10 @@ import base64
 import unittest
 
 from gsuite.GDrive import GDrive
-from utils.Dev import Dev
-from utils.Files import Files
-from utils.aws.Lambdas import Lambdas
-from utils.aws.s3 import S3
+from pbx_gs_python_utils.utils.Dev import Dev
+from pbx_gs_python_utils.utils.Files import Files
+from pbx_gs_python_utils.utils.aws.Lambdas import Lambdas
+from pbx_gs_python_utils.utils.aws.s3 import S3
 
 
 class Test_Lambda_pdf_to_slack(unittest.TestCase):

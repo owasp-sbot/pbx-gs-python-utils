@@ -1,7 +1,7 @@
 
 from unittest import TestCase
-from utils.Files import Files
-from utils.Temp_File import Temp_File
+from pbx_gs_python_utils.utils.Files import Files
+from pbx_gs_python_utils.utils.Temp_File import Temp_File
 
 
 class Test_Temp_File(TestCase):

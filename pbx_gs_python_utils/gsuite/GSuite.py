@@ -8,9 +8,9 @@ from oauth2client.tools        import run_flow
 
 from googleapiclient.discovery import build
 
-from utils.Dev import Dev
-from utils.Files               import Files
-from utils.aws.secrets         import Secrets
+from pbx_gs_python_utils.utils.Dev import Dev
+from pbx_gs_python_utils.utils.Files               import Files
+from pbx_gs_python_utils.utils.aws.secrets         import Secrets
 
 
 class GSuite:
