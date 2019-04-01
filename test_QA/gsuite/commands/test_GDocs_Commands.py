@@ -1,5 +1,8 @@
 from unittest import TestCase
 
+from pbx_gs_python_utils.utils.aws.Lambdas      import load_dependency
+load_dependency('gmail')
+
 from pbx_gs_python_utils.gsuite.commands.GDocs_Commands import GDocs_Commands
 from pbx_gs_python_utils.utils.Dev                      import Dev
 
