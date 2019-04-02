@@ -19,6 +19,7 @@ phases:
       #- cd test_QA && pytest --json=report.json utils/test_Files.py
     finally:
       - echo "\n\n****** in finally"
+      - pip3 install elasticsearch
       - cd test_QA && ls -la
 
       #- cd test_QA && cat PyTest_To_Elk.py
