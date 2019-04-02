@@ -1,4 +1,9 @@
+
 from unittest import TestCase
+
+from pbx_gs_python_utils.utils.aws.Lambdas import load_dependency
+
+load_dependency('elastic')
 
 from pbx_gs_python_utils.gsbot.API_GS_Bot import log_debug
 from pbx_gs_python_utils.utils.Dev import Dev
