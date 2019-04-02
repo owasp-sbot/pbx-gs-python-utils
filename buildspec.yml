@@ -20,4 +20,6 @@ phases:
     finally:
       - echo "\n\n****** in finally"
       - cd test_QA && ls -la
-      - cd test_QA && python3 Pytest_To_Elk.py
+
+      - cd test_QA && cat PyTest_To_Elk.py
+      #- cd test_QA && python3 Pytest_To_Elk.py
