@@ -21,5 +21,3 @@ class test_Files(TestCase):
 
     # def test_zip_files_from_two_folders(self):
     #     Dev.pprint(Files.zip_files_from_two_folders('../../libs/pbx-gs-python-utils/src/', '**/*File*.py','..', '**/*ELK*.py', '/tmp/test_zip.zip'))
-    def test_another_test(self):
-        assert 1==2

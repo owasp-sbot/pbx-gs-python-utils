@@ -13,10 +13,10 @@ phases:
   post_build:
     commands:
       - echo "\n\n****** RUNNING pbx-gs-python-utils/test_QA ********\n\n"
-      #- cd test_QA && pytest --cov=pbx_gs_python_utils
-      #- cp test_QA/.coverage .
-      #- coveralls
-      - cd test_QA && pytest --json=report.json utils/test_Files.py
+      - cd test_QA && pytest --cov=pbx_gs_python_utils --json=report.json
+      - cp test_QA/.coverage .
+      - coveralls
+      #- cd test_QA && pytest --json=report.json utils/test_Files.py
     finally:
       - echo "\n\n****** in finally"
       - cd test_QA && ls -la
