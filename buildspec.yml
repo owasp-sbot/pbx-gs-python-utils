@@ -16,6 +16,6 @@ phases:
       #- cd test_QA && pytest --cov=pbx_gs_python_utils
       #- cp test_QA/.coverage .
       #- coveralls
-    finally:
       - cd test_QA && pytest --json=report.json utils/test_Files.py
+    finally:
       - cd test_QA && python3 Pytest_To_Elk.py
