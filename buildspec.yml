@@ -5,14 +5,17 @@ phases:
     commands:
       - pip3 install python-coveralls pytest-cov==2.5.0
       - pip3 install boto3 pytest
+      - pip3 install pytest-json
+
       - git checkout master
 
 
   post_build:
     commands:
       - echo "\n\n****** RUNNING pbx-gs-python-utils/test_QA ********\n\n"
-      #- cd test_QA && ./run_tests.sh
-      - cd test_QA && pytest --cov=pbx_gs_python_utils
-      - cp test_QA/.coverage .
-      - coveralls
-
+      #- cd test_QA && pytest --cov=pbx_gs_python_utils
+      #- cp test_QA/.coverage .
+      #- coveralls
+    finally:
+      - pytest --json=report.json utils/test_Files.py
+      - python3 Pytest_To_Elk.py  

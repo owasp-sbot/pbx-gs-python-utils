@@ -1,9 +1,14 @@
+import sys
+from unittest import TestCase
+
+sys.path.append('..')
+
 from pbx_gs_python_utils.utils.Dev import Dev
 from pbx_gs_python_utils.utils.Files import Files
 from pbx_gs_python_utils.utils.Temp_File import Temp_File
 
 
-class Test_Files:
+class test_Files(TestCase):
 
     def test_zip_files(self):
         target_file = '/tmp/test_zip.zip'
@@ -16,3 +21,5 @@ class Test_Files:
 
     # def test_zip_files_from_two_folders(self):
     #     Dev.pprint(Files.zip_files_from_two_folders('../../libs/pbx-gs-python-utils/src/', '**/*File*.py','..', '**/*ELK*.py', '/tmp/test_zip.zip'))
+    def test_another_test(self):
+        assert 1==2

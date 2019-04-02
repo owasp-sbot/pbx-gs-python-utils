@@ -7,12 +7,9 @@ class Log_To_Elk:
     _elastic_cache = None
 
     def __init__(self):
-        self.index_id     = 'elastic_logs'
-        #self.port         = 9243
-        #self.host         = '546a0b2e8f0d4426a2f3337effcfc02a.eu-west-1.aws.found.io'
-        #self.secret_id    = 'elastic_cloud_test'
-        self.secret_id     = 'elastic-logs-server-1'
-        self.elastic      = self.setup()
+        self.index_id  = 'elastic_logs'
+        self.secret_id = 'elastic-logs-server-1'
+        self.elastic   = self.setup()
 
     def create(self):
         if self.elastic.exists() is False:
