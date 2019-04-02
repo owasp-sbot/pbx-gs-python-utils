@@ -3,6 +3,13 @@ import sys
 
 sys.path.append('..')
 
+print('***** loading dependency')
+from pbx_gs_python_utils.utils.aws.Lambdas import load_dependency
+
+load_dependency('elastic')
+
+print('***** done')
+
 from unittest import TestCase
 
 from pbx_gs_python_utils.utils.Dev            import Dev
