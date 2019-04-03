@@ -2,9 +2,6 @@ import json
 
 import boto3
 
-from utils.Dev import Dev
-
-
 class IAM:
 
     def __init__(self, user_name=None, role_name=None):

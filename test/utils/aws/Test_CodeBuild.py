@@ -56,9 +56,139 @@ class Test_CodeBuild(TestCase):
         ids = list(self.code_build.all_builds_ids(use_paginator=True))
         Assert(ids).is_bigger_than(1000)
 
-    def test_build_start(self):
-        self.code_build.policies_create()
+    def test_create_policies(self):
+        policies = {
+            "CodeBuildBasePolicy" : {
+                        "Version": "2012-10-17",
+                        "Statement": [
+                            {
+                                "Effect": "Allow",
+                                "Resource": [
+                                    "arn:aws:logs:eu-west-2:244560807427:log-group:/aws/codebuild/GSBot_code_build",
+                                    "arn:aws:logs:eu-west-2:244560807427:log-group:/aws/codebuild/GSBot_code_build:*"
+                                ],
+                                "Action": [
+                                    "logs:CreateLogGroup",
+                                    "logs:CreateLogStream",
+                                    "logs:PutLogEvents"
+                                ]
+                            },
+                            {
+                                "Effect": "Allow",
+                                "Resource": [
+                                    "arn:aws:s3:::codepipeline-eu-west-2-*"
+                                ],
+                                "Action": [
+                                    "s3:PutObject",
+                                    "s3:GetObject",
+                                    "s3:GetObjectVersion",
+                                    "s3:GetBucketAcl",
+                                    "s3:GetBucketLocation"
+                                ]
+                            }
+                        ]
+                    },
+            "Cloud_Watch_Policy": {
+                                      "Version": "2012-10-17",
+                                      "Statement": [
+                                        {
+                                          "Sid": "CloudWatchLogsPolicy",
+                                          "Effect": "Allow",
+                                          "Action": [
+                                            "logs:CreateLogGroup",
+                                            "logs:CreateLogStream",
+                                            "logs:PutLogEvents"
+                                          ],
+                                          "Resource": [
+                                            "*"
+                                          ]
+                                        },
+                                        {
+                                          "Sid": "CodeCommitPolicy",
+                                          "Effect": "Allow",
+                                          "Action": [
+                                            "codecommit:GitPull"
+                                          ],
+                                          "Resource": [
+                                            "*"
+                                          ]
+                                        },
+                                        {
+                                          "Sid": "S3GetObjectPolicy",
+                                          "Effect": "Allow",
+                                          "Action": [
+                                            "s3:GetObject",
+                                            "s3:GetObjectVersion"
+                                          ],
+                                          "Resource": [
+                                            "*"
+                                          ]
+                                        },
+                                        {
+                                          "Sid": "S3PutObjectPolicy",
+                                          "Effect": "Allow",
+                                          "Action": [
+                                            "s3:PutObject"
+                                          ],
+                                          "Resource": [
+                                            "*"
+                                          ]
+                                        }
+                                      ]
+                                    }
+                , "Access_Secret_Manager": {
+                                                "Version": "2012-10-17",
+                                                "Statement": [
+                                                    {
+                                                        "Sid": "VisualEditor0",
+                                                        "Effect": "Allow",
+                                                        "Action": [
+                                                            "secretsmanager:GetResourcePolicy",
+                                                            "secretsmanager:GetSecretValue",
+                                                            "secretsmanager:DescribeSecret",
+                                                            "secretsmanager:ListSecretVersionIds"
+                                                        ],
+                                                        "Resource": "arn:aws:secretsmanager:*:*:secret:*"
+                                                    }
+                                                ]
+                                            },
+                "Invoke_Lambda_Functions": {
+                                                "Version": "2012-10-17",
+                                                "Statement": [
+                                                    {
+                                                        "Sid": "VisualEditor0",
+                                                        "Effect": "Allow",
+                                                        "Action": "lambda:InvokeFunction",
+                                                        "Resource": "arn:aws:lambda:*:*:function:*"
+                                                    }
+                                                ]
+                                            },
+                "Create_Update_Lambda_Functions": {
+                                                "Version": "2012-10-17",
+                                                "Statement": [
+                                                    {
+                                                        "Sid": "VisualEditor0",
+                                                        "Effect": "Allow",
+                                                        "Action": ["lambda:ListFunctions","lambda:GetFunction","lambda:CreateFunction","lambda:UpdateFunctionCode"],
+                                                        "Resource": "arn:aws:lambda:*:*:function:*"
+                                                    }
+                                                ]
+                                            },
+                "Pass_Role": {
+                                "Version": "2012-10-17",
+                                "Statement": [{
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "iam:GetRole",
+                                        "iam:PassRole"
+                                    ],
+                                    "Resource": "arn:aws:iam::244560807427:role/lambda_with_s3_access"
+                                }]
+                            }
+            }
+        self.code_build.policies_create(policies)
 
+    def test_build_start(self):
         build_id     = self.code_build.build_start()
         build_info   = self.code_build.build_wait_for_completion(build_id,1, 60)
         build_phases = build_info.get('phases')

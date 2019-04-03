@@ -32,151 +32,23 @@ class CodeBuild:
         kvargs = { 'projectName': self.project_name }
         return self.codebuild.start_build(**kvargs).get('build').get('arn')
 
-    def build_wait_for_completion(self, build_id, sleep_for=0.5, max_attempts=20):
+    def build_wait_for_completion(self, build_id, sleep_for=0.5, max_attempts=20, log_status=False):
         for i in range(0,max_attempts):
             build_info    = self.build_info(build_id)
             build_status  = build_info.get('buildStatus')
             current_phase = build_info.get('currentPhase')
-            Dev.pprint("[{0}] {1} {2}".format(i,build_status,current_phase))
+            if log_status:
+                Dev.pprint("[{0}] {1} {2}".format(i,build_status,current_phase))
             if build_status != 'IN_PROGRESS':
                 return build_info
             sleep(sleep_for)
         return None
 
 
-    def policies_create(self):
-        policies = {
-            "CodeBuildBasePolicy" : {
-                        "Version": "2012-10-17",
-                        "Statement": [
-                            {
-                                "Effect": "Allow",
-                                "Resource": [
-                                    "arn:aws:logs:eu-west-2:244560807427:log-group:/aws/codebuild/GSBot_code_build",
-                                    "arn:aws:logs:eu-west-2:244560807427:log-group:/aws/codebuild/GSBot_code_build:*"
-                                ],
-                                "Action": [
-                                    "logs:CreateLogGroup",
-                                    "logs:CreateLogStream",
-                                    "logs:PutLogEvents"
-                                ]
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Resource": [
-                                    "arn:aws:s3:::codepipeline-eu-west-2-*"
-                                ],
-                                "Action": [
-                                    "s3:PutObject",
-                                    "s3:GetObject",
-                                    "s3:GetObjectVersion",
-                                    "s3:GetBucketAcl",
-                                    "s3:GetBucketLocation"
-                                ]
-                            }
-                        ]
-                    },
-            "Cloud_Watch_Policy": {
-                                      "Version": "2012-10-17",
-                                      "Statement": [
-                                        {
-                                          "Sid": "CloudWatchLogsPolicy",
-                                          "Effect": "Allow",
-                                          "Action": [
-                                            "logs:CreateLogGroup",
-                                            "logs:CreateLogStream",
-                                            "logs:PutLogEvents"
-                                          ],
-                                          "Resource": [
-                                            "*"
-                                          ]
-                                        },
-                                        {
-                                          "Sid": "CodeCommitPolicy",
-                                          "Effect": "Allow",
-                                          "Action": [
-                                            "codecommit:GitPull"
-                                          ],
-                                          "Resource": [
-                                            "*"
-                                          ]
-                                        },
-                                        {
-                                          "Sid": "S3GetObjectPolicy",
-                                          "Effect": "Allow",
-                                          "Action": [
-                                            "s3:GetObject",
-                                            "s3:GetObjectVersion"
-                                          ],
-                                          "Resource": [
-                                            "*"
-                                          ]
-                                        },
-                                        {
-                                          "Sid": "S3PutObjectPolicy",
-                                          "Effect": "Allow",
-                                          "Action": [
-                                            "s3:PutObject"
-                                          ],
-                                          "Resource": [
-                                            "*"
-                                          ]
-                                        }
-                                      ]
-                                    }
-                , "Access_Secret_Manager": {
-                                                "Version": "2012-10-17",
-                                                "Statement": [
-                                                    {
-                                                        "Sid": "VisualEditor0",
-                                                        "Effect": "Allow",
-                                                        "Action": [
-                                                            "secretsmanager:GetResourcePolicy",
-                                                            "secretsmanager:GetSecretValue",
-                                                            "secretsmanager:DescribeSecret",
-                                                            "secretsmanager:ListSecretVersionIds"
-                                                        ],
-                                                        "Resource": "arn:aws:secretsmanager:*:*:secret:*"
-                                                    }
-                                                ]
-                                            },
-                "Invoke_Lambda_Functions": {
-                                                "Version": "2012-10-17",
-                                                "Statement": [
-                                                    {
-                                                        "Sid": "VisualEditor0",
-                                                        "Effect": "Allow",
-                                                        "Action": "lambda:InvokeFunction",
-                                                        "Resource": "arn:aws:lambda:*:*:function:*"
-                                                    }
-                                                ]
-                                            },
-                "Create_Update_Lambda_Functions": {
-                                                "Version": "2012-10-17",
-                                                "Statement": [
-                                                    {
-                                                        "Sid": "VisualEditor0",
-                                                        "Effect": "Allow",
-                                                        "Action": ["lambda:ListFunctions","lambda:GetFunction","lambda:CreateFunction","lambda:UpdateFunctionCode"],
-                                                        "Resource": "arn:aws:lambda:*:*:function:*"
-                                                    }
-                                                ]
-                                            },
-                "Pass_Role": {
-                                "Version": "2012-10-17",
-                                "Statement": [{
-                                    "Effect": "Allow",
-                                    "Action": [
-                                        "iam:GetRole",
-                                        "iam:PassRole"
-                                    ],
-                                    "Resource": "arn:aws:iam::244560807427:role/lambda_with_s3_access"
-                                }]
-                            }
-            }
+    def policies_create(self, policies):
         role_policies = list(self.iam.role_policies().keys())
         for base_name, policy in policies.items():
-            policy_name = "{0}-{1}".format(base_name, self.project_name)
+            policy_name = "{0}_{1}".format(base_name, self.project_name)
             if policy_name in role_policies:
                 continue
             if self.iam.policy_info(policy_name) is None:

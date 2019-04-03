@@ -7,6 +7,7 @@ def run(event, context):
     try:
         load_dependency("gmail")
         load_dependency("elastic-slack")                              # load dependency (download and unzip if first run)
+        load_dependency('requests')
 
         from pbx_gs_python_utils.gsuite.handlers.Lambda_GDocs import Lambda_GDocs
 

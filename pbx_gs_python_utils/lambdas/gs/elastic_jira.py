@@ -1,8 +1,9 @@
 from pbx_gs_python_utils.utils.Lambdas_Helpers  import slack_message, log_to_elk
-from pbx_gs_python_utils.utils.aws.Lambdas      import load_dependency
+from pbx_gs_python_utils.utils.aws.Lambdas      import load_dependencies
+
 
 def run(event, context):
-    load_dependency("elastic-slack")
+    load_dependencies(["elastic-slack", 'requests'])
     try:
         from pbx_gs_python_utils.gs.GS_Bot_Jira import GS_Bot_Jira                               # import class
         result = GS_Bot_Jira().handle_request(event)                         # invoke lambda main handler method
