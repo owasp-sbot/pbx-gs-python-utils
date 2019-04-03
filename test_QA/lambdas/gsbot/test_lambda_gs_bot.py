@@ -10,8 +10,8 @@ class test_lambda_gs_bot(unittest.TestCase):
     def setUp(self):
         self.step_lambda   = Lambdas('pbx_gs_python_utils.lambdas.gsbot.lambda_gs_bot', memory = 3008)
 
-    #def test_lambda_update(self):
-    #    self.step_lambda.update_with_lib()
+    # def test_lambda_update(self):
+    #     self.step_lambda.update_with_lib()
 
     def test_invoke_directly(self):
         response = run({},{})

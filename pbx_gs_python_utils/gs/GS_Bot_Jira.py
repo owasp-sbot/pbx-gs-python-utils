@@ -244,9 +244,9 @@ class GS_Bot_Jira:
         def send_slack_message(message):
             slack_message(message, [], channel, team_id)
 
-        def show_pdf(file_id,icon, when):
-            send_slack_message('{0} this is what the file currently looks `{1}` the sync'.format(icon, when))
-            Lambdas('gs.lambda_gdocs').invoke({"params":['pdf', file_id], 'data':{'team_id':team_id,'channel': channel}})
+        # def show_pdf(file_id,icon, when):
+        #     send_slack_message('{0} this is what the file currently looks `{1}` the sync'.format(icon, when))
+        #     Lambdas('gsbot_gsuite.lambdas.gdocs').invoke({"params":['pdf', file_id], 'data':{'team_id':team_id,'channel': channel}})
 
 
         if len(params) < 2:

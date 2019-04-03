@@ -43,7 +43,7 @@ class test_GS_Bot_Commands(TestCase):
         assert GS_Bot_Commands.mindmap(slack_event, [ "aaa"]) == (None, None)
 
     def test_gdocs(self):
-        assert GS_Bot_Commands.gdocs({}, []) == (None,None)
+        assert GS_Bot_Commands.gdocs({}, ["version"]) == ['v0.22',[]]
 
     # def test_public_slack_channels(self):
     #     result = GS_Bot_Commands.public_slack_channels({})
@@ -53,4 +53,4 @@ class test_GS_Bot_Commands(TestCase):
     #    Lambdas('pbx_gs_python_utils.lambdas.gsbot.lambda_gs_bot').update_with_src()
 
     def test_version(self):
-        assert GS_Bot_Commands.version({}) == ('The current version of GSBot is v0.55',[])
+        assert GS_Bot_Commands.version({}) == ('The current version of GSBot is v0.56',[])

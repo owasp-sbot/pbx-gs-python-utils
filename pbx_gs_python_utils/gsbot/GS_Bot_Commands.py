@@ -3,7 +3,7 @@ from datetime import datetime
 from pbx_gs_python_utils.utils.Lambdas_Helpers       import slack_message
 from pbx_gs_python_utils.utils.aws.Lambdas           import Lambdas
 
-gsbot_version = 'v0.55'
+gsbot_version = 'v0.56'
 
 class GS_Bot_Commands:                                      # move to separate class
     @staticmethod
@@ -76,7 +76,9 @@ class GS_Bot_Commands:                                      # move to separate c
     # move to new routing mode
     @staticmethod
     def gdocs(slack_event, params=None):
-        Lambdas('pbx_gs_python_utils.lambdas.gs.lambda_gdocs').invoke_async({'params': params, 'data': slack_event})
+        result = Lambdas('gsbot_gsuite.lambdas.gdocs').invoke({'params': params, 'data': slack_event})
+        if slack_event.get('channel') is None:
+            return result
         return None, None
 
     @staticmethod

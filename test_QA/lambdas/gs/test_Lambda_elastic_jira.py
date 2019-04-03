@@ -27,9 +27,10 @@ class test_lambda_elastic_jira(unittest.TestCase):
 
 
     def test_update_invoke(self):
+        #self.jira_issues.update_with_lib()
         key = 'RISK-424'
         issue = self.jira_issues.invoke({"params": ['issue', key], "channel": 'GDL2EC3EE'})
-        #Dev.pprint(issue)
+        Dev.pprint(issue)
 
     def test_update_invoke__link_links(self):
         id = 'RISK-1'
