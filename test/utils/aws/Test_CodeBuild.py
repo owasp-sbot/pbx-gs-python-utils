@@ -7,6 +7,7 @@ from pbx_gs_python_utils.utils.aws.IAM          import IAM
 
 delete_on_setup    = False
 delete_on_teardown = False
+aws_region         = "eu-west-2"
 account_id         = '244560807427'
 project_name       = 'Code_Build_Test'
 project_repo       = 'https://github.com/pbx-gs/gsbot-build'
@@ -58,36 +59,31 @@ class Test_CodeBuild(TestCase):
 
     def test_create_policies(self):
         policies = {
-            "CodeBuildBasePolicy" : {
-                        "Version": "2012-10-17",
-                        "Statement": [
-                            {
-                                "Effect": "Allow",
-                                "Resource": [
-                                    "arn:aws:logs:eu-west-2:244560807427:log-group:/aws/codebuild/GSBot_code_build",
-                                    "arn:aws:logs:eu-west-2:244560807427:log-group:/aws/codebuild/GSBot_code_build:*"
-                                ],
-                                "Action": [
-                                    "logs:CreateLogGroup",
-                                    "logs:CreateLogStream",
-                                    "logs:PutLogEvents"
-                                ]
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Resource": [
-                                    "arn:aws:s3:::codepipeline-eu-west-2-*"
-                                ],
-                                "Action": [
-                                    "s3:PutObject",
-                                    "s3:GetObject",
-                                    "s3:GetObjectVersion",
-                                    "s3:GetBucketAcl",
-                                    "s3:GetBucketLocation"
-                                ]
-                            }
-                        ]
-                    },
+            "Download_Image"         : { "Version": "2012-10-17",
+                                                 "Statement": [{   "Effect": "Allow",
+                                                                   "Action": [   "ecr:GetAuthorizationToken",
+                                                                                 "ecr:BatchCheckLayerAvailability",
+                                                                                 "ecr:GetDownloadUrlForLayer",
+                                                                                 "ecr:GetRepositoryPolicy",
+                                                                                 "ecr:DescribeRepositories",
+                                                                                 "ecr:ListImages",
+                                                                                 "ecr:DescribeImages",
+                                                                                 "ecr:BatchGetImage"],
+                                                                   "Resource": "*"}]},
+            "CodeBuildBasePolicy" : {"Version"  : "2012-10-17",
+                                     "Statement": [ { "Effect"   :   "Allow",
+                                                      "Resource" : [ "arn:aws:logs:eu-west-2:244560807427:log-group:/aws/codebuild/GSBot_code_build",
+                                                                     "arn:aws:logs:eu-west-2:244560807427:log-group:/aws/codebuild/GSBot_code_build:*"],
+                                                      "Action"   : [ "logs:CreateLogGroup",
+                                                                     "logs:CreateLogStream",
+                                                                     "logs:PutLogEvents" ]},
+                                                    { "Effect"   :   "Allow",
+                                                      "Resource" : [ "arn:aws:s3:::codepipeline-eu-west-2-*"],
+                                                      "Action"   : [ "s3:PutObject",
+                                                                     "s3:GetObject",
+                                                                     "s3:GetObjectVersion",
+                                                                     "s3:GetBucketAcl",
+                                                                     "s3:GetBucketLocation"]}]},
             "Cloud_Watch_Policy": {
                                       "Version": "2012-10-17",
                                       "Statement": [
@@ -163,17 +159,14 @@ class Test_CodeBuild(TestCase):
                                                     }
                                                 ]
                                             },
-                "Create_Update_Lambda_Functions": {
-                                                "Version": "2012-10-17",
-                                                "Statement": [
-                                                    {
-                                                        "Sid": "VisualEditor0",
-                                                        "Effect": "Allow",
-                                                        "Action": ["lambda:ListFunctions","lambda:GetFunction","lambda:CreateFunction","lambda:UpdateFunctionCode"],
-                                                        "Resource": "arn:aws:lambda:*:*:function:*"
-                                                    }
-                                                ]
-                                            },
+                "Create_Update_Lambda_Functions": { "Version": "2012-10-17",
+                                                    "Statement": [ {  "Effect": "Allow",
+                                                                      "Action": ["lambda:ListFunctions","lambda:GetFunction","lambda:CreateFunction","lambda:UpdateFunctionCode"],
+                                                                      "Resource": "arn:aws:lambda:*:*:function:*" } ]},
+                "ECS_Management"                : { "Version": "2012-10-17",
+                                                    "Statement": [ {  "Effect": "Allow",
+                                                                      "Action": ["ecs:ListClusters"],
+                                                                      "Resource": "arn:aws:ecs:{0}:{1}:cluster/*".format(aws_region,account_id) } ]},
                 "Pass_Role": {
                                 "Version": "2012-10-17",
                                 "Statement": [{
@@ -186,7 +179,16 @@ class Test_CodeBuild(TestCase):
                                 }]
                             }
             }
+
+        policies_arns = list(self.code_build.iam.role_policies().values())
+        policies_names = list(self.code_build.iam.role_policies().keys())
+        self.code_build.iam.role_policies_detach(policies_arns)
+        for policies_name in policies_names:
+            self.code_build.iam.policy_delete(policies_name)
+
         self.code_build.policies_create(policies)
+
+
 
     def test_build_start(self):
         build_id     = self.code_build.build_start()

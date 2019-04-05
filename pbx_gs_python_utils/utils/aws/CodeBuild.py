@@ -51,11 +51,15 @@ class CodeBuild:
             policy_name = "{0}_{1}".format(base_name, self.project_name)
             if policy_name in role_policies:
                 continue
-            if self.iam.policy_info(policy_name) is None:
-                self.iam.policy_create(policy_name, policy)
-            policy_arn = self.iam.policy_info(policy_name).get('Arn')
-            Dev.pprint(policy_arn)
-            self.iam.role_policies_attach(policy_arn)
+            self.policy_create(policy_name,policy)
+
+
+    def policy_create(self, policy_name,policy):
+        if self.iam.policy_info(policy_name) is None:
+            self.iam.policy_create(policy_name, policy)
+        policy_arn = self.iam.policy_info(policy_name).get('Arn')
+        self.iam.role_policies_attach(policy_arn)
+        return policy_arn
 
     def project_builds(self,ids):
         return self.codebuild.batch_get_builds(ids=ids)
