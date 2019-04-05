@@ -5,7 +5,7 @@ phases:
     commands:
       #- pip3 install python-coveralls pytest-cov==2.5.0
       #- pip3 install boto3 pytest
-      #- pip3 install pytest-json
+      - pip3 install pytest-json
 
       #- git checkout master
 
@@ -18,7 +18,7 @@ phases:
       - coveralls
       #- cd test_QA && pytest --json=report.json utils/test_Files.py
     finally:
-      - echo "\n\n****** in finally"
+      - echo "****** in finally"
       #- pip3 install elasticsearch
       #- cd test_QA && ls -la
 
