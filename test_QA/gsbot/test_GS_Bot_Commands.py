@@ -57,7 +57,7 @@ class test_GS_Bot_Commands(TestCase):
 
 
     def test_version(self):
-        assert GS_Bot_Commands.version({}) == ('The current version of GSBot is v0.56',[])
+        assert GS_Bot_Commands.version({}) == ('The current version of GSBot is {0}'.format(GS_Bot_Commands.gsbot_version),[])
 
     # def test_update_lambda(self):
     #    Lambdas('pbx_gs_python_utils.lambdas.gsbot.lambda_gs_bot').update_with_src()

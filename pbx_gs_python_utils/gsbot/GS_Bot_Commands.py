@@ -3,9 +3,12 @@ from datetime import datetime
 from pbx_gs_python_utils.utils.Lambdas_Helpers       import slack_message
 from pbx_gs_python_utils.utils.aws.Lambdas           import Lambdas
 
-gsbot_version = 'v0.57'
+
 
 class GS_Bot_Commands:                                      # move to separate class
+
+    gsbot_version = 'v0.57'
+
     @staticmethod
     def hello(slack_event, params=None):
         user = slack_event.get('user')
@@ -129,7 +132,7 @@ class GS_Bot_Commands:                                      # move to separate c
 
     @staticmethod
     def version(slack_event, params=[]):
-        return 'The current version of GSBot is {0}'.format(gsbot_version),[]
+        return 'The current version of GSBot is {0}'.format(GS_Bot_Commands.gsbot_version),[]
 
 
     # @staticmethod

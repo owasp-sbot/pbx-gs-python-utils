@@ -9,8 +9,8 @@ class test_lambda_gsbot_gs_jira(unittest.TestCase):
     def setUp(self):
         self.step_lambda   = Lambdas('pbx_gs_python_utils.lambdas.gsbot.gsbot_gs_jira', memory = 3008)
 
-    #def test_lambda_update(self):
-    #    self.step_lambda.update_with_lib()
+    # def test_lambda_update(self):
+    #     self.step_lambda.update_with_lib()
 
     def test_invoke_directly(self):
         response = run({},{})
