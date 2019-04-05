@@ -11,15 +11,15 @@ class Aws_Cli:
     def lambda_create_function      (self, name, role, handler, s3_bucket, s3_key, memory = 512, timeout = 25 , runtime = 'python3.6'):
         if self.lambda_function_exists(name) is False:
             return self.aws_lambda.create_function(
-                    FunctionName  = name             ,
-                    Runtime       = runtime          ,
-                    Role          = role             ,
-                    Handler       = handler          ,
-                    MemorySize    = memory           ,
-                    Timeout       = timeout          ,
-                    Code          = {
-                                        "S3Bucket" : s3_bucket ,
-                                        "S3Key"    : s3_key    })
+                    FunctionName  = name                       ,
+                    Runtime       = runtime                    ,
+                    Role          = role                       ,
+                    Handler       = handler                    ,
+                    MemorySize    = memory                     ,
+                    Timeout       = timeout                    ,
+                    TracingConfig = { 'Mode':'Active' }        ,
+                    Code          = { "S3Bucket" : s3_bucket   ,
+                                      "S3Key"    : s3_key     })
         return None
 
         #

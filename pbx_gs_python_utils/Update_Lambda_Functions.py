@@ -30,8 +30,6 @@ class Update_Lambda_Functions:
                     'pbx_gs_python_utils.lambdas.utils.log_to_elk'   ,      # log_to_elk        Log_To_Elk
                     'pbx_gs_python_utils.lambdas.utils.slack_message',      # slack_message     API_Slack
 
-                    'pbx_gs_python_utils.lambdas.gs.lambda_slides'   ,      # lambda_slides     Lambda_Slides           Slides_Commandss
-
                    ]
         result = []
         for target in targets:
