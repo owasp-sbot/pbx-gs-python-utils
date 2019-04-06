@@ -14,16 +14,17 @@ phases:
   post_build:
     commands:
       - cd test_QA && pytest ./utils/aws/test_Fargate.py
-  post_build_2:
-    commands:
-      - echo "\n\n****** RUNNING pbx-gs-python-utils/test_QA ********\n\n"
-      - cd test_QA && pytest -v --cov=pbx_gs_python_utils --json=report.json
 
-      # the command below requires git installed (which is not on the current docker image)
-      #- cp test_QA/.coverage .
-      #- coveralls
-    finally:
-      - echo "****** in finally"
-      #- pip3 install elasticsearch
-      #- cd test_QA && ls -la
-      - cd test_QA && python3 PyTest_To_Elk.py
+#  post_build:
+#    commands:
+#      - echo "\n\n****** RUNNING pbx-gs-python-utils/test_QA ********\n\n"
+#      - cd test_QA && pytest -v --cov=pbx_gs_python_utils --json=report.json
+#
+#      # the command below requires git installed (which is not on the current docker image)
+#      #- cp test_QA/.coverage .
+#      #- coveralls
+#    finally:
+#      - echo "****** in finally"
+#      #- pip3 install elasticsearch
+#      #- cd test_QA && ls -la
+#      - cd test_QA && python3 PyTest_To_Elk.py
