@@ -143,7 +143,7 @@ class Test_CodeBuild(TestCase):
                                                                       "Resource": "arn:aws:lambda:*:*:function:*" } ]},
                 "ECS_Management"                : { "Version": "2012-10-17",
                                                     "Statement": [ {  "Effect": "Allow",
-                                                                      "Action": ["ecs:ListClusters"],
+                                                                      "Action": ["ecs:ListClusters", "ecs:ListTaskDefinitions"],
                                                                       "Resource": "*" } ]},
                 "Pass_Role": {
                                 "Version": "2012-10-17",
