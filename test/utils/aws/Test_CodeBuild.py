@@ -86,40 +86,18 @@ class Test_CodeBuild(TestCase):
                                                                      "s3:GetBucketLocation"]}]},
             "Cloud_Watch_Policy": {
                                       "Version": "2012-10-17",
-                                      "Statement": [
-                                        {
-                                          "Sid": "CloudWatchLogsPolicy",
-                                          "Effect": "Allow",
-                                          "Action": [
-                                            "logs:CreateLogGroup",
-                                            "logs:CreateLogStream",
-                                            "logs:PutLogEvents"
-                                          ],
-                                          "Resource": [
-                                            "*"
-                                          ]
-                                        },
-                                        {
-                                          "Sid": "CodeCommitPolicy",
-                                          "Effect": "Allow",
-                                          "Action": [
-                                            "codecommit:GitPull"
-                                          ],
-                                          "Resource": [
-                                            "*"
-                                          ]
-                                        },
-                                        {
-                                          "Sid": "S3GetObjectPolicy",
-                                          "Effect": "Allow",
-                                          "Action": [
-                                            "s3:GetObject",
-                                            "s3:GetObjectVersion"
-                                          ],
-                                          "Resource": [
-                                            "*"
-                                          ]
-                                        },
+                                      "Statement": [ {  "Effect": "Allow",
+                                                        "Action": [ "logs:CreateLogGroup",
+                                                                    "logs:CreateLogStream",
+                                                                    "logs:PutLogEvents" ],
+                                                        "Resource": ["*"]},
+                                                     {  "Effect": "Allow",
+                                                        "Action": ["codecommit:GitPull"],
+                                                        "Resource": ["*"] },
+                                                     {  "Effect": "Allow",
+                                                                  "Action": [ "s3:GetObject",
+                                                                              "s3:GetObjectVersion"],
+                                                                  "Resource": ["*"]},
                                         {
                                           "Sid": "S3PutObjectPolicy",
                                           "Effect": "Allow",
@@ -166,7 +144,7 @@ class Test_CodeBuild(TestCase):
                 "ECS_Management"                : { "Version": "2012-10-17",
                                                     "Statement": [ {  "Effect": "Allow",
                                                                       "Action": ["ecs:ListClusters"],
-                                                                      "Resource": "arn:aws:ecs:{0}:{1}:cluster/*".format(aws_region,account_id) } ]},
+                                                                      "Resource": "*" } ]},
                 "Pass_Role": {
                                 "Version": "2012-10-17",
                                 "Statement": [{
@@ -179,6 +157,7 @@ class Test_CodeBuild(TestCase):
                                 }]
                             }
             }
+
 
         policies_arns = list(self.code_build.iam.role_policies().values())
         policies_names = list(self.code_build.iam.role_policies().keys())
