@@ -13,8 +13,12 @@ phases:
 
   post_build:
     commands:
+      - cd test_QA && pytest ./utils/aws/test_Fargate.py
+  post_build_2:
+    commands:
       - echo "\n\n****** RUNNING pbx-gs-python-utils/test_QA ********\n\n"
       - cd test_QA && pytest -v --cov=pbx_gs_python_utils --json=report.json
+
       # the command below requires git installed (which is not on the current docker image)
       #- cp test_QA/.coverage .
       #- coveralls
