@@ -3,11 +3,7 @@ phases:
   #base-directory: src
   install:
     commands:
-      #- pip3 install python-coveralls pytest-cov==2.5.0
-      #- pip3 install boto3 pytest
       - pip3 uninstall -y pbx_gs_python_utils
-      - pip3 install pytest-json
-
       #- git checkout master
 
 
