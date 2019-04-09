@@ -4,7 +4,7 @@ import sys
 sys.path.append('..')
 
 print('***** loading dependency')
-from pbx_gs_python_utils.utils.aws.Lambdas import load_dependency
+from osbot_aws.apis.Lambda import load_dependency
 
 load_dependency('elastic')
 
@@ -13,7 +13,6 @@ print('***** done')
 from unittest import TestCase
 
 from pbx_gs_python_utils.utils.Dev            import Dev
-from pbx_gs_python_utils.utils.Files          import Files
 from pbx_gs_python_utils.utils.Json           import Json
 from pbx_gs_python_utils.utils.Elastic_Search import Elastic_Search
 
@@ -40,9 +39,6 @@ class Pytest_To_Elk:
         elk_data = []
         Dev.pprint(report.get('created_at'))
         created_at = report.get('created_at')
-
-        from email._parseaddr import parsedate_tz
-        from email._parseaddr import mktime_tz
 
         from datetime import datetime
         date = datetime.strptime('2019-04-02 01:10:36.068552', '%Y-%m-%d %H:%M:%S.%f')       #'2019-04-02 01:10:36.068552'

@@ -8,7 +8,7 @@ class Test_Lambda_dot_to_png(unittest.TestCase):
     def setUp(self):
         #upload_dependency('plantuml')
         #path_libs = '../_lambda_dependencies/plantuml'
-        self.plant_to_png = Lambdas('utils.puml_to_png', memory =3008).delete().create() #,path_libs=path_libs)
+        self.plant_to_png = Lambda('utils.puml_to_png', memory =3008).delete().create() #,path_libs=path_libs)
 
     def test_update_invoke(self):
         puml = "@startuml \n aaa30->bbb12 \n @enduml"

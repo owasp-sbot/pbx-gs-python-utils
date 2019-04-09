@@ -2,19 +2,19 @@ from unittest import TestCase
 
 from pbx_gs_python_utils.utils.slack.API_Slack_Attachment import API_Slack_Attachment
 from pbx_gs_python_utils.utils.Lambdas_Helpers            import slack_message
-from pbx_gs_python_utils.utils.aws.Lambdas                import Lambdas
+from osbot_aws.apis.Lambda import Lambda
 
 class test_API_Slack_Attachment(TestCase):
 
     def setUp(self):
         self.api = API_Slack_Attachment()
 
-    def test__update_lambda(self):
-        Lambdas('gs.jira_dialog').update()
+    # def test__update_lambda(self):
+    #     Lambda('gs.jira_dialog').update()
 
-    def test____update_Lambda_Slack_Integration(self):
-        path_libs = '../_lambda_dependencies/elastic-slack'
-        self.jira_issues = Lambdas('gs.slack_interaction', path_libs=path_libs).update()
+    # def test____update_Lambda_Slack_Integration(self):
+    #     path_libs = '../_lambda_dependencies/elastic-slack'
+    #     self.jira_issues = Lambda('gs.slack_interaction').update()
 
     def test_select(self):
         text          =  "...testing select attachment"

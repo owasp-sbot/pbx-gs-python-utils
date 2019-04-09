@@ -34,7 +34,7 @@ def run(event, context):
     dot             = event['dot']
 
     (fd, tmp_file)  = tempfile.mkstemp('png)')
-    dot_to_png      = Lambdas('utils.dot_to_png').invoke
+    dot_to_png      = Lambda('utils.dot_to_png').invoke
     png_data        = dot_to_png({"dot": dot, "width" : 500, "channel" : channel})
 
 

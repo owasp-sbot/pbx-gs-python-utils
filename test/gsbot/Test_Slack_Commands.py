@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from gsbot.Slack_Commands import Slack_Commands
 from pbx_gs_python_utils.utils.Dev import Dev
-from pbx_gs_python_utils.utils.aws.Lambdas import Lambdas
+from osbot_aws.apis.Lambda           import Lambda
 
 
 class Test_Slack_Commands(TestCase):
@@ -28,7 +28,7 @@ class Test_Slack_Commands(TestCase):
 
 
     def test__update_lambda(self):
-        Lambdas('gsbot.gsbot_slack').update()
+        Lambda('gsbot.gsbot_slack').update()
 
 
 

@@ -1,7 +1,5 @@
 from unittest import TestCase
 
-from pbx_gs_python_utils.gsbot.API_GS_Bot import log_debug
-from pbx_gs_python_utils.utils.Dev import Dev
 from pbx_gs_python_utils.utils.Log_To_Elk import Log_To_Elk
 
 

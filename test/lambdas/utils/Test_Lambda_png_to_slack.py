@@ -1,16 +1,14 @@
 import base64
 import unittest
 
-from gsuite.GDrive import GDrive
 from pbx_gs_python_utils.utils.Dev import Dev
-from pbx_gs_python_utils.utils.Files import Files
-from pbx_gs_python_utils.utils.aws.Lambdas import Lambdas
+from osbot_aws.apis.Lambda import Lambda
 from pbx_gs_python_utils.utils.aws.s3 import S3
 
 
 class Test_Lambda_pdf_to_slack(unittest.TestCase):
     def setUp(self):
-        self.png_to_slack = Lambdas('utils.png_to_slack', memory=3008)
+        self.png_to_slack = Lambda('utils.png_to_slack', memory=3008)
 
     def test_update_and_invoke(self):
         png_file = '/tmp/lambda_png_file.png'

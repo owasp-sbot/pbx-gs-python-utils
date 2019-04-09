@@ -9,7 +9,7 @@ from utils.aws.Lambdas import Lambdas
 
 class Test_Lambda_dot_to_svg(unittest.TestCase):
     def setUp(self):
-        self.dot_to_svg = Lambdas('utils.dot_to_svg')
+        self.dot_to_svg = Lambda('utils.dot_to_svg')
 
     def test_dot_round_trip(self):
         graph = pydot.Dot(graph_type='digraph')
@@ -102,4 +102,4 @@ _node [style = "filled, rounded", shape = box, color = "#919191", fontcolor = wh
     #handler = 'index.handle'
     #path_libs = '../_lambda_dependencies/phantomjs'
     # path_libs = '../_lambda_dependencies/requests'
-    #_lambda = Lambdas('dev.node_phantom', handler=handler, runtime='nodejs8.10', path_libs=path_libs)
+    #_lambda = Lambda('dev.node_phantom', handler=handler, runtime='nodejs8.10', path_libs=path_libs)

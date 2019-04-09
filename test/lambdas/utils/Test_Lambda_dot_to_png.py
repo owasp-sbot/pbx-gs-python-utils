@@ -1,12 +1,12 @@
 import  unittest
 from    utils.Dev              import Dev
 from pbx_gs_python_utils.utils.Show_Img import Show_Img
-from    utils.aws.Lambdas      import Lambdas
+from osbot_aws.apis.Lambda           import Lambda
 
 
 class Test_Lambda_dot_to_png(unittest.TestCase):
     def setUp(self):
-        self.dot_to_png = Lambdas('utils.dot_to_png')
+        self.dot_to_png = Lambda('utils.dot_to_png')
 
     def test_update_invoke(self):
         dot = """digraph G {\naaa -> bbb;\n}\n"""

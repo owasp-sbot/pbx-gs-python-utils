@@ -1,6 +1,7 @@
 import json
 import pprint
 import requests
+from osbot_aws.apis.Secrets import Secrets
 
 from pbx_gs_python_utils.gs.API_Issues                      import API_Issues
 from pbx_gs_python_utils.gs_elk.Elk_To_Slack                import ELK_to_Slack
@@ -9,8 +10,7 @@ from pbx_gs_python_utils.gs_elk.Lambda_Graph                import Lambda_Graph
 from pbx_gs_python_utils.gs_elk.Graph_View                  import Graph_View
 from pbx_gs_python_utils.utils.Lambdas_Helpers              import slack_message
 from pbx_gs_python_utils.utils.Misc                         import Misc
-from pbx_gs_python_utils.utils.aws.Lambdas                  import Lambdas
-from pbx_gs_python_utils.utils.aws.secrets                  import Secrets
+from osbot_aws.apis.Lambda import Lambda
 from pbx_gs_python_utils.utils.slack.API_Slack_Attachment   import API_Slack_Attachment
 
 
@@ -102,7 +102,7 @@ class GS_Bot_Jira:
                     payload = {"puml": table.puml ,
                                "channel": channel,
                                "team_id": team_id }
-                    Lambdas('utils.puml_to_slack').invoke_async(payload)
+                    Lambda('utils.puml_to_slack').invoke_async(payload)
             else:
                 text = ":exclamation: could not find index for issue "
         return {"text": text, "attachments": attachments}
@@ -169,7 +169,7 @@ class GS_Bot_Jira:
                     if channel:  # if the channel value is provided return a user friendly message, if not, return the data
                         text = ':point_right: Rendering graph for `{0}` in the direction `{1}`, with depth `{2}`, with plantuml size: `{3}`, with name `{4}`, with view `{5}`, with `{6}` nodes and `{7}` edges'\
                                         .format(target, direction, depth, len(puml), graph_name, view, len(graph.nodes), len(graph.edges))
-                        Lambdas('utils.puml_to_slack').invoke_async({"puml": puml,"channel": channel, 'team_id' : team_id})
+                        Lambda('utils.puml_to_slack').invoke_async({"puml": puml,"channel": channel, 'team_id' : team_id})
                     else:
                         data = {
                             "target"    : target     ,
@@ -200,7 +200,7 @@ class GS_Bot_Jira:
         return {"text": text, "attachments": attachments}
 
     def cmd_search(self, event):
-        Lambdas('gs.elk_to_slack').invoke_async(event)
+        Lambda('gs.elk_to_slack').invoke_async(event)
         return None
 
     def cmd_table(self, params, team_id=None, channel=None):
@@ -211,7 +211,7 @@ class GS_Bot_Jira:
             params.pop(0)                           # remove 1st command since it is 'server'
             graph_name = params.pop()
             text = ':point_right: Showing table with data created from graph `{0}`'.format(graph_name)
-            Lambdas('lambdas.browser.lambda_browser').invoke_async({"params": [ "table", graph_name , 'graph_simple'], "data":{"channel" : channel, "team_id": team_id}})
+            Lambda('lambdas.browser.lambda_browser').invoke_async({"params": [ "table", graph_name , 'graph_simple'], "data":{"channel" : channel, "team_id": team_id}})
         return {"text": text, "attachments": attachments}
 
     def cmd_server(self, params, team_id=None, channel=None):
@@ -246,7 +246,7 @@ class GS_Bot_Jira:
 
         # def show_pdf(file_id,icon, when):
         #     send_slack_message('{0} this is what the file currently looks `{1}` the sync'.format(icon, when))
-        #     Lambdas('gsbot_gsuite.lambdas.gdocs').invoke({"params":['pdf', file_id], 'data':{'team_id':team_id,'channel': channel}})
+        #     Lambda('gsbot_gsuite.lambdas.gdocs').invoke({"params":['pdf', file_id], 'data':{'team_id':team_id,'channel': channel}})
 
 
         if len(params) < 2:
@@ -328,7 +328,7 @@ class GS_Bot_Jira:
             text = ':point_right: Created graph for `{0}` in the direction `{1}`, with depth `{2}`, with name `{3}`, with `{4}` nodes and `{5}` edges' \
                             .format(target, direction, depth, graph_name, len(graph.nodes), len(graph.edges))
             slack_message(text, [], channel, team_id)
-            Lambdas('lambdas.browser.lambda_browser').invoke_async({"data": {"team_id": team_id, "channel": channel}, "params": ['viva_graph', graph_name, 'default']})
+            Lambda('lambdas.browser.lambda_browser').invoke_async({"data": {"team_id": team_id, "channel": channel}, "params": ['viva_graph', graph_name, 'default']})
 
 
     # main method

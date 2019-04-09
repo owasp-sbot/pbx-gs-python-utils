@@ -8,8 +8,8 @@ from utils.aws.Lambdas import Lambdas
 
 class Test_Lambda_pdf_to_slack(unittest.TestCase):
     def setUp(self):
-        self.pdf_to_slack = Lambdas('utils.pdf_to_slack', memory=3008).create()
-        #Lambdas('utils.puml_to_png', memory=3008).delete().create()
+        self.pdf_to_slack = Lambda('utils.pdf_to_slack', memory=3008).create()
+        #Lambda('utils.puml_to_png', memory=3008).delete().create()
 
     def test_update_and_invoke(self):
 

@@ -1,10 +1,8 @@
 from unittest                   import TestCase
 
-from pbx_gs_python_utils.utils.Dev import Dev
 from pbx_gs_python_utils.utils.slack.API_Slack_Attachment   import API_Slack_Attachment
 from pbx_gs_python_utils.utils.slack.API_Slack_Dialog       import API_Slack_Dialog
 from pbx_gs_python_utils.utils.Lambdas_Helpers              import slack_message
-from pbx_gs_python_utils.utils.aws.Lambdas                  import Lambdas
 
 
 class test_API_Slack_Dialog(TestCase):
@@ -15,17 +13,17 @@ class test_API_Slack_Dialog(TestCase):
 
 
     # def test__update_lambda(self):
-    #     Lambdas('gs.jira_dialog').update_with_src()
+    #     Lambda('gs.jira_dialog').update_with_src()
     #
     # def test____update_Lambda_Slack_Integration(self):
-    #     self.jira_issues = Lambdas('gs.slack_interaction').update_with_src()
+    #     self.jira_issues = Lambda('gs.slack_interaction').update_with_src()
 
     def test_test_render(self):
         dialog = self.api_dialog.test_render()
         dialog.get('title') == 'This is a test'
 
     def test__create_button_to_test_dialog(self):
-        #Lambdas('gs.jira_dialog').update_with_src()
+        #Lambda('gs.jira_dialog').update_with_src()
 
         self.api_attach.set_text       ('Click on button below to test dialog'    ) \
                        .set_callback_id("button-dialog-test"                      ) \

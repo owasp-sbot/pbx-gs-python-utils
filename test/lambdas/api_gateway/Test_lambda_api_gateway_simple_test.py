@@ -2,12 +2,12 @@ import unittest
 
 from pbx_gs_python_utils.utils.Dev import Dev
 from pbx_gs_python_utils.utils.Misc import Misc
-from pbx_gs_python_utils.utils.aws.Lambdas import Lambdas
+from osbot_aws.apis.Lambda           import Lambda
 
 
 class Test_lambda_api_gateway_simple_test(unittest.TestCase):
     def setUp(self):
-        self.simple_test = Lambdas('api_gateway.trigger_sync_jira_sheets')
+        self.simple_test = Lambda('api_gateway.trigger_sync_jira_sheets')
 
     def test_update_and_invoke(self):
         file_id = '1yDxu5YxL9FxY5wQ1EEQlAYGt3flIsm2VTyWwPny5RLA'

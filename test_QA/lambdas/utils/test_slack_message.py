@@ -1,12 +1,10 @@
 import  unittest
 
-from    pbx_gs_python_utils.utils.Dev              import Dev
-from    pbx_gs_python_utils.utils.aws.Lambdas      import Lambdas
-
+from osbot_aws.apis.Lambda import Lambda
 
 class test_slack_message(unittest.TestCase):
     def setUp(self):
-        self.slack_message = Lambdas('pbx_gs_python_utils.lambdas.utils.slack_message')
+        self.slack_message = Lambda('pbx_gs_python_utils.lambdas.utils.slack_message')
 
     def test_invoke(self):
         channel     = "gs-bot-tests"

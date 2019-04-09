@@ -1,5 +1,5 @@
 def run(event, context):
-    from pbx_gs_python_utils.utils.aws.Lambdas import load_dependency
+    from osbot_aws.apis.Lambda import load_dependency
     from pbx_gs_python_utils.utils.slack.Slack_Commands_Helper import Slack_Commands_Helper
 
 

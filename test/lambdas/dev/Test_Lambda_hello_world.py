@@ -6,7 +6,7 @@ from utils.aws.Lambdas import Lambdas
 
 class Test_Lambda_hello_world(unittest.TestCase):
     def setUp(self):
-        self.hello_world = Lambdas('dev.hello_world')
+        self.hello_world = Lambda('dev.hello_world')
 
     def test_update_and_invoke(self):
         payload ={ "name" : 'world'}

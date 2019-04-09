@@ -1,8 +1,8 @@
-from pbx_gs_python_utils.utils.Dev import Dev
+
 from jira import JIRA
+from osbot_aws.apis.Secrets import Secrets
 
 from pbx_gs_python_utils.utils.Lambdas_Helpers import log_info, log_error
-from pbx_gs_python_utils.utils.aws.secrets import Secrets
 
 # to add
 #  jira().groups

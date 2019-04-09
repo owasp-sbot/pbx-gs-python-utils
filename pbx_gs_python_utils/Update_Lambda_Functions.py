@@ -5,14 +5,14 @@ import json
 
 from pbx_gs_python_utils.utils.Dev              import Dev
 from pbx_gs_python_utils.utils.Lambdas_Helpers  import slack_message
-from pbx_gs_python_utils.utils.aws.Lambdas      import Lambdas
+from osbot_aws.apis.Lambda           import Lambda
 
 
 class Update_Lambda_Functions:
 
     def update_lambda_function(self, name):
         try:
-            Lambdas(name).update_with_lib()
+            Lambda(name).update_with_lib()
             return { 'status':'ok' , 'name': name}
         except Exception as error:
             return { 'status':'error' , 'name': name, 'details': '{0}'.format(error)}
@@ -43,7 +43,7 @@ class Update_Lambda_Functions:
         return result
 
    # def healthcheck_gs_elastic_jira(self):
-   #     target = Lambdas('gs.elastic_jira')
+   #     target = Lambda('gs.elastic_jira')
    #     Dev.pprint(target.info())
 
 

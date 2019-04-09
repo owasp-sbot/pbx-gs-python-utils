@@ -1,16 +1,17 @@
 import sys
+
+from osbot_aws.apis.Lambda import load_dependency
+
 sys.path.append('..')
 
 import unittest
-
-from pbx_gs_python_utils.utils.aws.Lambdas      import load_dependency
 load_dependency('elastic')
 
 
 from pbx_gs_python_utils.gs.GS_Bot_Jira         import GS_Bot_Jira
 from pbx_gs_python_utils.utils.Dev              import Dev
 from pbx_gs_python_utils.utils.Lambdas_Helpers  import slack_message
-from pbx_gs_python_utils.utils.aws.Lambdas      import Lambdas
+from osbot_aws.apis.Lambda           import Lambda
 
 
 
@@ -130,7 +131,7 @@ class test_GS_Bot_Jira(unittest.TestCase):
 
 
     def test__cmd_links__via_lambda(self):
-        elastic_jira = Lambdas('pbx_gs_python_utils.lambdas.gs.elastic_jira')
+        elastic_jira = Lambda('pbx_gs_python_utils.lambdas.gs.elastic_jira')
         payload = {"params": ["links","FACT-47", "up", "3"], "channel": "GDL2EC3EE"}
 
         result = elastic_jira.invoke(payload)
@@ -143,7 +144,7 @@ class test_GS_Bot_Jira(unittest.TestCase):
         assert ":point_right: Rendering graph for `FACT-47` in the direction `up`, with depth `3`, with plantuml size:" in text
 
     def test__cmd_server__via_lambda(self):
-        elastic_jira = Lambdas('pbx_gs_python_utils.lambdas.gs.elastic_jira')
+        elastic_jira = Lambda('pbx_gs_python_utils.lambdas.gs.elastic_jira')
         payload = {"params": ["server", "status"], "channel": "DDKUZTK6X", 'team_id': 'T7F3AUXGV'}
 
         result = elastic_jira.invoke(payload)
@@ -160,7 +161,7 @@ class test_GS_Bot_Jira(unittest.TestCase):
     # update lambda
 
     #def test__lambda_update(self):
-    #    Lambdas('gs.elastic_jira').update_with_src()
+    #    Lambda('gs.elastic_jira').update_with_src()
 
 
 

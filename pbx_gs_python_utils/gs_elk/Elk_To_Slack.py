@@ -116,7 +116,7 @@ class ELK_to_Slack:
     #
     #         slack_cmd = 'links {0} all 1'.format(','.join(keys))
     #         params    = slack_cmd.split(' ')
-    #         result    = Lambdas('gs.elastic_jira').invoke({"params": params,  "user": user, "channel": channel})
+    #         result    = Lambda('gs.elastic_jira').invoke({"params": params,  "user": user, "channel": channel})
     #         #slack_message(result.get('text'), result.get('attachments'), channel)
     #         self.attachments.set_text(result.get('text'))
     #

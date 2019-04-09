@@ -4,8 +4,9 @@ import base64
 from os.path import abspath, join
 
 #import requests
+from osbot_aws.apis.Lambda import Lambda
+
 from pbx_gs_python_utils.utils.Files import Files
-from pbx_gs_python_utils.utils.aws.Lambdas import Lambdas
 
 
 class API_Plant_UML:
@@ -42,7 +43,7 @@ class API_Plant_UML:
 
     def puml_to_png_using_lambda_function(self,puml, target_file = None):
         if target_file is None : target_file = self.tmp_png_file
-        puml_to_png  = Lambdas('utils.puml_to_png').invoke
+        puml_to_png  = Lambda('utils.puml_to_png').invoke
         result       = puml_to_png({"puml": puml})
         if result.get('png_base64'):
             with open(target_file, "wb") as fh:

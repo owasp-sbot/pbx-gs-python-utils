@@ -1,6 +1,7 @@
+from osbot_aws.apis.Lambda import Lambda
+from osbot_aws.apis.Secrets import Secrets
 from slackclient                           import SlackClient
-from pbx_gs_python_utils.utils.aws.secrets import Secrets
-from pbx_gs_python_utils.utils.aws.Lambdas import Lambdas
+
 
 
 class API_Slack:
@@ -89,12 +90,12 @@ class API_Slack:
     def dot_to_slack(self, dot):
         payload = {"dot"    : dot          ,
                    "channel": self.channel }
-        return Lambdas('utils.dot_to_slack').invoke(payload)
+        return Lambda('utils.dot_to_slack').invoke(payload)
 
     def puml_to_slack(self, puml):
         payload = {"puml"   : puml          ,
                    "channel": self.channel  }
-        return Lambdas('utils.puml_to_slack').invoke(payload)
+        return Lambda('utils.puml_to_slack').invoke(payload)
 
 
 

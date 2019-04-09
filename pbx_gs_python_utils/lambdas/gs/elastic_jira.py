@@ -1,5 +1,6 @@
+from osbot_aws.apis.Lambda import load_dependencies
+
 from pbx_gs_python_utils.utils.Lambdas_Helpers  import slack_message, log_to_elk
-from pbx_gs_python_utils.utils.aws.Lambdas      import load_dependencies
 
 
 def run(event, context):

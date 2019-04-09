@@ -1,8 +1,6 @@
 import base64
-import tempfile
 
 from pbx_gs_python_utils.utils.Files import Files
-from   utils.Lambdas_Helpers import slack_message
 from pbx_gs_python_utils.utils.aws.s3 import S3
 from   utils.aws.secrets     import Secrets
 from   utils.aws.Lambdas     import    load_dependency

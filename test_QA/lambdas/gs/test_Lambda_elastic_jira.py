@@ -1,8 +1,9 @@
 import  unittest
 
+from osbot_aws.apis.Lambda import Lambda
+
 from    pbx_gs_python_utils.lambdas.gs.elastic_jira import run
 from    pbx_gs_python_utils.utils.Dev         import Dev
-from    pbx_gs_python_utils.utils.aws.Lambdas import Lambdas
 
 
 class test_lambda_elastic_jira(unittest.TestCase):
@@ -10,8 +11,8 @@ class test_lambda_elastic_jira(unittest.TestCase):
         #upload_dependency('elastic-slack')  # this only needs to be done once
 
         #path_libs = '../_lambda_dependencies/elastic-slack'                    # this is how it used to be done (20 sec per update)
-        #self.jira_issues = Lambdas('gs.elastic_jira', path_libs= path_libs)
-        self.jira_issues = Lambdas('pbx_gs_python_utils.lambdas.gs.elastic_jira')                           # no need to include dependencies in the source code now (3 secs per update)
+        #self.jira_issues = Lambda('gs.elastic_jira', path_libs= path_libs)
+        self.jira_issues = Lambda('pbx_gs_python_utils.lambdas.gs.elastic_jira')                           # no need to include dependencies in the source code now (3 secs per update)
 
     def test_invoke_directly(self):
         response = run({},{})

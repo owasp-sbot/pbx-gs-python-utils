@@ -1,11 +1,12 @@
 import pprint
 
+from osbot_aws.apis.Lambda import Lambda
+
 from pbx_gs_python_utils.gs_elk.GS_Graph import GS_Graph
 #from gs_elk.Lambda_Graph_Commands   import Lambda_Graph_Commands
 from pbx_gs_python_utils.utils.Lambdas_Helpers          import log_to_elk, slack_message
 from pbx_gs_python_utils.utils.Misc                     import Misc
 from pbx_gs_python_utils.utils.Save_To_ELK              import Save_To_ELK
-from pbx_gs_python_utils.utils.aws.Lambdas              import Lambdas
 
 
 class Lambda_Graph():
@@ -30,7 +31,7 @@ class Lambda_Graph():
     def get_graph_png___by_name(self, graph_name):
         graph = self.get_gs_graph___by_name(graph_name)
         puml = graph.puml.puml
-        puml_to_png = Lambdas('utils.puml_to_png').invoke
+        puml_to_png = Lambda('utils.puml_to_png').invoke
         return puml_to_png({"puml": puml})
 
     def get_last_10_graphs(self):
@@ -106,4 +107,4 @@ class Lambda_Graph():
 
     def send_graph_to_slack___by_type(self, graph_name, channel):
         graph = self.get_gs_graph___by_type(graph_name)
-        return Lambdas('utils.puml_to_slack').invoke({"puml"   : graph.get_puml(), "channel": channel})
+        return Lambda('utils.puml_to_slack').invoke({"puml"   : graph.get_puml(), "channel": channel})

@@ -1,6 +1,5 @@
 def run(event, context):
-
-    from pbx_gs_python_utils.utils.aws.Lambdas import load_dependency
+    from osbot_aws.apis.Lambda import load_dependency
     load_dependency('elastic')
 
     from pbx_gs_python_utils.utils.Log_To_Elk import Log_To_Elk

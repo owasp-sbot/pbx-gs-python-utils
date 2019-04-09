@@ -3,8 +3,8 @@ import  datetime
 import  requests
 
 from    elasticsearch                           import Elasticsearch, helpers, NotFoundError
+from osbot_aws.apis.Secrets import Secrets
 from    requests.auth                           import HTTPBasicAuth
-from    pbx_gs_python_utils.utils.aws.secrets   import Secrets
 from    pbx_gs_python_utils.utils.Http          import PUT, DELETE
 #note the max query value in the search has been increased from 10000 to 100000 (which will need to be done on any new ES Install)
 # PUT _all/_settings

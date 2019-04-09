@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from pbx_gs_python_utils.utils.Dev import Dev
 from pbx_gs_python_utils.utils.Lambdas_Helpers import slack_message
-from pbx_gs_python_utils.utils.aws.Lambdas import Lambdas
+from osbot_aws.apis.Lambda           import Lambda
 
 
 class Test_Lambdas_Helpers(TestCase):
@@ -25,7 +25,7 @@ class Test_Lambdas_Helpers(TestCase):
                             'team_id': team_id
                         }
 
-            result = Lambdas('pbx_gs_python_utils.lambdas.utils.slack_message').invoke(payload)
+            result = Lambda('pbx_gs_python_utils.lambdas.utils.slack_message').invoke(payload)
             assert result.get('ok'     ) == True
             assert result.get('channel') == channel
 
