@@ -22,7 +22,7 @@ class Test_Lambda_svg_to_png(unittest.TestCase):
         #graph.write_svg(tmp_name, prog='dot')
         dot = graph.to_string()
 
-        pydot_lambda = Lambdas('dev.pydot_test')
+        pydot_lambda = Lambda('dev.pydot_test')
         dot_code = pydot_lambda.invoke({'name': 'test'})
         params       = {"svg" : base64.b64encode(dot_code.encode()).decode() }
 
@@ -34,8 +34,8 @@ class Test_Lambda_svg_to_png(unittest.TestCase):
         print(result)
 
     def test_create_dot_then_svg_then_png(self):
-        dot_to_svg = Lambdas('utils.dot_to_svg').invoke
-        svg_to_png = Lambdas('utils.svg_to_png').invoke
+        dot_to_svg = Lambda('utils.dot_to_svg').invoke
+        svg_to_png = Lambda('utils.svg_to_png').invoke
 
         dot     = 'digraph { abc -> edfAAAAA \n abc [shape=box] } '
         svg     = dot_to_svg({"dot" : dot})
