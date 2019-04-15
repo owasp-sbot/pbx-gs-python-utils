@@ -8,7 +8,7 @@ from pbx_gs_python_utils.lambdas.gsbot.gsbot_slack import run
 class test_lambda_gs_bot(unittest.TestCase):
 
     def setUp(self):
-        self.step_lambda   = Lambda('pbx_gs_python_utils.lambdas.gsbot.gsbot_slack', memory = 3008)
+        self.step_lambda   = Lambda('pbx_gs_python_utils.lambdas.gsbot.gsbot_slack')
 
     #def test_lambda_update(self):
     #    self.step_lambda.update_with_src()
