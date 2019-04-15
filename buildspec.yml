@@ -9,7 +9,7 @@ phases:
 
   post_build:
     commands:
-      - cd test_QA && pytest -v -s -W ignore::DeprecationWarning ./utils/aws/test_Fargate.py
+      - cd test_QA && pytest -v -s -W ignore::DeprecationWarning
 
 #  post_build:
 #    commands:
