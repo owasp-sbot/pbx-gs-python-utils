@@ -5,3 +5,4 @@ dist
 test_QA/htmlcov
 .coverage
 report.json
+.idea

@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    version                       = "0.4.11"               , # change this on every release
+    version                       = "0.4.12"               , # change this on every release
     name                          = "pbx_gs_python_utils"  ,
 
     author                        = "Dinis Cruz",

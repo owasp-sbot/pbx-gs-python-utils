@@ -1,7 +1,6 @@
 import  unittest
 
 from osbot_aws.apis.Lambda import Lambda
-
 from pbx_gs_python_utils.lambdas.gsbot.gsbot_slack import run
 
 
