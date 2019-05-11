@@ -2,9 +2,9 @@ import base64
 import tempfile
 import requests
 
-from utils.Lambdas_Helpers import slack_message
-from   utils.aws.secrets        import Secrets
-from   utils.aws.Lambdas        import Lambdas
+from pbx_gs_python_utils.utils.Lambdas_Helpers import slack_message
+from osbot_aws.apis        import Secrets
+from osbot_aws.apis        import Lambdas
 
 
 # def test_send_message(message):

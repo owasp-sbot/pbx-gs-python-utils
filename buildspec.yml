@@ -1,15 +1,17 @@
-version: 0.1
+version: 0.2
 phases:
-  #base-directory: src
-  install:
+  pre_build:
     commands:
-      - pip3 uninstall -y pbx_gs_python_utils
-      #- git checkout master
-
+      - apt-get update -y
+      - apt-get install -y build-essential
+  build:
+    commands:
+      - python setup.py install
 
   post_build:
     commands:
-      - cd test_QA && pytest -v -s -W ignore::DeprecationWarning
+      # This tests are going to fail. Mostly all.
+      - python setup.py test
 
 #  post_build:
 #    commands:

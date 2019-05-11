@@ -1,8 +1,8 @@
 import base64
 import tempfile
 import requests
-from   utils.aws.secrets        import Secrets
-from   utils.aws.Lambdas        import Lambdas
+from   osbot_aws.apis        import Secrets
+from   osbot_aws.apis.Lambdas        import Lambdas
 
 
 def upload_png_file(channel_id, file):
