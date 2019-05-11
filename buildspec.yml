@@ -1,6 +1,13 @@
-version: 0.1
+version: 0.2
 phases:
   install:
+    runtime-versions:
+      python: 3.6
+  pre_build:
+    commands:
+      - apt-get update -y
+      - apt-get install -y build-essential
+  build:
     commands:
       - python setup.py install
 
