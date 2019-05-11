@@ -1,9 +1,9 @@
 import base64
 
 from pbx_gs_python_utils.utils.Files import Files
-from pbx_gs_python_utils.utils.aws.s3 import S3
-from   utils.aws.secrets     import Secrets
-from   utils.aws.Lambdas     import    load_dependency
+from osbot_aws.apis import S3
+from osbot_aws.apis import Secrets
+from osbot_aws.apis.Lambda     import    load_dependency
 
 
 def send_file_to_slack(file_path, title, bot_token, channel):                  # refactor into Slack_API class

@@ -1,4 +1,4 @@
-from utils.aws.Lambdas import Lambdas
+from osbot_aws.apis.Lambdas import Lambdas
 
 
 def run(event, context):

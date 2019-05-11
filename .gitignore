@@ -6,3 +6,5 @@ test_QA/htmlcov
 .coverage
 report.json
 .idea
+build
+.eggs

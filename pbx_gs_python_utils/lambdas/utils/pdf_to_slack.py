@@ -1,8 +1,8 @@
 import base64
 import tempfile
 
-from   utils.aws.secrets     import Secrets
-from   utils.aws.Lambdas     import    load_dependency
+from   osbot_aws.apis     import Secrets
+from   osbot_aws.apis.Lambda     import    load_dependency
 
 
 def send_file_to_slack(file_path, title, bot_token, channel):                  # refactor into Slack_API class
