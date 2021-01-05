@@ -1,5 +1,4 @@
-# pbx-gs-python-utils
+# pbx-gs-python-utils (Legacy)
 Python utilities by the PhotoBox Group Security team
 
-
-### Multiple Code Build
+note: this is not being used anymore (code here for past references)
