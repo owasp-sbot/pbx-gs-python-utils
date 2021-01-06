@@ -7,9 +7,10 @@ from googleapiclient.discovery import build
 from googleapiclient.http import BatchHttpRequest
 from httplib2 import Http
 from oauth2client import file
-from osbot_aws.apis.Secrets import Secrets
-from osbot_utils.utils.Dev import Dev
-from osbot_utils.utils.Files import Files
+
+from utils.Dev import Dev
+from pbx_gs_python_utils.utils.Files import Files
+from utils.aws.secrets import Secrets
 
 
 class API_GMail:
